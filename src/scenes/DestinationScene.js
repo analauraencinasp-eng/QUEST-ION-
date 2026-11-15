@@ -2,7 +2,7 @@
 // Hover: dashed ring + tooltip. Only Mars (level 1) is open; the others show a padlock and
 // "Complete the Mars mission to unlock". Click → info panel with the screen behind dimmed.
 import { C, S } from '../ui/theme.js';
-import { fresh, txt, bg, img, hotspot, mentorBar, panel, chip } from '../ui/widgets.js';
+import { fresh, txt, bg, img, hotspot, mentorBar, panel, chip, fitBlock } from '../ui/widgets.js';
 import { setup, openModal, mButton, mText } from '../ui/chrome.js';
 import { content, t } from '../content.js';
 import { state, logEvent } from '../state.js';
@@ -74,10 +74,14 @@ export default class DestinationScene extends Phaser.Scene {
     mText(this, md, X, Y, p.name, { font: 'title', size: 30, color: S.gold });
     let cx = X;
     for (const f of p.facts) { const c = chip(this, cx, Y + 62, f.text, { fill: C.blueCard, color: S.white, size: 10, stroke: C.blueBorder, depth: md.depth }); md.objs.push(c); cx += c.w + 10; }
-    mText(this, md, X, Y + 92, p.desc.text, { size: 25, wrap: 700 });
-    mText(this, md, X, Y + 190, t('destination.questions'), { font: 'title', size: 12, color: S.cyan });
-    mText(this, md, X, Y + 212, p.questions.map((q) => '• ' + q).join('\n'), { size: 24, wrap: 700 });
-    mText(this, md, X, Y + 300, p.real.text, { size: 22, wrap: 700, color: S.muted });
+    // description → questions → real mission, stacked and kept above the buttons
+    const blocks = [
+      mText(this, md, X, 0, p.desc.text, { size: 24, wrap: 712 }),
+      mText(this, md, X, 0, t('destination.questions'), { font: 'title', size: 12, color: S.cyan }),
+      mText(this, md, X, 0, p.questions.map((q) => '• ' + q).join('\n'), { size: 23, wrap: 712 }),
+      mText(this, md, X, 0, p.real.text, { size: 21, wrap: 712, color: S.muted })
+    ];
+    fitBlock(blocks, Y + 84, 124 + 472 - 92, 8);
     mButton(this, md, 126 + 1028 - 360 - 196, 124 + 472 - 80, 340, 56, t('destination.design'), () => {
       state.mission.planet = p.id;
       logEvent(`Destination: ${p.name} (level ${p.level}).`, 'destination');

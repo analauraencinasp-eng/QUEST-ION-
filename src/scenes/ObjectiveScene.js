@@ -2,7 +2,7 @@
 // "OBJECTIVE i / 3" centred, ONE card at a time with ◀ ▶ arrows and dots. Only HUNT FOR ANCIENT
 // WATER is playable; NEXT stays disabled until it is selected. MY MISSION is always available.
 import { C, S } from '../ui/theme.js';
-import { fresh, txt, pxButton, bg, panel, img, chip, dots } from '../ui/widgets.js';
+import { fresh, txt, pxButton, bg, panel, img, chip, dots, fitBlock } from '../ui/widgets.js';
 import { setup } from '../ui/chrome.js';
 import { pixelIcon } from '../ui/icons.js';
 import { content, t } from '../content.js';
@@ -32,8 +32,8 @@ export default class ObjectiveScene extends Phaser.Scene {
     this.list = content.objectives.objectives;
     this.selected = state.mission.objective;
     this.card = this.add.container(0, 0);
-    this.prev = pxButton(this, 228, 438, 84, 60, '◀', () => this.move(-1), { size: 18 });
-    this.nextArrow = pxButton(this, 968, 438, 84, 60, '▶', () => this.move(1), { size: 18 });
+    this.prev = pxButton(this, 206, 438, 84, 60, '◀', () => this.move(-1), { size: 18 });
+    this.nextArrow = pxButton(this, 990, 438, 84, 60, '▶', () => this.move(1), { size: 18 });
     this.nextBtn = pxButton(this, 1072, 642, 184, 60, t('common.next'), () => this.done(), { primary: true });
     this.status = txt(this, 1062, 560, '', { size: 21, color: S.green, wrap: 200 });
     this.onKey = (k) => {
@@ -56,22 +56,26 @@ export default class ObjectiveScene extends Phaser.Scene {
     const sel = this.selected === o.id;
     this.counter.setText(t('objective.counter', { i: this.i + 1, n: this.list.length }));
     const g = this.add.graphics();
-    g.fillStyle(C.navy2, 1); g.fillRect(340, 272, 600, 417);
-    g.lineStyle(sel ? 6 : 4, sel ? C.yellow : 0x5d6a9a, 1); g.strokeRect(340, 272, 600, 417);
+    // card: 680 wide (was 600) so the text reads comfortably; content FLOWS top→bottom above the button
+    const X = 300, Wd = 680, IN = X + 28, WRAP = Wd - 56;
+    g.fillStyle(C.navy2, 1); g.fillRect(X, 272, Wd, 417);
+    g.lineStyle(sel ? 6 : 4, sel ? C.yellow : 0x5d6a9a, 1); g.strokeRect(X, 272, Wd, 417);
     this.card.add(g);
-    this.card.add(pixelIcon(this, ICON[o.id] || 'water', 372, 292, 64));
-    this.card.add(txt(this, 448, 324, o.title, { font: 'title', size: 16, color: open ? S.green : S.muted, origin: [0, 0.5], wrap: 470 }));
-    this.card.add(txt(this, 372, 368, o.text, { size: 26, wrap: 540 }));
+    this.card.add(pixelIcon(this, ICON[o.id] || 'water', IN, 288, 56));
+    this.card.add(txt(this, IN + 72, 316, o.title, { font: 'title', size: 16, color: open ? S.green : S.muted, origin: [0, 0.5], wrap: WRAP - 72 }));
+    const blocks = [txt(this, IN, 0, o.text, { size: 24, wrap: WRAP })];
     if (open) {
-      this.card.add(txt(this, 372, 460, o.real.text, { size: 22, wrap: 540, color: S.blue }));
-      this.card.add(txt(this, 372, 546, o.question.text, { size: 22, wrap: 540, color: S.gold }));
+      blocks.push(txt(this, IN, 0, o.real.text, { size: 21, wrap: WRAP, color: S.blue }));
+      blocks.push(txt(this, IN, 0, o.question.text, { size: 21, wrap: WRAP, color: S.gold }));
     } else {
-      this.card.add(txt(this, 372, 470, o.focus, { size: 22, wrap: 540, color: S.blue }));
-      this.card.add(pixelIcon(this, 'lock', 372, 540, 32));
-      this.card.add(txt(this, 414, 544, o.locked, { size: 22, wrap: 500, color: S.gold }));
+      blocks.push(txt(this, IN, 0, o.focus, { size: 21, wrap: WRAP, color: S.blue }));
+      blocks.push(txt(this, IN + 40, 0, o.locked, { size: 21, wrap: WRAP - 40, color: S.gold }));
     }
+    fitBlock(blocks, 350, 596, 8);
+    if (!open) this.card.add(pixelIcon(this, 'lock', IN, blocks[2].y + 2, 30));
+    blocks.forEach((b) => this.card.add(b));
     this.card.add(dots(this, 640, 674, this.list.length, this.i));
-    this.selBtn = pxButton(this, 372, 608, 484, 58, open ? (sel ? t('objective.selected') : t('objective.select')) : t('objective.lockedBtn'), () => this.select(), { size: 16, disabled: !open });
+    this.selBtn = pxButton(this, 398, 608, 484, 58, open ? (sel ? t('objective.selected') : t('objective.select')) : t('objective.lockedBtn'), () => this.select(), { size: 16, disabled: !open });
     if (sel) this.selBtn.setPrimary(true);
     this.nextBtn.setDisabled(!this.selected);
     this.status.setText(this.selected ? t('objective.chosen') : '');

@@ -2,7 +2,7 @@
 // highlights 1) the 5 numbered stations, 2) BUDGET + MASS, 3) EARTH RESPONSIBILITY.
 // The button becomes START BUILDING → Screen 9.
 import { C, S } from '../ui/theme.js';
-import { fresh, txt, pxButton, bg, panel, mentorBar, dots, finishTyping, img } from '../ui/widgets.js';
+import { fresh, txt, pxButton, bg, panel, mentorBar, dots, finishTyping, img, fitBlock } from '../ui/widgets.js';
 import { setup } from '../ui/chrome.js';
 import { content, t } from '../content.js';
 import { go } from '../router.js';
@@ -17,29 +17,32 @@ export default class BriefingScene extends Phaser.Scene {
     txt(this, 640, 40, t('briefing.title'), { font: 'title', size: 30, color: S.gold, origin: 0.5, shadow: 4 });
     txt(this, 640, 74, t('briefing.sub'), { size: 24, origin: 0.5 });
     panel(this, 90, 100, 1100, 372, { fill: C.navy2, stroke: C.blueBorder, bw: 4, alpha: 0.96 });
-    txt(this, 116, 122, t('briefing.know'), { font: 'title', size: 14, color: S.cyan });
-    txt(this, 116, 150, t('briefing.k1'), { size: 25 });
+    txt(this, 116, 114, t('briefing.know'), { font: 'title', size: 14, color: S.cyan });
+    txt(this, 116, 138, t('briefing.k1'), { size: 24 });
     this.hl = this.add.graphics().setDepth(18);
     this.stationBoxes = [];
     content.stations.stations.forEach((st, i) => {
-      const x = 116 + i * 212, y = 188;
-      panel(this, x, y, 196, 126, { fill: C.blueCard, stroke: C.blueBorder, bw: 3 });
+      const x = 116 + i * 212, y = 176, BH = 134;
+      panel(this, x, y, 196, BH, { fill: C.blueCard, stroke: C.blueBorder, bw: 3 });
       this.add.rectangle(x + 12, y + 14, 30, 30, C.gold).setOrigin(0);
       txt(this, x + 27, y + 30, String(st.n), { font: 'title', size: 14, color: S.navy, origin: 0.5 });
-      txt(this, x + 52, y + 16, st.name, { font: 'title', size: 10, wrap: 136 });
-      txt(this, x + 12, y + 80, st.tag, { size: 20, color: S.muted, wrap: 176, lineSpacing: -2 });
+      // name next to the number, tag below it; both stay inside the box at any text size
+      const name = txt(this, x + 52, y + 14, st.name, { font: 'title', size: 10, wrap: 136 });
+      const tag = txt(this, x + 12, 0, st.tag, { size: 20, color: S.muted, wrap: 176, lineSpacing: -2 });
+      fitBlock([name, Math.max(0, 34 - name.height), tag], y + 14, y + BH - 8, 6);
       if (i < 4) txt(this, x + 198, y + 50, '->', { size: 18, color: S.gold });
-      this.stationBoxes.push([x, y, 196, 126]);
+      this.stationBoxes.push([x, y, 196, BH]);
     });
-    txt(this, 116, 326, t('briefing.k2'), { size: 25 });
+    txt(this, 116, 316, t('briefing.k2'), { size: 24 });
     this.meterBoxes = [];
     [['budget', 'icon-coin'], ['mass', 'icon-weight'], ['earth', 'icon-earth']].forEach(([k, icon], i) => {
-      const x = 116 + i * 354, y = 362;
-      panel(this, x, y, 336, 92, { fill: C.blueCard, stroke: C.blueBorder, bw: 3 });
-      img(this, x + 34, y + 48, icon, { w: 40, h: 40 });
-      txt(this, x + 66, y + 16, t(`briefing.${k}`), { font: 'title', size: 12, color: S.gold });
-      txt(this, x + 66, y + 40, t(`briefing.${k}D`), { size: 22, wrap: 256 });
-      this.meterBoxes.push([x, y, 336, 92]);
+      const x = 116 + i * 354, y = 350, BH = 112;
+      panel(this, x, y, 336, BH, { fill: C.blueCard, stroke: C.blueBorder, bw: 3 });
+      img(this, x + 34, y + BH / 2, icon, { w: 40, h: 40 });
+      const lab = txt(this, x + 66, 0, t(`briefing.${k}`), { font: 'title', size: 12, color: S.gold, wrap: 256 });
+      const desc = txt(this, x + 66, 0, t(`briefing.${k}D`), { size: 22, wrap: 256 });
+      fitBlock([lab, desc], y + 12, y + BH - 8, 6);
+      this.meterBoxes.push([x, y, 336, BH]);
     });
     missionPath(this, 492, 2);
     this.i = 0;

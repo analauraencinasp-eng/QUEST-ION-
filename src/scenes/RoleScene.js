@@ -53,7 +53,8 @@ export default class RoleScene extends Phaser.Scene {
     const badge = txt(this, x + CARD.w - 18, y + 30, '', { font: 'title', size: 12, color: S.navy, origin: [1, 0.5] });
     const badgeBg = this.add.rectangle(x + CARD.w - 12, y + 30, 70, 26, C.yellow).setOrigin(1, 0.5);
     badge.setDepth(5); badgeBg.setDepth(4);
-    hotspot(this, x, y, CARD.w, 250, `${r.name}. ${r.bonus}`, () => this.pick(r.id), { onFocus: () => { this.cursor = r.id; } });
+    // hover/focus covers the WHOLE card and the ring sits exactly on the card border
+    hotspot(this, x, y, CARD.w, CARD.h, `${r.name}. ${r.bonus}`, () => this.pick(r.id), { onFocus: () => { this.cursor = r.id; }, ringRect: [x + 2, y + 2, CARD.w - 4, CARD.h - 4] });
     link(this, x + CARD.w / 2, y + 270, t('role.info'), () => this.info(r.id));
     this.cards[r.id] = { box, x, y, badge, badgeBg, bonus, portrait, im, name };
   }

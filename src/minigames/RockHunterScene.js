@@ -6,7 +6,7 @@
 // Team decision: when energy or time runs out you go to the results with the samples you have.
 // Timed gameplay events (dust on the panels, low Sun) live in a hand-written MIN-HEAP keyed by second.
 import { C, S, W, H } from '../ui/theme.js';
-import { fresh, txt, pxButton, img, panel, mentorBar, bar } from '../ui/widgets.js';
+import { fresh, txt, pxButton, img, panel, mentorBar, bar, fitBlock } from '../ui/widgets.js';
 import { setup, openPause } from '../ui/chrome.js';
 import { content, t } from '../content.js';
 import { state, logEvent } from '../state.js';
@@ -86,14 +86,17 @@ export default class RockHunterScene extends Phaser.Scene {
   brief() {
     this.briefObjs = [];
     const add = (o) => { o.setScrollFactor && o.setScrollFactor(0); this.briefObjs.push(o); return o; };
-    add(panel(this, 300, 60, 680, 400, { fill: C.navy2, stroke: C.gold, bw: 4, shadow: true, depth: 40 }));
-    add(txt(this, 640, 96, t('rock.title'), { font: 'title', size: 26, color: S.gold, origin: 0.5, depth: 41, shadow: 3 }));
-    add(txt(this, 640, 134, t('rock.sub'), { size: 22, origin: 0.5, depth: 41, align: 'center', wrap: 640 }));
-    add(txt(this, 330, 166, t('rock.how'), { font: 'title', size: 10, color: S.gold, depth: 41 }));
-    let y = 192;
-    for (const s of t('rock.steps')) { const o = add(txt(this, 330, y, s, { size: 22, wrap: 620, lineSpacing: 0, depth: 41 })); y += o.height + 6; }
+    add(panel(this, 300, 40, 680, 470, { fill: C.navy2, stroke: C.gold, bw: 4, shadow: true, depth: 40 }));
+    // title → subtitle → HOW TO PLAY → steps → kit, stacked and kept inside the panel at any text size
     const kitNames = this.kit.map((id) => (instrumentById(id) || { name: id }).name).join(', ') || '—';
-    add(txt(this, 330, y + 8, t('rock.kit', { LIST: kitNames }), { size: 20, color: S.cyan, wrap: 620, depth: 41 }));
+    const items = [
+      add(txt(this, 640, 0, t('rock.title'), { font: 'title', size: 26, color: S.gold, origin: [0.5, 0], depth: 41, shadow: 3 })), 4,
+      add(txt(this, 640, 0, t('rock.sub'), { size: 22, origin: [0.5, 0], depth: 41, align: 'center', wrap: 640 })), 8,
+      add(txt(this, 330, 0, t('rock.how'), { font: 'title', size: 10, color: S.gold, depth: 41 })),
+      ...t('rock.steps').map((s) => add(txt(this, 330, 0, s, { size: 22, wrap: 620, lineSpacing: 0, depth: 41 }))), 4,
+      add(txt(this, 330, 0, t('rock.kit', { LIST: kitNames }), { size: 20, color: S.cyan, wrap: 620, depth: 41 }))
+    ];
+    fitBlock(items, 58, 496, 6);
     this.mentor = mentorBar(this, 24, 520, 600, 110, t('rock.mentor'), { portrait: 104, size: 21, depth: 42 });
     add(pxButton(this, 1016, 640, 240, 60, t('rock.go'), () => this.start(), { primary: true, depth: 42 }).cont);
   }

@@ -26,13 +26,14 @@ export default class AssemblyResultsScene extends Phaser.Scene {
     for (let x = 0; x <= W; x += 64) g.lineBetween(x, 0, x, H);
     for (let y = 0; y <= H; y += 64) g.lineBetween(0, y, W, y);
     panel(this, 106, 20, 1068, 464, { fill: 0x141a3a, stroke: C.gold, bw: 6 });
-    txt(this, 138, 58, t('assemblyResults.result'), { font: 'title', size: 13, color: S.muted, origin: [0, 0.5] });
-    const lc = chip(this, 236, 58, t(`assemblyResults.${res.label}`), { fill: LABEL_COL[res.label], color: S.navy, size: 12 });
-    void lc;
-    // legend
-    [['ready', 138], ['limited', 248], ['incomplete', 436]].forEach(([k, x]) => {
-      this.add.rectangle(x, 86, 10, 10, LABEL_COL[k]).setOrigin(0, 0.5);
-      txt(this, x + 16, 86, t(`assemblyResults.${k}`), { font: 'title', size: 6, color: S.muted, origin: [0, 0.5] });
+    const rl = txt(this, 138, 58, t('assemblyResults.result'), { font: 'title', size: 13, color: S.muted, origin: [0, 0.5] });
+    chip(this, rl.x + rl.width + 14, 58, t(`assemblyResults.${res.label}`), { fill: LABEL_COL[res.label], color: S.navy, size: 12 });
+    // legend: each item placed after the previous one's real width
+    let lx = 138;
+    ['ready', 'limited', 'incomplete'].forEach((k) => {
+      this.add.rectangle(lx, 86, 10, 10, LABEL_COL[k]).setOrigin(0, 0.5);
+      const lt = txt(this, lx + 16, 86, t(`assemblyResults.${k}`), { font: 'title', size: 6, color: S.muted, origin: [0, 0.5] });
+      lx += 16 + lt.width + 24;
     });
     // 3 bars
     const metrics = [['cap', res.capability, C.cyan, S.cyan], ['acc', res.accuracy, C.gold, S.gold], ['comp', res.compatibility, C.green, S.green]];

@@ -35,9 +35,22 @@ export const S = {
 export const TITLE_FONT = '"Press Start 2P", monospace';
 export const BODY_FONT = '"VT323", monospace';
 
-// Text size S / M / L from Settings scales every text in the game.
-const SCALE = { S: 0.9, M: 1, L: 1.18 };
-export function fs(px) { return Math.round(px * (SCALE[state.settings.textSize] || 1)); }
+// Typography tokens. Every text in the game goes through fs(), so readability is fixed HERE, once:
+//   • body  (VT323): the pixel body font reads small, so sizes are boosted and never go below 22 px.
+//   • title (Press Start 2P): labels and headings never go below 11 px.
+// Then Text size S / M / L from Settings scales everything; FLOOR keeps even S comfortably readable.
+export const TYPE = {
+  body: { boost: 1.12, min: 22, floor: 20 },
+  title: { boost: 1.08, min: 11, floor: 10 }
+};
+const SCALE = { S: 0.9, M: 1, L: 1.15 };
+export function fs(px, font = 'body') {
+  const t = TYPE[font] || TYPE.body;
+  const base = Math.max(t.min, px * t.boost);
+  return Math.max(t.floor, Math.round(base * (SCALE[state.settings.textSize] || 1)));
+}
+// smallest size fit() may shrink a text to (so shrinking never makes text unreadable)
+export function minSize(font = 'body') { return (TYPE[font] || TYPE.body).floor; }
 export function textScale() { return SCALE[state.settings.textSize] || 1; }
 
 export function hex(n) { return '#' + n.toString(16).padStart(6, '0'); }

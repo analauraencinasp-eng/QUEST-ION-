@@ -3,7 +3,7 @@
 // requirements it helps with, compatibility, SIMULATED cost/mass/energy, and the quick question
 // (post-it "11a warehouse flow": 3 options, wrong → right answer + explanation and retry).
 // Buttons (Figma): ◀ WAREHOUSE · ADD TO KIT ▶ · ASSEMBLE ▶ (opens when every requirement has an inspected tool).
-import { C, S, W, H } from '../ui/theme.js';
+import { C, S, W, H, minSize } from '../ui/theme.js';
 import { fresh, txt, pxButton, img, panel, mentorBar, chip, hotspot, fit } from '../ui/widgets.js';
 import { setup, openModal, mButton, mText } from '../ui/chrome.js';
 import { content, t } from '../content.js';
@@ -31,13 +31,13 @@ export default class InstrumentScene extends Phaser.Scene {
     this.kitBox = this.add.graphics();
     this.kitText = txt(this, 52, 89, '', { size: 20, color: S.green, origin: [0, 0.5], wrap: 520 });
     this.mentor = mentorBar(this, 586, 14, 654, 116, '', { portrait: 116, size: 23 });
-    panel(this, 80, 140, 1120, 476, { fill: 0x10173a, stroke: 0xc8a24a, bw: 4 });
+    panel(this, 80, 140, 1120, 512, { fill: 0x10173a, stroke: 0xc8a24a, bw: 4 });
     this.cont = this.add.container(0, 0);
     this.body = null;              // right-column boxes (rebuilt by buildBody)
     this.chips = [];
-    pxButton(this, 190, 634, 284, 60, t('card.back'), () => back(this));
-    this.packBtn = pxButton(this, 498, 634, 304, 60, t('card.pack'), () => this.togglePack(), { primary: true });
-    this.asmBtn = pxButton(this, 826, 634, 264, 60, t('card.assemble'), () => this.assemble());
+    pxButton(this, 190, 662, 284, 48, t('card.back'), () => back(this));
+    this.packBtn = pxButton(this, 498, 662, 304, 48, t('card.pack'), () => this.togglePack(), { primary: true });
+    this.asmBtn = pxButton(this, 826, 662, 264, 48, t('card.assemble'), () => this.assemble());
     this.onKey = (k) => {
       if (k === 'ArrowLeft') { this.show(this.idx - 1); return true; }
       if (k === 'ArrowRight') { this.show(this.idx + 1); return true; }
@@ -80,49 +80,49 @@ export default class InstrumentScene extends Phaser.Scene {
     fit(this.kitText, 400, 30, 14);
     this.kitBox.clear(); this.kitBox.fillStyle(0x0b0f26, 1); this.kitBox.fillRect(40, 70, this.kitText.width + 130, 38);
     this.kitBox.lineStyle(3, C.white, 1); this.kitBox.strokeRect(40, 70, this.kitText.width + 130, 38);
-    // ---- blueprint (left box 96..536 × 160..568) ----
+    // ---- blueprint (left box 96..436): narrower than the Figma so the text column is wider and readable ----
     const g = add(this.add.graphics());
-    g.fillStyle(0x0b2a5c, 1); g.fillRect(96, 156, 440, 444);
+    g.fillStyle(0x0b2a5c, 1); g.fillRect(96, 156, 340, 480);
     g.lineStyle(1, 0x2f5f9e, 0.7);
-    for (let x = 96; x <= 536; x += 20) g.lineBetween(x, 156, x, 600);
-    for (let y = 156; y <= 600; y += 20) g.lineBetween(96, y, 536, y);
-    g.lineStyle(4, C.cyan, 1); g.strokeRect(98, 158, 436, 440);
-    add(fit(txt(this, 110, 174, ins.name, { font: 'title', size: 9, color: S.cyan, origin: [0, 0.5] }), 410));
+    for (let x = 96; x <= 436; x += 20) g.lineBetween(x, 156, x, 636);
+    for (let y = 156; y <= 636; y += 20) g.lineBetween(96, y, 436, y);
+    g.lineStyle(4, C.cyan, 1); g.strokeRect(98, 158, 336, 476);
+    add(fit(txt(this, 110, 174, ins.name, { font: 'title', size: 9, color: S.cyan, origin: [0, 0.5] }), 316));
     const [top, bottom] = ins.blueprint || ['', ''];
-    add(fit(txt(this, 316, 206, top, { size: 22, color: S.cyan, origin: 0.5 }), 400));
-    add(fit(txt(this, 316, 576, bottom, { size: 22, color: S.cyan, origin: 0.5 }), 400));
-    add(img(this, 316, 392, ins.table, { w: 340, h: 264 }));
-    g.lineStyle(2, C.cyan, 1); g.lineBetween(316, 220, 316, 262); g.lineBetween(316, 520, 316, 562);
-    // ---- header (552..1184 × 160..200) ----
-    const hg = add(this.add.graphics()); hg.lineStyle(3, 0x8a93c8, 1); hg.strokeRect(552, 156, 632, 40);
+    add(fit(txt(this, 266, 206, top, { size: 22, color: S.cyan, origin: 0.5 }), 316));
+    add(fit(txt(this, 266, 486, bottom, { size: 22, color: S.cyan, origin: 0.5 }), 316));
+    add(img(this, 266, 352, ins.table, { w: 250, h: 194 }));
+    g.lineStyle(2, C.cyan, 1); g.lineBetween(266, 220, 266, 255); g.lineBetween(266, 449, 266, 472);
+    // ---- header (452..1184) ----
+    const hg = add(this.add.graphics()); hg.lineStyle(3, 0x8a93c8, 1); hg.strokeRect(452, 156, 732, 40);
     const counter = add(txt(this, 1170, 180, `◀ ${this.idx + 1}/14 ▶`, { font: 'title', size: 10, color: S.gold, origin: [1, 0.5] }));
     counter.setY(176);
-    add(fit(txt(this, 566, 176, ins.name, { font: 'title', size: 16, origin: [0, 0.5] }), 600 - counter.width - 30, 30, 9));
-    // ---- chips of the 14 tables (always the same 2 rows) ----
-    let cx = 552, cy = 202;
+    add(fit(txt(this, 466, 176, ins.name, { font: 'title', size: 16, origin: [0, 0.5] }), 700 - counter.width - 30, 30));
+    // ---- chips of the 14 tables (readable size; chip height follows the text) ----
+    let cx = 452, cy = 202, chipH = 16;
     this.list.forEach((it, j) => {
       const done = !!mi.instruments.inspected[it.id];
       const tt = add(txt(this, 0, 0, `${done ? '[x] ' : ''}${it.short}`, { font: 'title', size: 6, color: j === this.idx ? S.navy : S.muted }));
-      fit(tt, 150, 12, 5);
+      fit(tt, 150);
+      chipH = Math.max(chipH, tt.height + 6);
       const w = tt.width + 10;
-      if (cx + w > 1184) { cx = 552; cy += 20; }
-      add(this.add.rectangle(cx, cy, w, 16, j === this.idx ? C.gold : 0x0b0f26).setOrigin(0).setStrokeStyle(2, j === this.idx ? C.white : 0x8a93c8));
-      tt.setPosition(cx + 5, cy + 8).setOrigin(0, 0.5); this.cont.bringToTop(tt);
-      this.chips.push(hotspot(this, cx, cy, w, 16, it.name, () => this.show(j)));
+      if (cx + w > 1184) { cx = 452; cy += chipH + 4; }
+      add(this.add.rectangle(cx, cy, w, chipH, j === this.idx ? C.gold : 0x0b0f26).setOrigin(0).setStrokeStyle(2, j === this.idx ? C.white : 0x8a93c8));
+      tt.setPosition(cx + 5, cy + chipH / 2).setOrigin(0, 0.5); this.cont.bringToTop(tt);
+      this.chips.push(hotspot(this, cx, cy, w, chipH, it.name, () => this.show(j)));
       cx += w + 5;
     });
     // ---- body: origin, info, requirements, compatibility. Built at one font size; if it does not fit
     //      between the chips and the footer, everything is rebuilt one size smaller (text size L too). ----
-    const TOP = cy + 22, BOTTOM = 556;
+    const TOP = cy + chipH + 6, BOTTOM = 640;           // the right column now uses the full card height
     this.body = this.body || this.add.container(0, 0);
-    let size = 20;
-    while (this.buildBody(ins, TOP, size) > BOTTOM && size > 14) size -= 1;
-    // ---- footer (inside the card, under the boxes): simulated values + question button ----
+    for (let shrink = 0; this.buildBody(ins, TOP, 20, shrink) > BOTTOM && shrink < 8; shrink++);
+    // ---- footer, at the bottom of the blueprint column: simulated values + question button ----
     const energy = ins.energy < 0 ? `draws ${-ins.energy}% energy` : 'no energy';
-    add(txt(this, 552, 566, t('card.values'), { font: 'title', size: 7, color: S.muted }));
-    add(fit(txt(this, 552, 580, `$${ins.cost.toLocaleString('en-US')} · ${ins.mass} kg · ${energy}`, { size: 20, color: S.muted }), 470, 26, 14));
+    const vl = add(txt(this, 110, 532, t('card.values'), { font: 'title', size: 7, color: S.muted }));
+    add(fit(txt(this, 110, vl.y + vl.height + 2, `${ins.cost.toLocaleString('en-US')} · ${ins.mass} kg · ${energy}`, { size: 20, color: S.text }), 316));
     const done = !!mi.instruments.inspected[ins.id];
-    this.chips.push(pxButton(this, 1036, 564, 148, 38, done ? t('card.done') : t('card.quiz'), () => this.quiz(), { size: 10, depth: 20, fill: done ? 0x0f5a3f : C.navy }));
+    this.chips.push(pxButton(this, 156, 586, 220, 40, done ? t('card.done') : t('card.quiz'), () => this.quiz(), { size: 10, depth: 20, fill: done ? 0x0f5a3f : C.navy }));
     // ---- bottom buttons + mentor ----
     const inKit = kit.includes(ins.id);
     this.packBtn.setLabel(inKit ? t('card.unpack') : t('card.pack'));
@@ -133,24 +133,28 @@ export default class InstrumentScene extends Phaser.Scene {
   }
 
   // right column body; returns the y where it ends
-  buildBody(ins, top, size) {
+  buildBody(ins, top, size, shrink = 0) {
     const b = this.body;
+    // body texts are drawn `shrink` px smaller than normal (never below the readable floor) when the column is too tall
+    const T = (...args) => { const o = txt(...args); if (shrink && !/Press Start/.test(o.style.fontFamily)) o.setFontSize(Math.max(minSize('body'), parseInt(o.style.fontSize, 10) - shrink)); return o; };
     b.removeAll(true);
     const add = (o) => { b.add(o); return o; };
-    const W_ = 632, X = 552, PAD = 8;
+    const W_ = 732, X = 452, PAD = 8;
     let y = top;
     // origin mission
-    add(txt(this, X, y + 9, t('card.origin'), { font: 'title', size: 7, color: S.muted, origin: [0, 0.5] }));
-    const oc = chip(this, X + 128, y + 9, ins.origin, { fill: ins.mer ? C.cyan : C.blueBorder, color: S.navy, size: 7 });
+    const ol = add(T(this, X, 0, t('card.origin'), { font: 'title', size: 7, color: S.muted, origin: [0, 0.5] }));
+    const oc = chip(this, X + ol.width + 12, 0, ins.origin, { fill: ins.mer ? C.cyan : C.blueBorder, color: S.navy, size: 7 });
+    const rowH = Math.max(ol.height, oc.h);
+    ol.setY(y + rowH / 2); oc.r.setY(y + rowH / 2); oc.t.setY(y + rowH / 2 - oc.t.height / 2 + 1);
     add(oc.r); add(oc.t);
-    y += 20;
+    y += rowH + 6;
     // what it does / role / where it mounts: label column 112 px, value column the rest
     const infoTop = y;
     const bg1 = add(this.add.graphics());
     let ry = y + PAD;
     for (const [label, value] of [[t('card.what'), ins.what], [t('card.role'), ins.role], [t('card.mount'), ins.mountText]]) {
-      const l = add(txt(this, X + 10, ry + 2, label, { font: 'title', size: 6, color: S.muted, wrap: 112, lineSpacing: 4 }));
-      const v = add(txt(this, X + 132, ry, value, { size, wrap: W_ - 142, lineSpacing: 0 }));
+      const l = add(T(this, X + 10, ry + 2, label, { font: 'title', size: 6, color: S.muted, wrap: 150, lineSpacing: 2 }));
+      const v = add(T(this, X + 168, ry, value, { size, wrap: W_ - 178, lineSpacing: 0 }));
       ry += Math.max(v.height, l.height) + 6;
     }
     y = ry + PAD - 6;
@@ -159,12 +163,13 @@ export default class InstrumentScene extends Phaser.Scene {
     // helps with requirements
     const reqTop = y;
     const bg2 = add(this.add.graphics());
-    add(txt(this, X + 10, y + PAD, t('card.helps'), { font: 'title', size: 6, color: S.muted }));
-    let qx = X + 10, qy = y + PAD + 16;
-    const chipH = Math.round(size * 1.05) + 4;
+    const hl = add(T(this, X + 10, y + PAD, t('card.helps'), { font: 'title', size: 6, color: S.muted }));
+    let qx = X + 10, qy = hl.y + hl.height + 4;
+    let chipH = 0;
     t('card.reqShort').forEach((label, k) => {
       const on = ins.helps.includes(k + 1);
-      const tt = add(txt(this, 0, 0, label, { size: size - 2, color: on ? S.navy : S.muted }));
+      const tt = add(T(this, 0, 0, label, { size: size - 2, color: on ? S.navy : S.muted }));
+      chipH = Math.max(chipH, tt.height + 4);
       const w = tt.width + 12;
       if (qx + w > X + W_ - 10) { qx = X + 10; qy += chipH + 4; }
       add(this.add.rectangle(qx, qy, w, chipH, on ? C.green : 0x2a3358).setOrigin(0));
@@ -179,8 +184,8 @@ export default class InstrumentScene extends Phaser.Scene {
     const col = COMPAT_COL[ins.compat] || C.grey;
     const cTop = y;
     const bg3 = add(this.add.graphics());
-    add(txt(this, X + 12, y + PAD, t('card.compat', { C: t('card.compatNames')[ins.compat] || ins.compat }), { font: 'title', size: 7, color: Phaser.Display.Color.IntegerToColor(col).rgba }));
-    const ct = add(txt(this, X + 12, y + PAD + 16, ins.compatText, { size, wrap: W_ - 24, lineSpacing: 0 }));
+    const cl = add(T(this, X + 12, y + PAD, t('card.compat', { C: t('card.compatNames')[ins.compat] || ins.compat }), { font: 'title', size: 7, color: Phaser.Display.Color.IntegerToColor(col).rgba, wrap: W_ - 24 }));
+    const ct = add(T(this, X + 12, cl.y + cl.height + 4, ins.compatText, { size, wrap: W_ - 24, lineSpacing: 0 }));
     y = ct.y + ct.height + PAD;
     bg3.fillStyle(0x0f2a2a, 1); bg3.fillRect(X, cTop, W_, y - cTop); bg3.lineStyle(3, col, 1); bg3.strokeRect(X + 1.5, cTop + 1.5, W_ - 3, y - cTop - 3);
     return y;

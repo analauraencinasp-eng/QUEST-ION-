@@ -7,7 +7,7 @@
 // Science (src/orbit.js): real Earth/Mars positions + velocities from JPL Horizons (live via server.mjs, or the saved
 // copy) and Lambert's problem → Δv departure, Δv arrival, Δv total. Rocket limits and stars are simulated game values.
 import { C, S, W, H, fs } from '../ui/theme.js';
-import { fresh, txt, pxButton, panel, mentorBar, slider, link, fit, chip } from '../ui/widgets.js';
+import { fresh, txt, pxButton, panel, mentorBar, slider, link, fit, chip, fitBlock } from '../ui/widgets.js';
 import { setup, openModal, mText, mButton } from '../ui/chrome.js';
 import { content, t } from '../content.js';
 import { state, logEvent } from '../state.js';
@@ -203,14 +203,14 @@ export default class OrbitScene extends Phaser.Scene {
 
   panelBrief() {
     const x = P.x + 18;
-    this.u(txt(this, x, P.y + 20, t('orbit.rules'), { font: 'title', size: 9, color: S.muted, depth: 11 }));
-    let y = P.y + 44;
+    // rules → example, stacked; the whole block stays above the mentor bubble at any text size
+    const items = [this.u(txt(this, x, 0, t('orbit.rules'), { font: 'title', size: 9, color: S.muted, depth: 11 })), 8];
     for (const r of content.orbit.rules) {
-      this.u(txt(this, x, y, r.title, { font: 'title', size: 9, color: S.gold, depth: 11 }));
-      const b = this.u(txt(this, x, y + 18, r.text, { size: 21, wrap: P.w - 40, depth: 11, lineSpacing: 0 }));
-      y += 26 + b.height;
+      items.push(this.u(txt(this, x, 0, r.title, { font: 'title', size: 9, color: S.gold, depth: 11, wrap: P.w - 40 })));
+      items.push(this.u(txt(this, x, 0, r.text, { size: 21, wrap: P.w - 40, depth: 11, lineSpacing: 0 })), 8);
     }
-    this.u(txt(this, x, y + 4, `Example on the map: Spirit's real dates, ${fmtDate(new Date(content.orbit.real.spiritLaunch))} → ${fmtDate(new Date(content.orbit.real.spiritArrival))}.`, { size: 19, color: S.cyan, wrap: P.w - 40, depth: 11 }));
+    items.push(this.u(txt(this, x, 0, `Example on the map: Spirit's real dates, ${fmtDate(new Date(content.orbit.real.spiritLaunch))} → ${fmtDate(new Date(content.orbit.real.spiritArrival))}.`, { size: 19, color: S.cyan, wrap: P.w - 40, depth: 11 })));
+    fitBlock(items, P.y + 20, P.y + P.h - 138, 2);
     this.u(mentorBar(this, x, P.y + P.h - 130, P.w - 36, 112, content.orbit.briefingMentor, { portrait: 90, size: 21, depth: 12, silent: true }));
     this.u(pxButton(this, 828, 646, 196, 56, t('common.back'), () => back(this), { size: 14 }));
     this.u(pxButton(this, 1040, 646, 216, 56, t('orbit.tryIt'), () => this.setStep('draw'), { primary: true, size: 14 }));
