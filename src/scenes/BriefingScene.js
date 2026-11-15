@@ -6,7 +6,6 @@ import { fresh, txt, pxButton, bg, panel, mentorBar, dots, finishTyping, img } f
 import { setup } from '../ui/chrome.js';
 import { content, t } from '../content.js';
 import { go } from '../router.js';
-import { playMusic } from '../audio.js';
 import { missionPath } from './SummaryScene.js';
 
 export default class BriefingScene extends Phaser.Scene {
@@ -14,7 +13,6 @@ export default class BriefingScene extends Phaser.Scene {
 
   create(data) {
     fresh(this);
-    playMusic('workshop');
     bg(this, 'bg-hangar', { dim: 0.55 });
     txt(this, 640, 40, t('briefing.title'), { font: 'title', size: 30, color: S.gold, origin: 0.5, shadow: 4 });
     txt(this, 640, 74, t('briefing.sub'), { size: 24, origin: 0.5 });

@@ -318,9 +318,18 @@ export function computeScore(mi) {
   const budgetLeft = Math.max(0, 1 - mi.meters.budget / budgetCap);
   const resources = Math.min(100, Math.round(budgetLeft * 40 + (mi.rocks.energyLeft || 0) * 0.3 + (100 - (mi.orbit.fuelUsed || 100)) * 0.3));
   const earth = Math.round(mi.meters.responsibility);
-  const commsPart = Math.min(1, (mi.signal.packets || 0) / 3);
+  // data that reached Earth (team decision: the comms plan and Signal Run change the points). The launch
+  // mini-game and the quick-check quizzes are just for fun / learning and never enter the score.
+  const commsPart = commsScore(mi);
   const total = Math.round(science * 0.35 + engineering * 0.25 + resources * 0.2 + earth * 0.1 + commsPart * 10);
   return { science, engineering, resources, earth, total: Math.min(100, total) };
+}
+
+// 0..1: half from the comms plan quality, half from the packets that reached the orbiter in Signal Run
+export function commsScore(mi) {
+  const q = { good: 1, ok: 0.6, poor: 0.2 }[mi.comms && mi.comms.quality] || 0;
+  const p = Math.min(1, ((mi.signal && mi.signal.packets) || 0) / 3);
+  return Math.round((q * 0.5 + p * 0.5) * 100) / 100;
 }
 
 // Decision tree for {RANK_TITLE}. Each node asks one question about the facts.

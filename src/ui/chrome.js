@@ -92,7 +92,7 @@ export function mText(scene, modal, x, y, s, o = {}) { return modal.add(txt(scen
 // ---------------- Settings (Screen 1b) ----------------
 export function openSettings(scene, o = {}) {
   if (scene.modals.find((md) => md.kind === 'settings')) return;
-  const md = openModal(scene, t('settings.title'), { w: 620, h: 560, stroke: C.white });
+  const md = openModal(scene, t('settings.title'), { w: 620, h: 660, stroke: C.white });
   md.kind = 'settings';
   const s = state.settings;
   const rows = [
@@ -100,6 +100,7 @@ export function openSettings(scene, o = {}) {
     { k: 'textSize', label: t('settings.textSize'), type: 'size' },
     { k: 'volume', label: t('settings.volume'), type: 'vol' },
     { k: 'music', label: t('settings.music'), type: 'onoff' },
+    { k: 'musicVolume', label: t('settings.musicVolume'), type: 'vol' },
     { k: 'sfx', label: t('settings.sfx'), type: 'onoff' },
     { k: 'reduceMotion', label: t('settings.reduceMotion'), type: 'onoff' }
   ];
@@ -120,14 +121,14 @@ export function openSettings(scene, o = {}) {
       const sync = () => btns.forEach((b, j) => b.setPrimary(['S', 'M', 'L'][j] === s.textSize));
       sync();
     } else {
-      const minus = mButton(scene, md, md.x + 330, y, 56, 44, '-', () => { s.volume = Math.max(0, s.volume - 10); sync(); changed(); sfx(scene, 'sfx-place'); }, { size: 14 });
+      const minus = mButton(scene, md, md.x + 330, y, 56, 44, '-', () => { s[r.k] = Math.max(0, (s[r.k] ?? 0) - 10); sync(); changed(); sfx(scene, 'sfx-place'); }, { size: 14 });
       const val = mText(scene, md, md.x + 430, y + 22, '', { font: 'title', size: 14, origin: 0.5 });
-      const plus = mButton(scene, md, md.x + 476, y, 56, 44, '+', () => { s.volume = Math.min(100, s.volume + 10); sync(); changed(); sfx(scene, 'sfx-place'); }, { size: 14 });
-      const sync = () => val.setText(`${s.volume}%`);
+      const plus = mButton(scene, md, md.x + 476, y, 56, 44, '+', () => { s[r.k] = Math.min(100, (s[r.k] ?? 0) + 10); sync(); changed(); sfx(scene, 'sfx-place'); }, { size: 14 });
+      const sync = () => val.setText(`${s[r.k] ?? 0}%`);
       sync(); void minus; void plus;
     }
   });
-  mText(scene, md, md.x + 32, md.y + 444, t('settings.note'), { size: 20, color: S.muted, wrap: 380 });
+  mText(scene, md, md.x + 32, md.y + 500, t('settings.note'), { size: 20, color: S.muted, wrap: 380 });
   mButton(scene, md, md.x + 32, md.y + md.h - 80, 200, 56, t('settings.sources'), () => openSources(scene), { size: 12 });
   if (o.extra) o.extra(md);
   say(t('settings.title'));

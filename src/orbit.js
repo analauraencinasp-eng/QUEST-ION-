@@ -166,3 +166,11 @@ export function rate(tr, criterion, best, cfg) {
   const stars = ratio >= 0.98 ? 5 : ratio >= 0.9 ? 4 : ratio >= 0.8 ? 3 : ratio >= 0.65 ? 2 : 1;
   return { stars, ratio, label: stars === 5 ? 'best' : stars >= 3 ? 'good' : 'weak' };
 }
+
+// one-way light time Earth → Mars in minutes on a given ephemeris day (real Horizons positions)
+export const AU_KM = 149597870.7, C_KMS = 299792.458;
+export function lightMinutes(eph, day) {
+  const e = stateAt(eph, 'earth', day).r, m = stateAt(eph, 'mars', day).r;
+  const d = Math.hypot(m[0] - e[0], m[1] - e[1], m[2] - e[2]);
+  return (d * AU_KM) / C_KMS / 60;
+}

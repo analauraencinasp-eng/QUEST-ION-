@@ -9,7 +9,7 @@ import { setup } from '../ui/chrome.js';
 import { content, t } from '../content.js';
 import { state, logEvent } from '../state.js';
 import { back, replace } from '../router.js';
-import { playMusic, sfx } from '../audio.js';
+import { sfx } from '../audio.js';
 import { say } from '../a11y.js';
 
 const ICON = { window: 'icon-rocket', maxq: 'icon-bolt', escape: 'icon-earth' };
@@ -19,7 +19,6 @@ export default class LaunchReadyScene extends Phaser.Scene {
 
   create(data) {
     fresh(this);
-    playMusic('launch');
     this.launching = false;
     const lf = content.launch_facts;
     this.add.rectangle(0, 0, W, H, 0x10173a).setOrigin(0);

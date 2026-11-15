@@ -1,143 +1,146 @@
-// audio.js — music, sound effects and NASA audio clips.
-// MUSIC: 8-bit chiptune generated with WebAudio from a FIXED SEED per stage, so every game
-// sounds exactly the same (same notes, same order). Short loops, crossfade between stages.
+// audio.js — background music, sound effects and NASA audio clips.
+// MUSIC: two local tracks (assets/music), one HTMLAudioElement each, created once and reused:
+//   ambience.mp3  → every regular screen. Loops. Pauses (keeps its position) while a mini-game is open.
+//   minigame.mp3  → only while a scene from MINIGAME_SCENES is on screen. Loops. Rewinds when you leave.
+// The router calls syncMusic(sceneKey) on every screen change, so the track never restarts between
+// regular screens. Switching fades the old track out FIRST and only then fades the new one in:
+// the two tracks are never heard at the same time.
+// Volume: Settings → Music ON/OFF + Music volume (default 25 %, saved with the settings).
+// While the narrator voice speaks the music ducks to DUCK × volume.
+// Browsers block audio until the first click / key: a blocked play() is retried on that gesture.
 // SFX: the .wav files loaded by Phaser (assets/sfx). NASA clips: assets/nasa-audio (optional).
 import { state } from './state.js';
+import { isSpeaking } from './voice.js';
 
-// The team did not like the generated chiptune nor the effects playing on top of it, and is choosing another
-// audio API. Until then music and sound effects are OFF; flip these two flags to bring them back.
-// The narrator voice (voice.js) is separate and is not affected.
-export const MUSIC_ENABLED = false;
-export const SFX_ENABLED = false;
+export const SFX_ENABLED = false;     // the team turned effects off; flip to bring them back
 
-let ctx = null, master = null, current = null;
-const STAGES = {
-  // seed, tempo (BPM), scale (semitones from root), root MIDI note, wave of the lead
-  title: { seed: 11, bpm: 96, scale: [0, 2, 4, 7, 9], root: 57, lead: 'square' },
-  workshop: { seed: 23, bpm: 112, scale: [0, 2, 3, 5, 7, 10], root: 55, lead: 'square' },
-  orbit: { seed: 37, bpm: 88, scale: [0, 2, 4, 6, 7, 11], root: 60, lead: 'triangle' },
-  launch: { seed: 41, bpm: 132, scale: [0, 3, 5, 7, 10], root: 52, lead: 'sawtooth' },
-  mars: { seed: 53, bpm: 100, scale: [0, 2, 3, 7, 8], root: 50, lead: 'square' },
-  comms: { seed: 67, bpm: 104, scale: [0, 2, 5, 7, 9], root: 62, lead: 'triangle' },
-  ending: { seed: 79, bpm: 92, scale: [0, 4, 7, 9, 11], root: 60, lead: 'square' }
-};
+export const MUSIC_TRACKS = { ambience: 'assets/music/ambience.mp3', minigame: 'assets/music/minigame.mp3' };
+// every scene in src/minigames (team decision): these play minigame.mp3, everything else ambience.mp3
+export const MINIGAME_SCENES = new Set(['WorkshopScene', 'WarehouseScene', 'AssemblyScene', 'OrbitScene',
+  'MeteorScene', 'RockHunterScene', 'CommsScene', 'SignalRunScene']);
+export const DEFAULT_MUSIC_VOLUME = 25;
+const DUCK = 0.35;                    // music level while the narrator talks
+const FADE_OUT_MS = 450, FADE_IN_MS = 900, FADE_ADJUST_MS = 250;
+const isBrowser = typeof window !== 'undefined' && typeof Audio !== 'undefined';
 
-// small deterministic PRNG (mulberry32): same seed → same sequence
-export function rng(seed) {
-  let a = seed >>> 0;
-  return () => {
-    a |= 0; a = (a + 0x6d2b79f5) | 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
+export function trackFor(sceneKey) { return MINIGAME_SCENES.has(sceneKey) ? 'minigame' : 'ambience'; }
+
+// target loudness 0..1 of the music right now (pure → tested)
+export function musicLevel(settings, ducked) {
+  if (!settings.music) return 0;
+  const v = settings.musicVolume ?? DEFAULT_MUSIC_VOLUME;
+  return Math.max(0, Math.min(1, (v / 100) * (ducked ? DUCK : 1)));
 }
 
-// Builds the note pattern of a stage (pure function → tested in tests.js)
-export function composeLoop(stage) {
-  const def = STAGES[stage] || STAGES.title;
-  const r = rng(def.seed);
-  const steps = 32;
-  const lead = [], bass = [];
-  let idx = 2;
-  for (let i = 0; i < steps; i++) {
-    if (r() < 0.72) {
-      idx = Math.max(0, Math.min(def.scale.length * 2 - 1, idx + Math.floor(r() * 5) - 2));
-      const oct = Math.floor(idx / def.scale.length);
-      lead.push(def.root + 12 + def.scale[idx % def.scale.length] + 12 * oct);
-    } else lead.push(null);
-    bass.push(i % 4 === 0 ? def.root - 12 + def.scale[Math.floor(r() * 3) % def.scale.length] : null);
+const els = {};                      // name → HTMLAudioElement (at most one per track, ever)
+const fades = new Map();             // element → interval id (one fade per element)
+let wanted = null;                   // track the current screen asks for
+let gen = 0;                         // bumps on every switch: callbacks of older switches are ignored
+let blocked = false;                 // the browser refused play() before the first gesture
+let ducked = false;
+
+function el(name) {
+  if (!els[name]) {
+    const a = new Audio(MUSIC_TRACKS[name]);
+    a.loop = true; a.preload = 'auto'; a.volume = 0;
+    els[name] = a;
   }
-  return { bpm: def.bpm, lead, bass, wave: def.lead };
+  return els[name];
 }
 
-function midiHz(n) { return 440 * Math.pow(2, (n - 69) / 12); }
-
-function ensureCtx() {
-  if (ctx) return ctx;
-  try {
-    const AC = typeof window !== 'undefined' && (window.AudioContext || window.webkitAudioContext);
-    if (!AC) return null;
-    ctx = new AC();
-    master = ctx.createGain();
-    master.connect(ctx.destination);
-    applyVolume();
-  } catch (e) { ctx = null; }
-  return ctx;
+function fade(a, to, ms, done) {
+  if (fades.has(a)) { clearInterval(fades.get(a)); fades.delete(a); }
+  const from = a.volume, t0 = Date.now();
+  if (ms <= 0 || Math.abs(from - to) < 0.005) { a.volume = to; if (done) done(); return; }
+  const id = setInterval(() => {
+    const k = Math.min(1, (Date.now() - t0) / ms);
+    a.volume = Math.max(0, Math.min(1, from + (to - from) * k));
+    if (k >= 1) { clearInterval(id); fades.delete(a); if (done) done(); }
+  }, 30);
+  fades.set(a, id);
 }
 
+function tryPlay(a) {
+  const p = a.play();
+  if (p && p.catch) p.catch((err) => { if (err && err.name === 'NotAllowedError') blocked = true; });
+}
+
+function silence(a, g, after) {
+  fade(a, 0, FADE_OUT_MS, () => {
+    if (g !== gen) return;                                   // a newer switch took over this element
+    a.pause();
+    if (a === els.minigame) a.currentTime = 0;               // leaving the mini-game: next time starts fresh
+    if (after) after();
+  });
+}
+
+function apply() {
+  if (!isBrowser || !wanted) return;
+  const g = ++gen;
+  const level = musicLevel(state.settings, ducked);
+  const playingOthers = Object.keys(els).filter((n) => n !== wanted && !els[n].paused).map((n) => els[n]);
+  if (level === 0 && !state.settings.music) {               // music OFF: fade everything out and pause
+    for (const a of Object.values(els)) if (!a.paused) silence(a, g);
+    return;
+  }
+  const start = () => {
+    if (g !== gen) return;
+    const a = el(wanted);
+    if (a.paused) { a.volume = 0; tryPlay(a); fade(a, level, FADE_IN_MS); }
+    else fade(a, level, FADE_ADJUST_MS);
+  };
+  if (!playingOthers.length) { start(); return; }
+  let left = playingOthers.length;
+  for (const a of playingOthers) silence(a, g, () => { if (--left === 0) start(); });
+}
+
+// called by the router every time a screen arrives
+export function syncMusic(sceneKey) {
+  if (!sceneKey || sceneKey === 'BootScene') return;
+  const next = trackFor(sceneKey);
+  if (next === wanted && !blocked) {
+    const a = els[next];
+    if (a && !a.paused) return;                              // already playing: never restart
+  }
+  wanted = next;
+  apply();
+}
+
+// Settings changed (music ON/OFF or music volume)
+export function refreshMusic() { apply(); }
 export function applyVolume() {
-  if (!master) return;
-  master.gain.value = (state.settings.volume / 100) * 0.5;
+  if (!isBrowser || !wanted) return;
+  const a = els[wanted];
+  if (a && !a.paused) fade(a, musicLevel(state.settings, ducked), FADE_ADJUST_MS);
 }
 
-function blip(time, hz, dur, wave, gainNode, vol) {
-  const o = ctx.createOscillator(), g = ctx.createGain();
-  o.type = wave; o.frequency.value = hz;
-  g.gain.setValueAtTime(0, time);
-  g.gain.linearRampToValueAtTime(vol, time + 0.01);
-  g.gain.exponentialRampToValueAtTime(0.0008, time + dur);
-  o.connect(g); g.connect(gainNode);
-  o.start(time); o.stop(time + dur + 0.02);
+// stop and release everything (not used during play; handy for tests / a future "quit")
+export function stopMusic() {
+  gen++;
+  for (const a of Object.values(els)) { if (fades.has(a)) clearInterval(fades.get(a)); a.pause(); a.currentTime = 0; }
+  fades.clear(); wanted = null;
 }
 
-// Starts (or crossfades to) the loop of a stage. Calling it again with the same stage does nothing.
-export function playMusic(stage) {
-  if (!MUSIC_ENABLED) return;
-  if (current && current.stage === stage) return;
-  stopMusic(true);
-  if (!state.settings.music || typeof window === 'undefined' || !window.__questUnlocked) { current = { stage, pending: true }; return; }
-  if (!ensureCtx()) return;
-  if (ctx.state === 'suspended') ctx.resume();
-  const loop = composeLoop(stage);
-  const bus = ctx.createGain();
-  bus.gain.setValueAtTime(0, ctx.currentTime);
-  bus.gain.linearRampToValueAtTime(1, ctx.currentTime + 1.2);       // crossfade in
-  bus.connect(master);
-  const stepDur = 60 / loop.bpm / 2;                                    // eighth notes
-  let step = 0, nextTime = ctx.currentTime + 0.1;
-  const timer = setInterval(() => {
-    while (nextTime < ctx.currentTime + 0.25) {
-      const i = step % loop.lead.length;
-      if (loop.lead[i] !== null) blip(nextTime, midiHz(loop.lead[i]), stepDur * 0.9, loop.wave, bus, 0.07);
-      if (loop.bass[i] !== null) blip(nextTime, midiHz(loop.bass[i]), stepDur * 3.5, 'triangle', bus, 0.12);
-      nextTime += stepDur; step++;
-    }
-  }, 60);
-  current = { stage, bus, timer };
+export function currentMusic() {
+  const playing = Object.keys(els).filter((n) => !els[n].paused);
+  const at = {}; for (const n of Object.keys(els)) at[n] = Math.round(els[n].currentTime * 10) / 10;
+  return { wanted, playing, volume: wanted && els[wanted] ? els[wanted].volume : 0, blocked, at };
 }
 
-export function stopMusic(fade = false) {
-  if (!current) return;
-  const c = current; current = null;
-  if (c.timer) clearInterval(c.timer);
-  if (c.bus && ctx) {
-    try {
-      c.bus.gain.cancelScheduledValues(ctx.currentTime);
-      c.bus.gain.setValueAtTime(c.bus.gain.value, ctx.currentTime);
-      c.bus.gain.linearRampToValueAtTime(0, ctx.currentTime + (fade ? 1.2 : 0.05));
-      setTimeout(() => { try { c.bus.disconnect(); } catch (e) { /* gone */ } }, 1400);
-    } catch (e) { /* ignore */ }
-  }
-}
-
-// re-apply after Settings changes (music on/off)
-export function refreshMusic() {
-  applyVolume();
-  const stage = current && current.stage;
-  if (!state.settings.music) { stopMusic(true); current = stage ? { stage, pending: true } : null; return; }
-  if (stage && (current.pending || !current.timer)) { current = null; playMusic(stage); }
-}
-
-// browsers only allow sound after the first click / key: unlock on the first gesture anywhere
-if (typeof window !== 'undefined') {
-  window.__questUnlocked = true;
-  window.__questUnlock = () => {
-    if (!MUSIC_ENABLED) return;
-    ensureCtx();
-    if (ctx && ctx.state === 'suspended') ctx.resume();
-    if (current && current.pending) { const s = current.stage; current = null; playMusic(s); }
-  };
+if (isBrowser && typeof document !== 'undefined') {
+  // first click / key anywhere: retry a play() the browser blocked
+  const unlock = () => { if (blocked) { blocked = false; apply(); } };
+  for (const ev of ['pointerdown', 'keydown', 'touchstart']) document.addEventListener(ev, unlock, true);
+  // tab hidden → pause (keeps position); visible again → resume the wanted track
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { gen++; for (const a of Object.values(els)) { if (fades.has(a)) { clearInterval(fades.get(a)); fades.delete(a); } a.pause(); } }
+    else apply();
+  });
+  // duck under the narrator voice
+  setInterval(() => {
+    const now = isSpeaking();
+    if (now !== ducked) { ducked = now; applyVolume(); }
+  }, 250);
 }
 
 // ---------- sound effects (Phaser sound manager) ----------

@@ -57,3 +57,7 @@ Decisión del equipo: que funcione como en la misión real y que el jugador lo a
 ## Órbita (pantalla 12)
 
 Posiciones y velocidades de la Tierra y Marte: [JPL Horizons API](https://ssd-api.jpl.nasa.gov/doc/horizons.html) (en vivo con `npm start`, o la copia guardada `data/ephemeris_mer.json`). Trayectoria: problema de Lambert (H. Curtis, *Orbital Mechanics for Engineering Students*, algoritmo 5.2), solo gravedad del Sol.
+
+## Retraso de la señal (pantalla 16)
+- Distancia Tierra–Marte del día de la partida: NASA/JPL Horizons (mismo archivo que la órbita). Minutos = distancia / velocidad de la luz (299 792.458 km/s; 1 UA = 149 597 870.7 km).
+

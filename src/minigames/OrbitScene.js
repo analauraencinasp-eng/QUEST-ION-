@@ -15,7 +15,7 @@ import { go, back } from '../router.js';
 import { loadEphemeris } from '../ephemeris.js';
 import { transfer, pathPoints, grid, bestFor, rate, feasible, ephDays, stateAt } from '../orbit.js';
 import { judgeDrawing, dateFromDay, fmtDate } from '../rules.js';
-import { playMusic, sfx } from '../audio.js';
+import { sfx } from '../audio.js';
 import { say } from '../a11y.js';
 
 const MAP = { x: 24, y: 96, w: 620, h: 540, cx: 334, cy: 360, scale: 150 };
@@ -28,7 +28,6 @@ export default class OrbitScene extends Phaser.Scene {
 
   create(data) {
     fresh(this);
-    playMusic('orbit');
     this.L = content.orbit.lambert;
     this.mi = state.mission;
     const o = this.mi.orbit;

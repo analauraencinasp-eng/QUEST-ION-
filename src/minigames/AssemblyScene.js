@@ -11,7 +11,7 @@ import { state, logEvent } from '../state.js';
 import { go, back } from '../router.js';
 import { instrumentById, slotAccepts, assemblyScore } from '../rules.js';
 import Stack from '../ds/Stack.js';
-import { playMusic, sfx } from '../audio.js';
+import { sfx } from '../audio.js';
 import { say } from '../a11y.js';
 
 const MOUNT_NAME = { mast: 'MAST', body: 'BODY', arm: 'ARM TURRET', deck: 'DECK' };
@@ -21,7 +21,6 @@ export default class AssemblyScene extends Phaser.Scene {
 
   create(data) {
     fresh(this);
-    playMusic('workshop');
     const mi = state.mission;
     this.slots = content.instruments.slots;
     this.undoStack = new Stack();

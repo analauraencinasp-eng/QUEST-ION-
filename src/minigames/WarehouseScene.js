@@ -11,7 +11,7 @@ import { content, t } from '../content.js';
 import { state, logEvent } from '../state.js';
 import { go } from '../router.js';
 import { computeMeters, requirementsCovered } from '../rules.js';
-import { playMusic, sfx } from '../audio.js';
+import { sfx } from '../audio.js';
 import { say, sayHover } from '../a11y.js';
 
 const START = { x: 96, y: 404 };                    // entry door, left end of the pink corridor
@@ -24,7 +24,6 @@ export default class WarehouseScene extends Phaser.Scene {
 
   create(data) {
     fresh(this);
-    playMusic('workshop');
     this.leaving = false; this.target = null; this.lastPrompt = null; this.hoverT = null;
     const mi = state.mission;
     mi.meters = computeMeters(mi);

@@ -8,7 +8,7 @@ import { pixelIcon } from '../ui/icons.js';
 import { content, t } from '../content.js';
 import { state, logEvent } from '../state.js';
 import { go } from '../router.js';
-import { playMusic, sfx } from '../audio.js';
+import { sfx } from '../audio.js';
 import { say } from '../a11y.js';
 
 const ICON = { water: 'water', surface: 'volcano', survive: 'sun' };
@@ -18,7 +18,6 @@ export default class ObjectiveScene extends Phaser.Scene {
 
   create(data) {
     fresh(this);
-    playMusic('title');
     bg(this, 'bg-solar');
     chip(this, 228, 54, t('objective.chip'), { fill: 0xc8532a, color: S.white, size: 11 });
     // mentor question at the top (Figma "Mentor question" 160,80 960x118) with portrait

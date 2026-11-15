@@ -30,8 +30,9 @@
     "narration": "🔊 Narration",
     "narrationOn": "Narration is on.",
     "textSize": "🔠 Text size",
-    "volume": "🎚 Volume",
+    "volume": "🎚 Voice & effects",
     "music": "🎵 Music",
+    "musicVolume": "🎼 Music volume",
     "sfx": "🔔 Sound effects",
     "reduceMotion": "✨ Reduce motion & flashes",
     "note": "Changes apply right away. You can open this menu from any screen.",
@@ -254,7 +255,7 @@
   "meteor": {
     "title": "LAUNCH!", "sub": "Protect your rocket on the way to orbit",
     "how": "HOW TO PLAY",
-    "steps": ["1. Your rocket climbs on its own.", "2. Move the blue SHIELD with the mouse (or WASD).", "3. Push falling rocks away from the rocket.", "4. 3 hits and the mission is lost.", "5. Reach 200 km to get into orbit!"],
+    "steps": ["1. Your rocket climbs on its own.", "2. Move the blue SHIELD with the mouse (or WASD).", "3. Push falling rocks away from the rocket.", "4. 3 hits? You can retry or continue: this game doesn't change your score.", "5. Reach 200 km to get into orbit!"],
     "mentor": "A meteor shower is crossing your launch path! Real rocks rarely hit rockets, but tiny space rocks and orbital debris are a real risk NASA tracks every day.",
     "go": "START ▶",
     "altitude": "ALTITUDE", "orbit": "ORBIT 200 km", "space": "SPACE 100 km", "clouds": "CLOUDS 12 km", "launchL": "LAUNCH",
@@ -264,15 +265,19 @@
     "hitMsg": "A rock hit the rocket! Keep the shield between the rocks and the nose. {n} hits left.",
     "reached": "ORBIT REACHED!", "reachedSub": "Your rocket made it to 200 km",
     "resultMentor": "Nice flying! You lost {lost} hull point(s). Next: the long trip to Mars.",
-    "lostTitle": "MISSION LOST", "lostSub": "The rocket took 3 hits.",
-    "lostMentor": "Don't worry: in the real world the team prepares for risks before launch. Try again!",
+    "lostTitle": "SO CLOSE!", "lostSub": "The rocket took 3 hits.",
+    "lostMentor": "Don't worry: in the real world the team prepares for risks before launch. Try again, or continue: this mini-game is just for fun.",
+    "noScore": "Just for fun: your mission score does not change.",
+    "next": "NEXT: TO MARS ▶",
+    "pauseNote": "The launch is paused. This mini-game is just for fun: skipping it does not change your mission score.",
+    "pauseQuit": "SKIP MINI-GAME",
     "retry": "↺ RETRY", "continue": "CONTINUE ▶"
   },
   "slides": { "next": "NEXT ▶", "back": "◀ BACK", "toQuestion": "TO THE QUESTION ▶", "why": "WHY IT MATTERS" },
   "quiz": {
     "title": "QUICK CHECK", "q1": "QUESTION 1", "easier": "EASIER QUESTION",
     "correct": "✓ Correct!", "next": "NEXT ▶"
-  },
+  , "check": "CHECK ▶", "wrong": "Not quite!"},
   "rock": {
     "title": "ROCK HUNTER", "sub": "Meridiani Planum, Mars · Find 3 rocks with clues of ancient water",
     "how": "HOW TO PLAY",
@@ -286,7 +291,8 @@
     "strongClue": "STRONG CLUE!", "hmm": "HMM...", "sample": "[x] SAMPLE",
     "noInstrument": "Your rover has no instrument that can read this clue well. (Pick the right instruments next time!)",
     "results": "SAMPLES COLLECTED", "energyLeft": "ENERGY LEFT", "missed": "Missed: {NAME} ({WHY})",
-    "out": "Out of energy or time!", "continue": "CONTINUE ▶"
+    "out": "Out of energy or time!", "kit": "Your instruments: {LIST}", "noRock": "Drive next to a rock (?) first, then press SPACE to scan it.", "none": "NO MATCHING INSTRUMENT", "noInstrumentShort": "Inconclusive: none of your instruments can read this rock.", "inconclusive": "Inconclusive reading (no matching instrument).", "noSamples": "No samples collected.", "retry": "↺ RETRY", "transmit": "TRANSMIT DATA ▶", "pauseQuit": "END THE HUNT (go to results)", "mentorGood": "{n} strong clues! Results come from simplified instrument analysis of each rock, not from a single photo.", "mentorOne": "One strong clue. Real teams studied many rocks before drawing conclusions: weak evidence does not mean there was no water.", "mentorNone": "No strong clue this time. The right instruments matter: a photo alone cannot prove there was water.",
+    "continue": "CONTINUE ▶"
   },
   "comms": {
     "planner": "MER COMMS PLANNER v1.0 · SOL {N}",
@@ -294,6 +300,7 @@
     "assumptions": "* = simplified game value (assumption)",
     "next": "NEXT >", "back": "< BACK", "confirm": "CONFIRM >", "send": "SEND PLAN >",
     "replan": "REPLAN", "execute": "EXECUTE: SIGNAL RUN >",
+    "routeTitle": "SELECT A COMMUNICATION ROUTE", "installed": "INSTALLED ON ROVER:  X-band antennas [OK]   UHF antenna [OK]   ->  both routes compatible", "speed": "Link speed*", "contact": "Contact time*", "energyCost": "Energy cost*", "needs": "Needs", "oneSession": "Data you can return in one session*:   A about {A} Mb      B about {B} Mb", "selectedRoute": "Selected: {NAME}  -  next you will pick when to talk.", "windowTitle": "SELECT A CONTACT WINDOW", "daytime": "DAYTIME (sunlight)", "night": "NIGHT", "colWindow": "WINDOW", "colTime": "TIME", "colLength": "LENGTH", "colElev": "ELEVATION", "colCap": "CAPACITY", "colEnergy": "ENERGY", "selectedWindow": "Selected: {NAME}  -  about {CAP} Mb* of capacity.", "fitNext": "Next you'll decide what fits into those {CAP} Mb*.", "priorityTitle": "PRIORITIZE YOUR DATA  (drag to reorder)", "fits": "{R} / {T} Mb fits in {W}*", "resultTitle": "TRANSMISSION PLAN RESULTS", "returned": "DATA RETURNED", "route": "ROUTE", "window": "WINDOW", "energyUsed": "ENERGY USED", "sciYes": "SCIENCE OBJECTIVE: evidence of ancient water reached Earth  [x] {LIST}", "sciNo": "SCIENCE OBJECTIVE: the water evidence did NOT fit in this pass (it waits in the rover's memory).", "waitingMem": "WAITING IN MEMORY", "poor": "This plan sent big pictures first, so the key evidence is still waiting on Mars. Try REPLAN, or go on: Signal Run can still send what waits in memory.",
     "grab": "Grab :: to drag an item up or down (or select with ↑↓ and move with W/S)"
   },
   "talk": {
@@ -303,7 +310,7 @@
     "dsn": "3 DSN antennas:", "dsnSites": "California · Spain · Australia",
     "signal": "SIGNAL: 3 to 22 MIN one way",
     "earth": "EARTH", "sun": "SUN", "mars": "MARS", "orbiter": "ORBITER", "relay": "RELAY",
-    "info": "HOW IT WORKS ▶", "plan": "PLAN THE LINK ▶"
+    "info": "HOW IT WORKS ▶", "delayReal": "SIGNAL: {MIN} MIN one way (real distance on your day)", "next": "NEXT: SIGNAL RUN ▶", "plan": "PLAN THE LINK ▶"
   },
   "signal": {
     "title": "SIGNAL RUN",
@@ -319,9 +326,9 @@
     "controls": "A/D or Left/Right: aim · SPACE: send packet (only in the LINK WINDOW)",
     "sent": "DATA SENT!", "rover": "ROVER", "dsn": "DSN ON EARTH", "arrives": "ARRIVES ON EARTH IN",
     "shots": "SHOTS USED", "energyLeft": "ENERGY LEFT",
-    "resultMentor": "The team on Earth will see your clues about {min} minutes from now. That is how real Mars missions work!",
-    "retryPass": "NEXT PASS ▶", "outMentor": "The orbiter flew away. Your unsent data is still saved in the rover's memory and waits for the next pass.",
-    "continue": "MISSION REPORT ▶"
+    "resultMentor": "The team on Earth will see your {CLUES} clues about {min} minutes from now. That is how real Mars missions work!",
+    "retryPass": "NEXT PASS ▶", "outMentor": "The rover ran low on energy for today. Your unsent data is still saved in its flash memory and waits for the next pass, just like on the real rovers.",
+    "memInfo": "Your comms plan put {PLAN} Mb* in this pass, split into {N} packets. {MB} Mb* are waiting in the rover's memory.", "memLine": "{USED} / {CAP} Mb* saved", "partTitle": "DATA SAVED FOR LATER", "nextPassShort": "NEXT PASS", "inMemory": "STILL IN MEMORY", "retry": "↺ RETRY", "pauseQuit": "END THIS PASS (go to results)", "continue": "MISSION REPORT ▶"
   },
   "dashboard": {
     "title": "MISSION COMPLETE!",
@@ -336,7 +343,7 @@
     "details": "VIEW DETAILS ▶",
     "feedback": "MENTOR FEEDBACK", "good": "Well done:", "improve": "Next time:", "learned": "Learned:",
     "unlocked": "UNLOCKED!",
-    "retry": "RETRY", "log": "LOG", "continue": "CONTINUE ▶",
+    "lockedTitle": "KEEP EXPLORING", "lockedText": "Score 70+ to unlock the next objective.", "unlockedNext": "New objectives: coming soon!", "cardGood": "Close to the real mission.", "cardImprove": "Compare with the real mission ▶", "goodLine": "your {STAGE} choices were closest to the real mission.", "improveLine": "check {STAGE}: it was the most different from what the real team did.", "improveNone": "no stage was far from the real mission!", "learnedLine": "real missions balance science, energy and timing, and science only counts once the data reaches Earth.", "toTitle": "TITLE ▶", "retry": "RETRY", "log": "LOG", "continue": "CONTINUE ▶",
     "retryConfirm": "Play the Mars mission again from the start? (Your settings and unlocks are kept.)",
     "logTitle": "MISSION LOG (your decisions, in order)",
     "end": "Thanks for playing QUEST(ION)! Future destinations will open here.",
@@ -349,7 +356,7 @@
     "aspect": "ASPECT", "yours": "YOUR DECISION", "real": "REAL MER MISSION", "result": "RESULT",
     "why": "WHY THE REAL TEAM CHOSE THIS",
     "prev": "◀ PREV", "nextStage": "NEXT STAGE ▶", "dash": "◀ DASHBOARD", "done": "DONE ▶",
-    "match": "✓ MATCH", "close": "≈ CLOSE", "different": "✕ DIFFERENT", "simulated": "Simulated game value (no real equivalent)"
+    "match": "✓ MATCH", "close": "≈ CLOSE", "different": "✕ DIFFERENT", "simShort": "game value", "mentorLine": "This stage: ✓ {M} match · ≈ {C} close · ✕ {D} different. Rows with no badge are game values with no real equivalent.", "simulated": "Simulated game value (no real equivalent)"
   },
   "transitions": {
     "4c": { "kicker": "NEXT UP", "title": "MISSION OBJECTIVE", "text": "Destination locked: MARS! Now choose the science goal of your mission. Your objective decides the instruments and the spacecraft you will design next.", "bg": "solar" },

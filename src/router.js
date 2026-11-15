@@ -8,6 +8,7 @@ import { state } from './state.js';
 import { saveGame } from './save.js';
 import { cover, reveal } from './transitions.js';
 import { quiet, readScreen } from './a11y.js';
+import { syncMusic } from './audio.js';
 
 export const history = new Stack();
 let pendingReveal = 'fade';
@@ -75,6 +76,7 @@ export function arrived(scene, data) {
   for (const k of Object.keys(scene.routeData)) if (k.startsWith('_')) delete scene.routeData[k];   // one-shot data (_installed…)
   const key = scene.sys.settings ? scene.sys.settings.key : scene.sys.key;
   if (key !== 'BootScene' && key !== 'TitleScene') { state.screen = { key, data: scene.routeData }; }
+  syncMusic(key);              // ambience on regular screens, minigame.mp3 in mini-games (never restarts)
   reveal(scene, pendingReveal);
   pendingReveal = 'fade';
   // accessibility: after the mentor's line, read the whole screen (top → bottom, left → right) + its keys

@@ -8,7 +8,6 @@ import { t } from '../content.js';
 import { state, resetMission, logEvent } from '../state.js';
 import { hasSave, loadGame, clearGame, saveGame } from '../save.js';
 import { go, restoreHistory, resetHistory, replace } from '../router.js';
-import { playMusic } from '../audio.js';
 import { say, sayHover, describeItem } from '../a11y.js';
 
 export default class TitleScene extends Phaser.Scene {
@@ -16,7 +15,6 @@ export default class TitleScene extends Phaser.Scene {
 
   create(data) {
     fresh(this);
-    playMusic('title');
     bg(this, 'bg-solar');
     // Title block (Figma frame "Title" 280,60 720x162)
     const g = this.add.graphics();

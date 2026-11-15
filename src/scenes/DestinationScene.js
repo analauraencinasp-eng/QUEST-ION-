@@ -7,7 +7,7 @@ import { setup, openModal, mButton, mText } from '../ui/chrome.js';
 import { content, t } from '../content.js';
 import { state, logEvent } from '../state.js';
 import { go } from '../router.js';
-import { playMusic, sfx } from '../audio.js';
+import { sfx } from '../audio.js';
 import { say } from '../a11y.js';
 
 export default class DestinationScene extends Phaser.Scene {
@@ -15,7 +15,6 @@ export default class DestinationScene extends Phaser.Scene {
 
   create(data) {
     fresh(this);
-    playMusic('title');
     bg(this, 'bg-solar');
     txt(this, 640, 60, t('destination.title'), { font: 'title', size: 30, color: S.gold, origin: 0.5, shadow: 4 });
     txt(this, 640, 94, t('destination.sub'), { size: 24, origin: 0.5 });

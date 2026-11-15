@@ -7,7 +7,7 @@ import { setup, openModal, mButton, mText } from '../ui/chrome.js';
 import { content, t } from '../content.js';
 import { state, logEvent } from '../state.js';
 import { go } from '../router.js';
-import { playMusic, sfx } from '../audio.js';
+import { sfx } from '../audio.js';
 import { say } from '../a11y.js';
 
 const CARD = { x: 76, y: 197, w: 264, h: 300, step: 288 };
@@ -17,7 +17,6 @@ export default class RoleScene extends Phaser.Scene {
 
   create(data) {
     fresh(this);
-    playMusic('title');
     bg(this, 'bg-solar', { dim: 0.45 });
     txt(this, 640, 52, t('role.title'), { font: 'title', size: 30, color: S.gold, origin: 0.5, shadow: 4 });
     txt(this, 640, 86, t('role.sub'), { size: 22, origin: 0.5 });

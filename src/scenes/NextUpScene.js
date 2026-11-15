@@ -6,11 +6,9 @@ import { fresh, txt, pxButton, bg } from '../ui/widgets.js';
 import { setup } from '../ui/chrome.js';
 import { t, content } from '../content.js';
 import { go } from '../router.js';
-import { playMusic } from '../audio.js';
 import { say } from '../a11y.js';
 
 const BG = { solar: 'bg-solar', hangar: 'bg-hangar', bench: 'bg-bench', space: 'bg-space', sky: 'bg-sky', mars: 'bg-meridiani', warehouse: 'bg-warehouse' };
-const MUSIC = { solar: 'title', hangar: 'workshop', bench: 'workshop', space: 'orbit', sky: 'launch', mars: 'mars' };
 
 export default class NextUpScene extends Phaser.Scene {
   constructor() { super('NextUpScene'); }
@@ -18,7 +16,6 @@ export default class NextUpScene extends Phaser.Scene {
   create(data) {
     fresh(this);
     const tr = (content.ui.transitions || {})[data.id] || { kicker: 'NEXT UP', title: '', text: '', bg: 'solar' };
-    playMusic(data.id === '16-0' || data.id === '15b' ? 'comms' : MUSIC[tr.bg] || 'title');
     bg(this, BG[tr.bg] || 'bg-solar', { dim: 0.7 });
     // thin pixel grid like the Figma transition frames
     const g = this.add.graphics(); g.lineStyle(1, 0x1f3a6e, 0.35);

@@ -31,3 +31,27 @@ Decisiones que no resuelve el Figma o que cambian lo que dice `PROMPT_CLAUDE_COD
 
 ## Puntaje final
 - Solo cuenta lo que tendría impacto real en una misión (decisiones de diseño, instrumentos, trayectoria, muestras, datos que llegan a la Tierra). Los minijuegos "por diversión" no cuentan.
+
+## Música
+- Dos pistas locales en `assets/music/`: `ambience.mp3` (todo el juego) y `minigame.mp3` (solo dentro de los minijuegos).
+- Cuentan como minijuego **los 8 de `src/minigames`**: Taller, Almacén, Ensamble, Órbita, Meteoritos, Rock Hunter, Comms y Signal Run.
+- La ambientación no se reinicia al cambiar de pantalla; al entrar a un minijuego se pausa y luego **sigue donde se quedó**. La música del minijuego empieza desde el inicio cada vez.
+- Nunca suenan las dos juntas: primero baja una y luego sube la otra.
+- Cuando habla el narrador, la música **baja de volumen** y después regresa.
+- Ajustes: Música ON/OFF y **Volumen de música** propio (25 % al empezar). El volumen general queda para la voz y los efectos.
+
+## Pantallas 13e y 14f · Repaso rápido
+- Hay que contestar bien para seguir; si fallas, sale la explicación y una pregunta más fácil (niveles 1 → 2 → 3, y en el 3 rotan).
+- **No da puntos**: solo se guarda si acertaste a la primera (el puntaje cuenta solo lo que tiene impacto real).
+
+## Pantalla 14 · Rock Hunter (detalles)
+- Lo que lees de cada roca depende de los **instrumentos que empacaste** en el almacén: sin el instrumento correcto, la lectura sale "HMM..." (no concluyente).
+- Mientras tienes abierta la tarjeta del escaneo, el tiempo se detiene.
+
+## Pantalla 16 · Hablar con la Tierra
+- El retraso de la señal (minutos) se calcula con las posiciones **reales** de JPL Horizons del día en que tu rover habla con la Tierra (llegada + 30 días; si no hay órbita, el aterrizaje de Opportunity, 25 ene 2004).
+- En Signal Run, los paquetes llevan los datos que tu plan de comunicaciones puso en ese paso.
+
+## Puntaje (ajuste)
+- Comunicaciones = la mitad por la calidad de tu plan (15h) y la mitad por los paquetes que llegaron (Signal Run).
+

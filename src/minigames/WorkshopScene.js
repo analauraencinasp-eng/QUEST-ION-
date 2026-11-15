@@ -10,7 +10,7 @@ import { content, t } from '../content.js';
 import { state, STATION_IDS, logEvent } from '../state.js';
 import { go } from '../router.js';
 import { canUseStation, nextStation, computeMeters, stationById, stationOption, affectedMeters } from '../rules.js';
-import { playMusic, sfx } from '../audio.js';
+import { sfx } from '../audio.js';
 import { say, sayHover } from '../a11y.js';
 
 const DOOR = { x: 1180, y: 560, w: 100, h: 100 };
@@ -25,7 +25,6 @@ export default class WorkshopScene extends Phaser.Scene {
 
   create(data) {
     fresh(this);
-    playMusic('workshop');
     // Phaser reuses this object: reset everything a previous visit could have left behind
     this.leaving = false; this.target = null; this.doorLabel = null; this.lastPrompt = null; this.lockPanel = null; this.hoverSt = null;
     const mi = state.mission;

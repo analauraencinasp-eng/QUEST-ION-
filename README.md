@@ -34,4 +34,4 @@ Live Server still works, but it has no backend: the narrator then uses lines alr
 
 ## Audio
 
-Music and sound effects are **off** for now (`MUSIC_ENABLED` / `SFX_ENABLED` in `src/audio.js`) while the team picks another audio API. The narrator does not depend on them.
+Music: two local tracks in `assets/music/` — `ambience.mp3` on every regular screen and `minigame.mp3` inside the mini-games (`MINIGAME_SCENES` in `src/audio.js`). The router switches them on every screen change with a fade (never both at once); Settings has Music ON/OFF and Music volume (25 % by default). Sound effects are still **off** (`SFX_ENABLED` in `src/audio.js`). The narrator does not depend on them.

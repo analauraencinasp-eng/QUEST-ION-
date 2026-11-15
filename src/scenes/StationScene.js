@@ -9,7 +9,7 @@ import { state } from '../state.js';
 import { back, backWith } from '../router.js';
 import { stationById, wouldExceedBudget } from '../rules.js';
 import { installPart } from '../minigames/WorkshopScene.js';
-import { playMusic, sfx } from '../audio.js';
+import { sfx } from '../audio.js';
 import { say } from '../a11y.js';
 
 export default class StationScene extends Phaser.Scene {
@@ -18,7 +18,6 @@ export default class StationScene extends Phaser.Scene {
   create(data) {
     fresh(this);
     this.noAutoRead = true;          // this card speaks its own full description + keys (draw())
-    playMusic('workshop');
     this.st = stationById(data.station || 'structure');
     const cur = state.mission.stations[this.st.id];
     this.idx = Math.max(0, this.st.options.findIndex((o) => o.letter === (cur || 'B')));

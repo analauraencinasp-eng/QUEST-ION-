@@ -174,7 +174,8 @@ export function iconButton(scene, x, y, kind, onClick, o = {}) {
     cont, label: kind === 'menu' ? 'Settings menu' : 'Help', modal: o.modal || null, disabled: false,
     alive: () => !!cont.scene && cont.visible,
     focus() { box.setStrokeStyle(4, C.yellow); }, blur() { box.setStrokeStyle(4, C.white); },
-    press() { sfx(scene, 'sfx-pickup'); onClick(); }
+    press() { sfx(scene, 'sfx-pickup'); onClick(); },
+    hit
   };
   hit.on('pointerover', () => { item.focus(); if (isTop(scene, item)) sayHover(describeItem(item.label, 'button', kind === 'menu' ? 'Shortcut: Escape.' : 'Shortcut: the H key.')); });
   hit.on('pointerout', () => { if (scene.focused !== item) item.blur(); });

@@ -5,14 +5,12 @@ import { fresh, txt, pxButton, bg, panel, img, mentorBar, dots, finishTyping } f
 import { setup } from '../ui/chrome.js';
 import { content, t } from '../content.js';
 import { go } from '../router.js';
-import { playMusic } from '../audio.js';
 
 export default class StoryScene extends Phaser.Scene {
   constructor() { super('StoryScene'); }
 
   create(data) {
     fresh(this);
-    playMusic('title');
     bg(this, 'bg-solar', { dim: 0.55 });
     this.i = 0;
     this.slides = content.story.slides;

@@ -8,7 +8,7 @@ import { content, t } from '../content.js';
 import { state, logEvent } from '../state.js';
 import { go } from '../router.js';
 import { instrumentById, assemblyScore } from '../rules.js';
-import { playMusic, sfx } from '../audio.js';
+import { sfx } from '../audio.js';
 import { say } from '../a11y.js';
 
 const LABEL_COL = { ready: C.green, limited: C.gold, incomplete: C.red };
@@ -18,7 +18,6 @@ export default class AssemblyResultsScene extends Phaser.Scene {
 
   create(data) {
     fresh(this);
-    playMusic('workshop');
     const mi = state.mission;
     const res = mi.instruments.results || assemblyScore(mi.instruments.placed);
     mi.instruments.results = res;

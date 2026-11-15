@@ -10,7 +10,7 @@ import { content, t } from '../content.js';
 import { state, logEvent } from '../state.js';
 import { back, go } from '../router.js';
 import { instrumentById, questionFor, computeMeters, requirementsCovered, kitWouldExceedBudget } from '../rules.js';
-import { playMusic, sfx } from '../audio.js';
+import { sfx } from '../audio.js';
 import { say } from '../a11y.js';
 
 const COMPAT_COL = { yes: C.green, redesign: C.gold, offgoal: C.red };
@@ -21,7 +21,6 @@ export default class InstrumentScene extends Phaser.Scene {
   create(data) {
     fresh(this);
     this.noAutoRead = true;          // the card speaks its own description + keys
-    playMusic('workshop');
     this.list = content.instruments.instruments;
     this.idx = Math.max(0, this.list.findIndex((i) => i.id === (data.inst || 'pancam')));
     this.add.rectangle(0, 0, W, H, 0x1b2233).setOrigin(0);
@@ -32,12 +31,13 @@ export default class InstrumentScene extends Phaser.Scene {
     this.kitBox = this.add.graphics();
     this.kitText = txt(this, 52, 89, '', { size: 20, color: S.green, origin: [0, 0.5], wrap: 520 });
     this.mentor = mentorBar(this, 586, 14, 654, 116, '', { portrait: 116, size: 23 });
-    panel(this, 80, 144, 1120, 440, { fill: 0x10173a, stroke: 0xc8a24a, bw: 4 });
+    panel(this, 80, 140, 1120, 476, { fill: 0x10173a, stroke: 0xc8a24a, bw: 4 });
     this.cont = this.add.container(0, 0);
+    this.body = null;              // right-column boxes (rebuilt by buildBody)
     this.chips = [];
-    pxButton(this, 190, 620, 284, 60, t('card.back'), () => back(this));
-    this.packBtn = pxButton(this, 498, 620, 304, 60, t('card.pack'), () => this.togglePack(), { primary: true });
-    this.asmBtn = pxButton(this, 826, 620, 264, 60, t('card.assemble'), () => this.assemble());
+    pxButton(this, 190, 634, 284, 60, t('card.back'), () => back(this));
+    this.packBtn = pxButton(this, 498, 634, 304, 60, t('card.pack'), () => this.togglePack(), { primary: true });
+    this.asmBtn = pxButton(this, 826, 634, 264, 60, t('card.assemble'), () => this.assemble());
     this.onKey = (k) => {
       if (k === 'ArrowLeft') { this.show(this.idx - 1); return true; }
       if (k === 'ArrowRight') { this.show(this.idx + 1); return true; }
@@ -68,100 +68,122 @@ export default class InstrumentScene extends Phaser.Scene {
     this.chips.forEach((h) => { h.destroy(); this.focusables = this.focusables.filter((f) => f !== h); });
     this.chips = [];
     const add = (o) => { this.cont.add(o); return o; };
-    // your kit (top-left)
+    // ---- YOUR KIT (top-left): never wider than the space before the mentor bubble ----
+    add(txt(this, 52, 89, t('card.kit'), { font: 'title', size: 9, origin: [0, 0.5] }));
     const names = kit.map((id) => (instrumentById(id) || {}).short).filter(Boolean);
-    this.kitText.setText(names.length ? names.join(' · ') : '—');
-    fit(this.kitText, 520, 30, 14);
+    let shown = names.length ? names.join(' · ') : '—';
+    this.kitText.setText(shown).setX(156);
+    for (let n = names.length - 1; this.kitText.width > 400 && n > 0; n--) {
+      shown = `${names.slice(0, n).join(' · ')} +${names.length - n}`;
+      this.kitText.setText(shown);
+    }
+    fit(this.kitText, 400, 30, 14);
     this.kitBox.clear(); this.kitBox.fillStyle(0x0b0f26, 1); this.kitBox.fillRect(40, 70, this.kitText.width + 130, 38);
     this.kitBox.lineStyle(3, C.white, 1); this.kitBox.strokeRect(40, 70, this.kitText.width + 130, 38);
-    this.kitText.setX(52 + 104);
-    add(txt(this, 52, 89, t('card.kit'), { font: 'title', size: 9, origin: [0, 0.5] }));
-    // blueprint (left)
+    // ---- blueprint (left box 96..536 × 160..568) ----
     const g = add(this.add.graphics());
-    g.fillStyle(0x0b2a5c, 1); g.fillRect(96, 160, 440, 408);
+    g.fillStyle(0x0b2a5c, 1); g.fillRect(96, 156, 440, 444);
     g.lineStyle(1, 0x2f5f9e, 0.7);
-    for (let x = 96; x <= 536; x += 20) g.lineBetween(x, 160, x, 568);
-    for (let y = 160; y <= 568; y += 20) g.lineBetween(96, y, 536, y);
-    g.lineStyle(4, C.cyan, 1); g.strokeRect(98, 162, 436, 404);
-    add(txt(this, 108, 176, ins.name, { font: 'title', size: 10, color: S.cyan }));
-    add(img(this, 316, 380, ins.table, { w: 360, h: 279 }));
+    for (let x = 96; x <= 536; x += 20) g.lineBetween(x, 156, x, 600);
+    for (let y = 156; y <= 600; y += 20) g.lineBetween(96, y, 536, y);
+    g.lineStyle(4, C.cyan, 1); g.strokeRect(98, 158, 436, 440);
+    add(fit(txt(this, 110, 174, ins.name, { font: 'title', size: 9, color: S.cyan, origin: [0, 0.5] }), 410));
     const [top, bottom] = ins.blueprint || ['', ''];
-    g.lineStyle(2, C.cyan, 1); g.lineBetween(316, 222, 316, 290); g.lineBetween(316, 470, 316, 530);
-    add(txt(this, 316, 208, top, { size: 22, color: S.cyan, origin: 0.5 }));
-    add(txt(this, 316, 546, bottom, { size: 22, color: S.cyan, origin: 0.5 }));
-    // header
-    const hg = add(this.add.graphics()); hg.lineStyle(3, 0x8a93c8, 1); hg.strokeRect(552, 160, 632, 40);
-    add(fit(txt(this, 566, 180, ins.name, { font: 'title', size: 17, origin: [0, 0.5] }), 470));
-    add(txt(this, 1170, 180, `◀ ${this.idx + 1}/14 ▶`, { font: 'title', size: 11, color: S.gold, origin: [1, 0.5] }));
-    // chips of the 14 tables
-    let cx = 552, cy = 208;
+    add(fit(txt(this, 316, 206, top, { size: 22, color: S.cyan, origin: 0.5 }), 400));
+    add(fit(txt(this, 316, 576, bottom, { size: 22, color: S.cyan, origin: 0.5 }), 400));
+    add(img(this, 316, 392, ins.table, { w: 340, h: 264 }));
+    g.lineStyle(2, C.cyan, 1); g.lineBetween(316, 220, 316, 262); g.lineBetween(316, 520, 316, 562);
+    // ---- header (552..1184 × 160..200) ----
+    const hg = add(this.add.graphics()); hg.lineStyle(3, 0x8a93c8, 1); hg.strokeRect(552, 156, 632, 40);
+    const counter = add(txt(this, 1170, 180, `◀ ${this.idx + 1}/14 ▶`, { font: 'title', size: 10, color: S.gold, origin: [1, 0.5] }));
+    counter.setY(176);
+    add(fit(txt(this, 566, 176, ins.name, { font: 'title', size: 16, origin: [0, 0.5] }), 600 - counter.width - 30, 30, 9));
+    // ---- chips of the 14 tables (always the same 2 rows) ----
+    let cx = 552, cy = 202;
     this.list.forEach((it, j) => {
       const done = !!mi.instruments.inspected[it.id];
-      const label = `${done ? '[x] ' : ''}${it.short}`;
-      const tt = add(txt(this, 0, 0, label, { font: 'title', size: 7, color: j === this.idx ? S.navy : S.muted }));
-      const w = tt.width + 12;
-      if (cx + w > 1184) { cx = 552; cy += 22; }
-      add(this.add.rectangle(cx, cy, w, 18, j === this.idx ? C.gold : 0x0b0f26).setOrigin(0).setStrokeStyle(2, j === this.idx ? C.white : 0x8a93c8));
-      tt.setPosition(cx + 6, cy + 4); this.cont.bringToTop(tt);
-      this.chips.push(hotspot(this, cx, cy, w, 18, it.name, () => this.show(j)));
-      cx += w + 6;
+      const tt = add(txt(this, 0, 0, `${done ? '[x] ' : ''}${it.short}`, { font: 'title', size: 6, color: j === this.idx ? S.navy : S.muted }));
+      fit(tt, 150, 12, 5);
+      const w = tt.width + 10;
+      if (cx + w > 1184) { cx = 552; cy += 20; }
+      add(this.add.rectangle(cx, cy, w, 16, j === this.idx ? C.gold : 0x0b0f26).setOrigin(0).setStrokeStyle(2, j === this.idx ? C.white : 0x8a93c8));
+      tt.setPosition(cx + 5, cy + 8).setOrigin(0, 0.5); this.cont.bringToTop(tt);
+      this.chips.push(hotspot(this, cx, cy, w, 16, it.name, () => this.show(j)));
+      cx += w + 5;
     });
-    let y = cy + 30;
-    add(txt(this, 552, y, t('card.origin'), { font: 'title', size: 8, color: S.muted, origin: [0, 0.5] }));
-    const oc = chip(this, 680, y, ins.origin, { fill: ins.mer ? C.cyan : C.blueBorder, color: S.navy, size: 8 });
-    add(oc.r); add(oc.t);
-    y += 16;
-    // what / role / mount
-    const box = add(this.add.graphics());
-    const rows = [[t('card.what'), ins.what], [t('card.role'), ins.role], [t('card.mount'), ins.mountText]];
-    let ry = y + 8;
-    const texts = rows.map(([label, value]) => {
-      const l = add(txt(this, 562, ry + 3, label, { font: 'title', size: 7, color: S.muted, wrap: 120 }));
-      const v = add(txt(this, 690, ry, value, { size: 20, wrap: 486, lineSpacing: 0 }));
-      ry += Math.max(v.height, l.height) + 4;
-      return v;
-    });
-    void texts;
-    box.fillStyle(0x0b0f26, 1); box.fillRect(552, y, 632, ry - y + 4);
-    this.cont.sendToBack(box);
-    y = ry + 12;
-    // helps with requirements
-    const hb = add(this.add.graphics());
-    add(txt(this, 562, y + 6, t('card.helps'), { font: 'title', size: 7, color: S.muted }));
-    let qx = 562, qy = y + 22;
-    t('card.reqShort').forEach((label, k) => {
-      const on = ins.helps.includes(k + 1);
-      const tt = add(txt(this, 0, 0, label, { size: 18, color: on ? S.navy : S.muted }));
-      const w = tt.width + 12;
-      if (qx + w > 1176) { qx = 562; qy += 26; }
-      add(this.add.rectangle(qx, qy, w, 22, on ? C.green : 0x2a3358).setOrigin(0));
-      tt.setPosition(qx + 6, qy + 1); this.cont.bringToTop(tt);
-      qx += w + 8;
-    });
-    hb.fillStyle(0x0b0f26, 1); hb.fillRect(552, y, 632, qy + 30 - y);
-    this.cont.sendToBack(hb);
-    y = qy + 36;
-    // compatibility
-    const col = COMPAT_COL[ins.compat] || C.grey;
-    const cb = add(this.add.graphics());
-    add(txt(this, 564, y + 6, t('card.compat', { C: t('card.compatNames')[ins.compat] || ins.compat }), { font: 'title', size: 8, color: Phaser.Display.Color.IntegerToColor(col).rgba }));
-    const ct = add(txt(this, 564, y + 22, ins.compatText, { size: 20, wrap: 604, lineSpacing: 0 }));
-    const ch = ct.height + 30;
-    cb.fillStyle(0x0f2a2a, 1); cb.fillRect(552, y, 632, ch); cb.lineStyle(3, col, 1); cb.strokeRect(553, y + 1, 630, ch - 2);
-    this.cont.sendToBack(cb);
-    y += ch + 6;
-    // simulated values + quick question
+    // ---- body: origin, info, requirements, compatibility. Built at one font size; if it does not fit
+    //      between the chips and the footer, everything is rebuilt one size smaller (text size L too). ----
+    const TOP = cy + 22, BOTTOM = 556;
+    this.body = this.body || this.add.container(0, 0);
+    let size = 20;
+    while (this.buildBody(ins, TOP, size) > BOTTOM && size > 14) size -= 1;
+    // ---- footer (inside the card, under the boxes): simulated values + question button ----
     const energy = ins.energy < 0 ? `draws ${-ins.energy}% energy` : 'no energy';
-    add(txt(this, 552, Math.min(y + 2, 546), `${t('card.values')}\n$${ins.cost.toLocaleString('en-US')} · ${ins.mass} kg · ${energy}`, { font: 'title', size: 7, color: S.muted, wrap: 470, lineSpacing: 6 }));
+    add(txt(this, 552, 566, t('card.values'), { font: 'title', size: 7, color: S.muted }));
+    add(fit(txt(this, 552, 580, `$${ins.cost.toLocaleString('en-US')} · ${ins.mass} kg · ${energy}`, { size: 20, color: S.muted }), 470, 26, 14));
     const done = !!mi.instruments.inspected[ins.id];
-    const qb = pxButton(this, 1040, Math.min(y, 534), 144, 40, done ? t('card.done') : t('card.quiz'), () => this.quiz(), { size: 10, depth: 20, fill: done ? 0x0f5a3f : C.navy });
-    this.chips.push(qb);
+    this.chips.push(pxButton(this, 1036, 564, 148, 38, done ? t('card.done') : t('card.quiz'), () => this.quiz(), { size: 10, depth: 20, fill: done ? 0x0f5a3f : C.navy }));
+    // ---- bottom buttons + mentor ----
     const inKit = kit.includes(ins.id);
     this.packBtn.setLabel(inKit ? t('card.unpack') : t('card.pack'));
     this.packBtn.setPrimary(!inKit);
     const cov = requirementsCovered(mi.instruments.inspected);
     this.asmBtn.setDisabled(!cov.ok);
     this.mentor.set(inKit ? `${t('card.inKit')}. ${t('card.mentor')}` : (cov.ok ? t('warehouse.allDone') : t('card.mentor')), { silent: true });
+  }
+
+  // right column body; returns the y where it ends
+  buildBody(ins, top, size) {
+    const b = this.body;
+    b.removeAll(true);
+    const add = (o) => { b.add(o); return o; };
+    const W_ = 632, X = 552, PAD = 8;
+    let y = top;
+    // origin mission
+    add(txt(this, X, y + 9, t('card.origin'), { font: 'title', size: 7, color: S.muted, origin: [0, 0.5] }));
+    const oc = chip(this, X + 128, y + 9, ins.origin, { fill: ins.mer ? C.cyan : C.blueBorder, color: S.navy, size: 7 });
+    add(oc.r); add(oc.t);
+    y += 20;
+    // what it does / role / where it mounts: label column 112 px, value column the rest
+    const infoTop = y;
+    const bg1 = add(this.add.graphics());
+    let ry = y + PAD;
+    for (const [label, value] of [[t('card.what'), ins.what], [t('card.role'), ins.role], [t('card.mount'), ins.mountText]]) {
+      const l = add(txt(this, X + 10, ry + 2, label, { font: 'title', size: 6, color: S.muted, wrap: 112, lineSpacing: 4 }));
+      const v = add(txt(this, X + 132, ry, value, { size, wrap: W_ - 142, lineSpacing: 0 }));
+      ry += Math.max(v.height, l.height) + 6;
+    }
+    y = ry + PAD - 6;
+    bg1.fillStyle(0x0b0f26, 1); bg1.fillRect(X, infoTop, W_, y - infoTop);
+    y += 6;
+    // helps with requirements
+    const reqTop = y;
+    const bg2 = add(this.add.graphics());
+    add(txt(this, X + 10, y + PAD, t('card.helps'), { font: 'title', size: 6, color: S.muted }));
+    let qx = X + 10, qy = y + PAD + 16;
+    const chipH = Math.round(size * 1.05) + 4;
+    t('card.reqShort').forEach((label, k) => {
+      const on = ins.helps.includes(k + 1);
+      const tt = add(txt(this, 0, 0, label, { size: size - 2, color: on ? S.navy : S.muted }));
+      const w = tt.width + 12;
+      if (qx + w > X + W_ - 10) { qx = X + 10; qy += chipH + 4; }
+      add(this.add.rectangle(qx, qy, w, chipH, on ? C.green : 0x2a3358).setOrigin(0));
+      tt.setPosition(qx + 6, qy + chipH / 2).setOrigin(0, 0.5);
+      b.bringToTop(tt);
+      qx += w + 6;
+    });
+    y = qy + chipH + PAD;
+    bg2.fillStyle(0x0b0f26, 1); bg2.fillRect(X, reqTop, W_, y - reqTop);
+    y += 6;
+    // compatibility
+    const col = COMPAT_COL[ins.compat] || C.grey;
+    const cTop = y;
+    const bg3 = add(this.add.graphics());
+    add(txt(this, X + 12, y + PAD, t('card.compat', { C: t('card.compatNames')[ins.compat] || ins.compat }), { font: 'title', size: 7, color: Phaser.Display.Color.IntegerToColor(col).rgba }));
+    const ct = add(txt(this, X + 12, y + PAD + 16, ins.compatText, { size, wrap: W_ - 24, lineSpacing: 0 }));
+    y = ct.y + ct.height + PAD;
+    bg3.fillStyle(0x0f2a2a, 1); bg3.fillRect(X, cTop, W_, y - cTop); bg3.lineStyle(3, col, 1); bg3.strokeRect(X + 1.5, cTop + 1.5, W_ - 3, y - cTop - 3);
+    return y;
   }
 
   quiz(onCorrect) {
@@ -171,11 +193,11 @@ export default class InstrumentScene extends Phaser.Scene {
     const mi = state.mission.instruments;
     const md = openModal(this, t('card.quizTitle', { NAME: ins.name }), { w: 900, h: 520, closeLabel: t('card.later') });
     mText(this, md, md.x + 28, md.y + 64, t('card.quizIntro'), { size: 20, color: S.muted });
-    mText(this, md, md.x + 28, md.y + 92, q.question, { size: 28, wrap: md.w - 56 });
+    fit(mText(this, md, md.x + 28, md.y + 92, q.question, { size: 28, wrap: md.w - 56 }), md.w - 56, 54, 16);
     const fb = mText(this, md, md.x + 28, md.y + 330, '', { size: 21, wrap: md.w - 56 });
     let answered = false;
     const btns = q.options.map((opt, k) => mButton(this, md, md.x + 28, md.y + 150 + k * 60, md.w - 56, 50, `${'ABC'[k]}. ${opt}`, () => pick(k), { size: 10 }));
-    btns.forEach((b) => { b.text.setFontFamily('"VT323", monospace').setFontSize(26); b.text.setX(16).setOrigin(0, 0.5); });
+    btns.forEach((b) => { b.text.setFontFamily('"VT323", monospace').setFontSize(26); b.text.setX(16).setOrigin(0, 0.5); fit(b.text, md.w - 92, 44, 15); });
     const pick = (k) => {
       if (answered) return;
       mi.quiz[ins.id] = { tries: ((mi.quiz[ins.id] || {}).tries || 0) + 1 };

@@ -8,7 +8,6 @@ import { pixelIcon } from '../ui/icons.js';
 import { content, t } from '../content.js';
 import { state } from '../state.js';
 import { go } from '../router.js';
-import { playMusic } from '../audio.js';
 
 export function missionPath(scene, y, current) {
   const steps = t('summary.path');
@@ -27,7 +26,6 @@ export default class SummaryScene extends Phaser.Scene {
 
   create(data) {
     fresh(this);
-    playMusic('title');
     bg(this, 'bg-solar');
     txt(this, 640, 42, t('summary.title'), { font: 'title', size: 32, color: S.gold, origin: 0.5, shadow: 4 });
     txt(this, 640, 78, t('summary.sub'), { size: 24, origin: 0.5 });

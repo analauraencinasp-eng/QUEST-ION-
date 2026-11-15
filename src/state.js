@@ -6,7 +6,7 @@ import LinkedList from './ds/LinkedList.js';
 export const STATION_IDS = ['structure', 'power', 'comms', 'computer', 'attitude'];
 
 export function defaultSettings() {
-  return { narration: true, textSize: 'M', volume: 70, music: true, sfx: true, reduceMotion: false, nasaKey: '' };
+  return { narration: true, textSize: 'M', volume: 70, music: true, musicVolume: 25, sfx: true, reduceMotion: false, nasaKey: '' };
 }
 
 function freshMission() {
