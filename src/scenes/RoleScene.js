@@ -48,15 +48,15 @@ export default class RoleScene extends Phaser.Scene {
     const im = img(this, x + CARD.w / 2, y + 16, r.art, { origin: [0.5, 0] });
     if (im.setCrop) { im.setCrop(0, 0, 240, 210); im.setScale(0.93); }
     const name = txt(this, x + CARD.w / 2, y + 236, r.short && r.name.length > 10 ? r.name : r.name, { font: 'title', size: 16, origin: 0.5 });
-    const bonus = chip(this, x + 16, y + 30, r.bonus, { fill: C.gold, size: 9 });
+   /* const bonus = chip(this, x + 16, y + 30, r.bonus, { fill: C.gold, size: 9 });
     bonus.r.setVisible(false); bonus.t.setVisible(false);
     const badge = txt(this, x + CARD.w - 18, y + 30, '', { font: 'title', size: 12, color: S.navy, origin: [1, 0.5] });
     const badgeBg = this.add.rectangle(x + CARD.w - 12, y + 30, 70, 26, C.yellow).setOrigin(1, 0.5);
-    badge.setDepth(5); badgeBg.setDepth(4);
+    badge.setDepth(5); badgeBg.setDepth(4); */
     // hover/focus covers the WHOLE card and the ring sits exactly on the card border
-    hotspot(this, x, y, CARD.w, CARD.h, `${r.name}. ${r.bonus}`, () => this.pick(r.id), { onFocus: () => { this.cursor = r.id; }, ringRect: [x + 2, y + 2, CARD.w - 4, CARD.h - 4] });
+    hotspot(this, x, y, CARD.w, CARD.h, `r.name`, () => this.pick(r.id), { onFocus: () => { this.cursor = r.id; }, ringRect: [x + 2, y + 2, CARD.w - 4, CARD.h - 4] });
     link(this, x + CARD.w / 2, y + 270, t('role.info'), () => this.info(r.id));
-    this.cards[r.id] = { box, x, y, badge, badgeBg, bonus, portrait, im, name };
+    this.cards[r.id] = { box, x, y, portrait, im, name }; 
   }
 
   isPicked(id) { return this.four ? Object.values(this.picks).includes(id) : this.selected === id; }
@@ -75,7 +75,7 @@ export default class RoleScene extends Phaser.Scene {
     } else this.selected = id;
     sfx(this, 'sfx-place');
     const r = content.roles.roles.find((x) => x.id === id);
-    say(`${r.name}. ${r.bonus}.`);
+    say(`say(r.name)`);
     this.refresh();
   }
 
@@ -88,9 +88,9 @@ export default class RoleScene extends Phaser.Scene {
       c.box.fillStyle(C.navy2, 0.95); c.box.fillRect(c.x, c.y, CARD.w, CARD.h);
       c.box.lineStyle(sel ? 6 : 4, sel ? C.yellow : (this.cursor === r.id ? C.cyan : 0x4a5583), 1);
       c.box.strokeRect(c.x, c.y, CARD.w, CARD.h);
-      c.badge.setText(sel ? `${player} ✓` : ''); c.badgeBg.setVisible(sel);
+     /* c.badge.setText(sel ? `${player} ✓` : ''); c.badgeBg.setVisible(sel);
       c.bonus.r.setVisible(sel || this.showBonus); c.bonus.t.setVisible(sel || this.showBonus);
-    }
+    */}
     const ready = this.four ? Object.keys(this.picks).length === 4 : !!this.selected;
     this.confirm.setDisabled(!ready);
   }
