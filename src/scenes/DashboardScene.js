@@ -3,7 +3,7 @@
 // resources over the mission, score by category, you vs real mission, the 6 stage cards (→ 15-D1…D6),
 // mentor feedback, UNLOCKED banner (score ≥ 70), RETRY / LOG / CONTINUE.
 import { C, S, W, H } from '../ui/theme.js';
-import { fresh, txt, pxButton, panel, mentorBar, hotspot, fit } from '../ui/widgets.js';
+import { fresh, txt, pxButton, panel, mentorBar, hotspot, fit, fitBlock } from '../ui/widgets.js';
 import { setup, openModal, mText, confirmBox } from '../ui/chrome.js';
 import { content, t } from '../content.js';
 import { state, resetMission, logEvent } from '../state.js';
@@ -100,10 +100,18 @@ export default class DashboardScene extends Phaser.Scene {
     // resources over the mission (line chart; each line also has its own marker shape)
     const cx = x + 10, cy = y + 122, cw = w - 20, ch = 150;
     panel(this, cx, cy, cw, ch, { fill: C.space, stroke: C.white, bw: 2 });
-    txt(this, cx + 8, cy + 6, t('dashboard.overTime'), { font: 'title', size: 6, color: S.muted });
+    const ot = txt(this, cx + 8, cy + 6, t('dashboard.overTime'), { font: 'title', size: 6, color: S.muted });
     const series = resourceSeries(mi), cols = { budget: C.gold, energy: C.green, fuel: 0xe5484d };
     const leg = t('dashboard.legend');
-    ['budget', 'energy', 'fuel'].forEach((k, i) => { this.add.rectangle(cx + 250 + i * 76, cy + 10, 10, 10, cols[k]).setOrigin(0); txt(this, cx + 264 + i * 76, cy + 6, leg[i], { font: 'title', size: 6, color: S.text }); });
+    // legend starts after the header and each item is spaced by its own width (no overlap at any size)
+    let lx = ot.x + ot.width + 18, ly = cy + 6;
+    ['budget', 'energy', 'fuel'].forEach((k, i) => {
+      const lt = txt(this, 0, ly, leg[i], { font: 'title', size: 6, color: S.text });
+      if (lx + 14 + lt.width > cx + cw - 8) { lx = cx + 8; ly += lt.height + 4; lt.setY(ly); }
+      this.add.rectangle(lx, ly + lt.height / 2 - 5, 10, 10, cols[k]).setOrigin(0);
+      lt.setX(lx + 14);
+      lx += 14 + lt.width + 14;
+    });
     const g = this.add.graphics();
     const px = (i) => cx + 30 + i * ((cw - 60) / 5), py = (v) => cy + ch - 26 - (v / 100) * (ch - 50);
     ['budget', 'energy', 'fuel'].forEach((k, s) => {
@@ -137,13 +145,20 @@ export default class DashboardScene extends Phaser.Scene {
       [t('dashboard.vsRows')[2], `${strong} strong`, 'many', strong / 3, 1],
       [t('dashboard.vsRows')[3], `${mi.signal.packets || 0}/3 pk`, 'relay', (mi.signal.packets || 0) / 3, 1]
     ];
-    rows.forEach(([k, you, real, fy, fr], i) => {
-      const yy = by + 26 + i * 35;
-      txt(this, vx + 8, yy, k, { font: 'title', size: 6, color: S.text });
-      this.add.rectangle(vx + 8, yy + 11, 120 * fy, 8, C.cyan).setOrigin(0);
-      this.add.rectangle(vx + 8, yy + 21, 120 * fr, 8, C.gold).setOrigin(0);
-      txt(this, vx + 134, yy + 8, `${t('dashboard.you')}: ${you}`, { size: 17, color: S.cyan });
-      txt(this, vx + 134, yy + 20, `${t('dashboard.real')}: ${real}`, { size: 17, color: S.gold });
+    // each row: label, then bars on the left and "YOU … REAL …" on one line beside them
+    let yy = by + 26;
+    rows.forEach(([k, you, real, fy, fr]) => {
+      const lab = txt(this, vx + 8, yy, k, { font: 'title', size: 6, color: S.text });
+      const ry = lab.y + lab.height + 1;
+      const yt = txt(this, vx + 96, ry, `${t('dashboard.you')}: ${you}`, { size: 17, color: S.cyan });
+      const rt = txt(this, 0, ry, `${t('dashboard.real')}: ${real}`, { size: 17, color: S.gold });
+      const room = vw - 96 - 12;
+      if (yt.width + 10 + rt.width > room) { fit(yt, room / 2 - 6); fit(rt, room / 2 - 6); }
+      rt.setX(yt.x + yt.width + 10);
+      const rowH = Math.max(yt.height, 20);
+      this.add.rectangle(vx + 8, ry + rowH / 2 - 9, 80 * fy, 8, C.cyan).setOrigin(0);
+      this.add.rectangle(vx + 8, ry + rowH / 2 + 1, 80 * fr, 8, C.gold).setOrigin(0);
+      yy = ry + rowH + 2;
     });
   }
 
@@ -158,9 +173,12 @@ export default class DashboardScene extends Phaser.Scene {
     const sg = this.add.graphics();
     for (let i = 0; i < 5; i++) { const sx = cx - 48 + i * 24, sy = cy + 52; const pts = []; for (let k = 0; k < 10; k++) { const a = -Math.PI / 2 + (k * Math.PI) / 5, r = k % 2 ? 4 : 10; pts.push(sx + Math.cos(a) * r, sy + Math.sin(a) * r); } sg.fillStyle(i < stars ? 0xf0c040 : 0x3a4160, 1); sg.fillPoints(new Phaser.Geom.Polygon(pts).points, true); }
     txt(this, cx, cy + 84, this.rank.rank, { font: 'title', size: 8, color: S.cyan, origin: 0.5, align: 'center', wrap: 170 });
-    this.add.rectangle(cx, cy + 162, 220, 54, this.score.total >= 70 ? 0x16502f : 0x2a3358).setStrokeStyle(3, this.score.total >= 70 ? C.green : C.grey);
-    txt(this, cx, cy + 150, this.score.total >= 70 ? t('dashboard.unlocked') : t('dashboard.lockedTitle'), { font: 'title', size: 9, color: this.score.total >= 70 ? S.green : S.muted, origin: 0.5 });
-    txt(this, cx, cy + 172, this.score.total >= 70 ? t('dashboard.unlockedNext') : t('dashboard.lockedText'), { size: 18, color: S.text, origin: 0.5, align: 'center', wrap: 210 });
+    // unlock banner: title, then the sentence under it; the box grows to hold both
+    const ok = this.score.total >= 70;
+    const bt = txt(this, cx, cy + 142, ok ? t('dashboard.unlocked') : t('dashboard.lockedTitle'), { font: 'title', size: 9, color: ok ? S.green : S.muted, origin: [0.5, 0], depth: 2 });
+    const bx = txt(this, cx, bt.y + bt.height + 4, ok ? t('dashboard.unlockedNext') : t('dashboard.lockedText'), { size: 18, color: S.text, origin: [0.5, 0], align: 'center', wrap: 214, depth: 2 });
+    const bTop = cy + 134, bBottom = bx.y + bx.height + 8;
+    this.add.rectangle(cx, (bTop + bBottom) / 2, 236, bBottom - bTop, ok ? 0x16502f : 0x2a3358).setStrokeStyle(3, ok ? C.green : C.grey).setDepth(1);
   }
 
   cards(mi) {
@@ -182,12 +200,16 @@ export default class DashboardScene extends Phaser.Scene {
       this.add.rectangle(x + 10, y + 10, 24, 24, C.space).setOrigin(0).setStrokeStyle(2, C.gold);
       txt(this, x + 22, y + 22, String(i + 1), { font: 'title', size: 10, color: S.gold, origin: 0.5 });
       pixelIcon(this, STAGE_ICONS[i], x + w - 46, y + 8, 36, 20);
-      txt(this, x + 10, y + 44, names[i], { font: 'title', size: 7, color: S.gold });
-      fit(txt(this, x + 10, y + 62, head[i], { size: 22, color: S.white }), w - 20);
+      // name → result → matches → note stacked; VIEW DETAILS keeps its own line at the bottom
       const m = stageMatches(st, mi);
-      txt(this, x + 10, y + 90, `✓ ${m.match}  ≈ ${m.close}  ✕ ${m.different}`, { size: 22, color: S.cyan });
-      txt(this, x + 10, y + 114, m.match >= m.different ? t('dashboard.cardGood') : t('dashboard.cardImprove'), { size: 18, color: S.muted, wrap: w - 20 });
-      txt(this, x + w - 10, y + h - 14, t('dashboard.details'), { font: 'title', size: 6, color: S.cyan, origin: [1, 0.5] });
+      const det = txt(this, x + w - 10, 0, t('dashboard.details'), { font: 'title', size: 6, color: S.cyan, origin: [1, 0] });
+      det.setY(y + h - det.height - 8);
+      fitBlock([
+        txt(this, x + 10, 0, names[i], { font: 'title', size: 7, color: S.gold, wrap: w - 64 }),
+        fit(txt(this, x + 10, 0, head[i], { size: 22, color: S.white }), w - 20),
+        txt(this, x + 10, 0, `✓ ${m.match}  ≈ ${m.close}  ✕ ${m.different}`, { size: 22, color: S.cyan }),
+        txt(this, x + 10, 0, m.match >= m.different ? t('dashboard.cardGood') : t('dashboard.cardImprove'), { size: 18, color: S.muted, wrap: w - 20 })
+      ], y + 42, det.y - 4, 2);
       hotspot(this, x, y, w, h, `${i + 1}. ${names[i]}: ${head[i]}. ${m.match} match, ${m.close} close, ${m.different} different. View details.`, () => this.detail(i + 1));
     });
   }

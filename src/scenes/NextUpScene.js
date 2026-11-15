@@ -2,7 +2,7 @@
 // dimmed background of the stage, cyan kicker, big gold title, one sentence and NEXT.
 // Same pattern for all of them (post-it "How to implement"): data = { id, next, nextData, transition }.
 import { C, S, W, H } from '../ui/theme.js';
-import { fresh, txt, pxButton, bg } from '../ui/widgets.js';
+import { fresh, txt, pxButton, bg, fitBlock } from '../ui/widgets.js';
 import { setup } from '../ui/chrome.js';
 import { t, content } from '../content.js';
 import { go } from '../router.js';
@@ -21,9 +21,11 @@ export default class NextUpScene extends Phaser.Scene {
     const g = this.add.graphics(); g.lineStyle(1, 0x1f3a6e, 0.35);
     for (let x = 0; x <= W; x += 16) g.lineBetween(x, 0, x, H);
     for (let y = 0; y <= H; y += 16) g.lineBetween(0, y, W, y);
-    txt(this, 640, 226, tr.kicker, { font: 'title', size: 16, color: S.cyan, origin: 0.5 });
-    const title = txt(this, 640, 276, tr.title, { font: 'title', size: 40, color: S.gold, origin: 0.5, shadow: 4, align: 'center', wrap: 1100 });
-    txt(this, 640, 330 + Math.max(0, title.height - 48), tr.text, { size: 26, origin: [0.5, 0], align: 'center', wrap: 780 });
+    // kicker → title → sentence, stacked (a 2-line title pushes the sentence down instead of overlapping)
+    const kicker = txt(this, 640, 0, tr.kicker, { font: 'title', size: 16, color: S.cyan, origin: [0.5, 0] });
+    const title = txt(this, 640, 0, tr.title, { font: 'title', size: 40, color: S.gold, origin: [0.5, 0], shadow: 4, align: 'center', wrap: 1100 });
+    const text = txt(this, 640, 0, tr.text, { size: 26, origin: [0.5, 0], align: 'center', wrap: 820 });
+    fitBlock([kicker, 14, title, 10, text], 200, 452, 0);
     pxButton(this, 548, 470, 184, 60, t('common.next'), () => this.next(data), { primary: true });
     this.onKey = (k) => { if (k === 'Enter' || k === ' ') { this.next(data); return true; } return false; };
     setup(this, data, { back: true, help: 'NextUpScene' });

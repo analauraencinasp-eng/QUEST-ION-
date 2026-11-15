@@ -4,7 +4,7 @@
 //   mentorBar (bubble #e8eef2 + "MENTOR" in #a63711 + BIG alien portrait), card, chip, dots,
 //   img/bg (with placeholder if a PNG is missing), typewriter, meterBar, slider.
 // Keyboard focus: every button registers in scene.focusables; Tab / Shift+Tab move, Enter/Space press.
-import { C, S, W, H, TITLE_FONT, BODY_FONT, fs } from './theme.js';
+import { C, S, W, H, TITLE_FONT, BODY_FONT, fs, minSize } from './theme.js';
 import { sfx } from '../audio.js';
 import { say, sayHover, describeItem } from '../a11y.js';
 
@@ -27,13 +27,16 @@ export function txt(scene, x, y, str, o = {}) {
   const title = o.font === 'title';
   const t = scene.add.text(x, y, str, {
     fontFamily: title ? TITLE_FONT : BODY_FONT,
-    fontSize: `${fs(o.size || (title ? 16 : 22))}px`,
+    fontSize: `${fs(o.size || (title ? 16 : 22), title ? 'title' : 'body')}px`,
     color: o.color || S.text,
     align: o.align || 'left',
-    wordWrap: o.wrap ? { width: o.wrap, useAdvancedWrap: true } : undefined,
+    // wrap on spaces only: words are never cut in half ("COMMUNICATIO / N"); a single word that is
+    // wider than the box shrinks instead (see below)
+    wordWrap: o.wrap ? { width: o.wrap, useAdvancedWrap: false } : undefined,
     lineSpacing: o.lineSpacing ?? (title ? 8 : 2),
     resolution: 2
   });
+  if (o.wrap && t.width > o.wrap + 1) fit(t, o.wrap);
   if (o.origin !== undefined) t.setOrigin(...[].concat(o.origin));
   if (o.shadow) t.setShadow(o.shadow === true ? 3 : o.shadow, o.shadow === true ? 3 : o.shadow, '#000000', 0, false, true);
   if (o.depth) t.setDepth(o.depth);
@@ -46,6 +49,34 @@ export function fit(t, maxW, maxH, min = 12) {
   let size = parseInt(t.style.fontSize, 10);
   while ((t.width > maxW || (maxH && t.height > maxH)) && size > min) { size -= 1; t.setFontSize(size); }
   return t;
+}
+
+// Stack texts top→bottom: each one starts `gap` px below the previous one (so longer or larger text
+// pushes the next block down instead of overlapping it). Returns the bottom y.
+export function flow(items, y, gap = 10) {
+  for (const it of items) {
+    if (!it) continue;
+    if (it.setY) { it.setY(y + (it.displayOriginY || 0)); y += it.height + gap; } else if (typeof it === 'number') y += it;
+  }
+  return y - gap;
+}
+
+// Shrink a group of texts evenly (1 px at a time, never below the readable floor) until the stack
+// laid out by flow() ends above maxBottom. Returns the bottom y.
+export function fitBlock(items, y, maxBottom, gap = 10) {
+  const texts = items.filter((t) => t && t.setFontSize);
+  let bottom = flow(items, y, gap);
+  for (let guard = 0; bottom > maxBottom && guard < 20; guard++) {
+    let shrunk = false;
+    for (const t of texts) {
+      const size = parseInt(t.style.fontSize, 10);
+      const min = minSize(/Press Start/.test(t.style.fontFamily) ? 'title' : 'body');
+      if (size > min) { t.setFontSize(size - 1); shrunk = true; }
+    }
+    if (!shrunk) break;
+    bottom = flow(items, y, gap);
+  }
+  return bottom;
 }
 
 // ---------- boxes ----------
@@ -212,7 +243,7 @@ export function hotspot(scene, x, y, w, h, label, onClick, o = {}) {
   const item = {
     zone: z, label, kind: 'option', modal: o.modal || null, disabled: false,
     alive: () => !!z.scene && z.input && z.input.enabled,
-    focus() { ring.clear(); ring.lineStyle(4, C.yellow, 1); ring.strokeRect(x - 4, y - 4, w + 8, h + 8); if (o.onFocus) o.onFocus(); },
+    focus() { const [rx, ry, rw, rh] = o.ringRect || [x - 4, y - 4, w + 8, h + 8]; ring.clear(); ring.lineStyle(4, C.yellow, 1); ring.strokeRect(rx, ry, rw, rh); if (o.onFocus) o.onFocus(); },
     blur() { ring.clear(); if (o.onBlur) o.onBlur(); },
     press() { sfx(scene, 'sfx-pickup'); onClick(); },
     destroy() { z.destroy(); ring.destroy(); }
@@ -232,8 +263,10 @@ export function mentorBar(scene, x, y, w, h, text, o = {}) {
   const bx = side === 'right' ? x : x + portrait + 16;
   const px = side === 'right' ? x + bubbleW + 16 : x;
   const bubble = panel(scene, bx, y, bubbleW, h, { fill: C.bubble, stroke: C.ink, bw: 4, depth });
-  const title = txt(scene, bx + 14, y + 10, o.title || 'MENTOR', { font: 'title', size: 12, color: S.mentor }).setDepth(depth + 1);
-  const body = txt(scene, bx + 14, y + 30, '', { size: o.size || 24, color: S.ink, wrap: bubbleW - 28, lineSpacing: 0 }).setDepth(depth + 1);
+  const title = txt(scene, bx + 14, y + 12, o.title || 'MENTOR', { font: 'title', size: 12, color: S.mentor }).setDepth(depth + 1);
+  // the body starts under the label (whatever the text size) and must end inside the bubble
+  const body = txt(scene, bx + 14, title.y + title.height + 4, '', { size: o.size || 24, color: S.ink, wrap: bubbleW - 28, lineSpacing: 0 }).setDepth(depth + 1);
+  const bodyMaxH = y + h - 8 - body.y;
   body._a11yMentor = true;   // the mentor line is spoken on its own; the screen reader doesn't repeat it
   const py = y + h - portrait;
   const frame = panel(scene, px, py, portrait, portrait, { fill: C.portrait, stroke: C.white, bw: 4, depth });
@@ -241,7 +274,7 @@ export function mentorBar(scene, x, y, w, h, text, o = {}) {
   const api = {
     title, body,
     destroy() { if (body._tw) body._tw.remove(); [bubble, title, body, frame, face].forEach((o) => o.destroy()); },
-    set(str, opts = {}) { typewriter(scene, body, str, { maxH: h - 40, onDone: opts.onDone }); if (!opts.silent) say(str, opts.lineId); },
+    set(str, opts = {}) { typewriter(scene, body, str, { maxH: bodyMaxH, onDone: opts.onDone }); if (!opts.silent) say(str, opts.lineId); },
     setTitle(s) { title.setText(s); }
   };
   if (text) api.set(text, { lineId: o.lineId, silent: o.silent });
@@ -255,6 +288,8 @@ export function typewriter(scene, t, full, o = {}) {
   const reduce = scene.registry && scene.registry.get && scene.registry.get('reduceMotion');
   if (reduce || o.instant) { t.setText(full); if (o.maxH) fit(t, t.style.wordWrapWidth || 9999, o.maxH); o.onDone && o.onDone(); return; }
   let i = 0;
+  // size the font for the FULL line first, so the text never spills out of its box while typing
+  if (o.maxH) { t.setText(full); fit(t, t.style.wordWrapWidth || 9999, o.maxH); }
   t.setText('');
   t._full = full;
   t._tw = scene.time.addEvent({ delay: o.speed || 18, repeat: full.length, callback: () => {

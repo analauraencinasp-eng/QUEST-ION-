@@ -22,8 +22,8 @@ export default class SlidesScene extends Phaser.Scene {
     this.i = Math.max(0, Math.min(this.deck.slides.length - 1, data.i || 0));
     img(this, 0, 0, 'bg-meridiani', { origin: 0, w: W, h: H });
     this.add.rectangle(0, 0, W, H, C.space, 0.35).setOrigin(0);
-    txt(this, 640, 32, this.deck.title, { font: 'title', size: 20, color: S.gold, origin: 0.5, shadow: 3 });
-    txt(this, 640, 70, this.deck.sub.text, { size: 23, color: S.cyan, origin: 0.5, align: 'center', wrap: 1180 });
+    const dt = txt(this, 640, 18, this.deck.title, { font: 'title', size: 20, color: S.gold, origin: [0.5, 0], shadow: 3 });
+    txt(this, 640, dt.y + dt.height + 6, this.deck.sub.text, { size: 23, color: S.cyan, origin: [0.5, 0], align: 'center', wrap: 1180 });
     this.layer = this.add.container(0, 0);
     this.backBtn = pxButton(this, 24, 640, 200, 60, t('slides.back'), () => this.prev(), { size: 16 });
     this.nextBtn = pxButton(this, 1016, 640, 240, 60, '', () => this.next(), { primary: true });

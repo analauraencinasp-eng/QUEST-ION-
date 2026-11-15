@@ -44,8 +44,8 @@ export default class TalkScene extends Phaser.Scene {
     img(this, 240, ey, 'icon-earth', { w: 140, h: 140 });
     txt(this, 240, ey + 86, t('talk.earth'), { font: 'title', size: 10, color: S.cyan, origin: 0.5 });
     for (let i = 0; i < 3; i++) img(this, 200 + i * 40, ey + 120, 'icon-antenna', { w: 26, h: 26 });
-    txt(this, 240, ey + 150, t('talk.dsn'), { size: 20, color: S.muted, origin: 0.5 });
-    txt(this, 240, ey + 172, t('talk.dsnSites'), { size: 20, color: S.muted, origin: 0.5 });
+    const dsn = txt(this, 240, ey + 140, t('talk.dsn'), { size: 20, color: S.muted, origin: [0.5, 0] });
+    txt(this, 240, dsn.y + dsn.height, t('talk.dsnSites'), { size: 20, color: S.muted, origin: [0.5, 0] });
     const sun = this.add.graphics(); sun.fillStyle(0xf0c040, 1); sun.fillCircle(640, ey, 34); sun.fillStyle(0xffe08a, 1); sun.fillCircle(632, ey - 8, 14);
     txt(this, 640, ey + 50, t('talk.sun'), { font: 'title', size: 9, color: S.gold, origin: 0.5 });
     img(this, 1040, ey, 'planet-mars-big', { w: 140, h: 140 });

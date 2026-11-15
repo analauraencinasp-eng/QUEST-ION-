@@ -5,7 +5,7 @@
 //   MY MISSION panel (planet, objective, parts, instruments, orbit, results, log)  key: M
 // Also the modal system and the keyboard dispatcher (only the top modal receives keys).
 import { C, S, W, H } from './theme.js';
-import { fresh, txt, panel, pxButton, iconButton, dim, moveFocus, activeFocusables, mentorBar } from './widgets.js';
+import { fresh, txt, panel, pxButton, iconButton, dim, moveFocus, activeFocusables, mentorBar, fitBlock } from './widgets.js';
 import { content, t, allSources } from '../content.js';
 import { state, STATION_IDS } from '../state.js';
 import { saveSettings } from '../save.js';
@@ -92,7 +92,7 @@ export function mText(scene, modal, x, y, s, o = {}) { return modal.add(txt(scen
 // ---------------- Settings (Screen 1b) ----------------
 export function openSettings(scene, o = {}) {
   if (scene.modals.find((md) => md.kind === 'settings')) return;
-  const md = openModal(scene, t('settings.title'), { w: 620, h: 660, stroke: C.white });
+  const md = openModal(scene, t('settings.title'), { w: 760, h: 690, stroke: C.white });
   md.kind = 'settings';
   const s = state.settings;
   const rows = [
@@ -108,28 +108,36 @@ export function openSettings(scene, o = {}) {
     saveSettings(); applyVolume(); refreshMusic();
     scene.registry.set('reduceMotion', s.reduceMotion);
   };
-  rows.forEach((r, i) => {
-    const y = md.y + 86 + i * 58;
-    mText(scene, md, md.x + 32, y + 6, r.label, { size: 26 });
+  // labels get their own wrapped column; each row is as tall as its label (no overlap at text size L)
+  const CX = md.x + 400;                         // controls column
+  let y = md.y + 78;
+  rows.forEach((r) => {
+    const lab = mText(scene, md, md.x + 32, y + 4, r.label, { size: 24, wrap: CX - md.x - 48 });
+    const rowH = Math.max(52, lab.height + 10);
+    lab.setY(y + Math.max(4, (44 - lab.height) / 2));
     if (r.type === 'onoff') {
-      const on = mButton(scene, md, md.x + 330, y, 110, 44, 'ON', () => { s[r.k] = true; sync(); changed(); if (r.k === 'narration') say(t('settings.narrationOn')); }, { size: 12 });
-      const off = mButton(scene, md, md.x + 452, y, 110, 44, 'OFF', () => { s[r.k] = false; sync(); changed(); }, { size: 12 });
+      const on = mButton(scene, md, CX, y, 110, 44, 'ON', () => { s[r.k] = true; sync(); changed(); if (r.k === 'narration') say(t('settings.narrationOn')); }, { size: 12 });
+      const off = mButton(scene, md, CX + 122, y, 110, 44, 'OFF', () => { s[r.k] = false; sync(); changed(); }, { size: 12 });
       const sync = () => { on.setPrimary(!!s[r.k]); off.setPrimary(!s[r.k]); on.setLabel(s[r.k] ? '✓ ON' : 'ON'); off.setLabel(!s[r.k] ? '✓ OFF' : 'OFF'); };
       sync();
     } else if (r.type === 'size') {
-      const btns = ['S', 'M', 'L'].map((z, j) => mButton(scene, md, md.x + 330 + j * 78, y, 66, 44, z, () => { s.textSize = z; sync(); changed(); scene.scene.restart(scene.routeData); }, { size: 12 }));
+      const btns = ['S', 'M', 'L'].map((z, j) => mButton(scene, md, CX + j * 78, y, 66, 44, z, () => { s.textSize = z; sync(); changed(); scene.scene.restart(scene.routeData); }, { size: 12 }));
       const sync = () => btns.forEach((b, j) => b.setPrimary(['S', 'M', 'L'][j] === s.textSize));
       sync();
     } else {
-      const minus = mButton(scene, md, md.x + 330, y, 56, 44, '-', () => { s[r.k] = Math.max(0, (s[r.k] ?? 0) - 10); sync(); changed(); sfx(scene, 'sfx-place'); }, { size: 14 });
-      const val = mText(scene, md, md.x + 430, y + 22, '', { font: 'title', size: 14, origin: 0.5 });
-      const plus = mButton(scene, md, md.x + 476, y, 56, 44, '+', () => { s[r.k] = Math.min(100, (s[r.k] ?? 0) + 10); sync(); changed(); sfx(scene, 'sfx-place'); }, { size: 14 });
+      const minus = mButton(scene, md, CX, y, 56, 44, '-', () => { s[r.k] = Math.max(0, (s[r.k] ?? 0) - 10); sync(); changed(); sfx(scene, 'sfx-place'); }, { size: 14 });
+      const val = mText(scene, md, CX + 100, y + 22, '', { font: 'title', size: 14, origin: 0.5 });
+      const plus = mButton(scene, md, CX + 146, y, 56, 44, '+', () => { s[r.k] = Math.min(100, (s[r.k] ?? 0) + 10); sync(); changed(); sfx(scene, 'sfx-place'); }, { size: 14 });
       const sync = () => val.setText(`${s[r.k] ?? 0}%`);
       sync(); void minus; void plus;
     }
+    y += rowH;
   });
-  mText(scene, md, md.x + 32, md.y + 500, t('settings.note'), { size: 20, color: S.muted, wrap: 380 });
-  mButton(scene, md, md.x + 32, md.y + md.h - 80, 200, 56, t('settings.sources'), () => openSources(scene), { size: 12 });
+  // note under the rows, always above the bottom buttons (SOURCES / CLOSE)
+  const btnTop = md.y + md.h - 80;
+  const note = mText(scene, md, md.x + 32, y + 8, t('settings.note'), { size: 20, color: S.muted, wrap: md.w - 64 });
+  fitBlock([note], y + 8, btnTop - 12);
+  mButton(scene, md, md.x + 32, btnTop, 220, 56, t('settings.sources'), () => openSources(scene), { size: 12 });
   if (o.extra) o.extra(md);
   say(t('settings.title'));
   return md;

@@ -4,7 +4,7 @@
 // helps with it has been inspected (= its question answered). Then 11a2 → assembly (11c).
 // The HUD meters change with the kit: every packed instrument adds cost + mass and draws energy (simulated).
 import { C, S, W, H } from '../ui/theme.js';
-import { fresh, txt, img, panel, mentorBar } from '../ui/widgets.js';
+import { fresh, txt, img, panel, mentorBar, fit } from '../ui/widgets.js';
 import { setup } from '../ui/chrome.js';
 import { makeHud } from '../ui/hud.js';
 import { content, t } from '../content.js';
@@ -30,9 +30,14 @@ export default class WarehouseScene extends Phaser.Scene {
     this.add.rectangle(0, 0, W, H, 0x1b2233).setOrigin(0);
     img(this, 0, 0, 'bg-warehouse', { origin: 0, w: W, h: H });
     // title chip (Figma 415,114)
-    panel(this, 412, 108, 456, 40, { fill: 0x0b0f26, stroke: C.cyan, bw: 3, depth: 20 });
-    txt(this, 432, 128, t('warehouse.title'), { font: 'title', size: 12, origin: [0, 0.5], depth: 21 });
-    txt(this, 852, 128, t('warehouse.sub'), { font: 'title', size: 8, color: S.gold, origin: [1, 0.5], depth: 21 });
+    // the chip is as wide as its two labels (they never overlap at any text size)
+    const wt = txt(this, 0, 128, t('warehouse.title'), { font: 'title', size: 12, origin: [0, 0.5], depth: 21 });
+    const ws = txt(this, 0, 128, t('warehouse.sub'), { font: 'title', size: 8, color: S.gold, origin: [0, 0.5], depth: 21 });
+    // starts right of the progress box (24..396) and ends before the ☰ button (1192)
+    if (wt.width + ws.width + 60 > 1176 - 412) fit(ws, 1176 - 412 - 60 - wt.width);
+    const cw = wt.width + ws.width + 60, cx0 = Math.max(412, Math.min(640 - cw / 2, 1176 - cw));
+    panel(this, cx0, 108, cw, 40, { fill: 0x0b0f26, stroke: C.cyan, bw: 3, depth: 20 });
+    wt.setX(cx0 + 20); ws.setX(cx0 + cw - 20 - ws.width);
     // progress (inspected + requirements covered + kit)
     panel(this, 24, 108, 372, 40, { fill: 0x0b0f26, stroke: C.white, bw: 3, depth: 20 });
     this.progress = txt(this, 40, 128, '', { font: 'title', size: 9, origin: [0, 0.5], depth: 21 });
