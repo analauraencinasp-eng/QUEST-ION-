@@ -4,6 +4,12 @@
 // SFX: the .wav files loaded by Phaser (assets/sfx). NASA clips: assets/nasa-audio (optional).
 import { state } from './state.js';
 
+// The team did not like the generated chiptune nor the effects playing on top of it, and is choosing another
+// audio API. Until then music and sound effects are OFF; flip these two flags to bring them back.
+// The narrator voice (voice.js) is separate and is not affected.
+export const MUSIC_ENABLED = false;
+export const SFX_ENABLED = false;
+
 let ctx = null, master = null, current = null;
 const STAGES = {
   // seed, tempo (BPM), scale (semitones from root), root MIDI note, wave of the lead
@@ -77,6 +83,7 @@ function blip(time, hz, dur, wave, gainNode, vol) {
 
 // Starts (or crossfades to) the loop of a stage. Calling it again with the same stage does nothing.
 export function playMusic(stage) {
+  if (!MUSIC_ENABLED) return;
   if (current && current.stage === stage) return;
   stopMusic(true);
   if (!state.settings.music || typeof window === 'undefined' || !window.__questUnlocked) { current = { stage, pending: true }; return; }
@@ -122,9 +129,11 @@ export function refreshMusic() {
   if (stage && (current.pending || !current.timer)) { current = null; playMusic(stage); }
 }
 
-// called by index.html after the "click to play" overlay
+// browsers only allow sound after the first click / key: unlock on the first gesture anywhere
 if (typeof window !== 'undefined') {
+  window.__questUnlocked = true;
   window.__questUnlock = () => {
+    if (!MUSIC_ENABLED) return;
     ensureCtx();
     if (ctx && ctx.state === 'suspended') ctx.resume();
     if (current && current.pending) { const s = current.stage; current = null; playMusic(s); }
@@ -133,7 +142,7 @@ if (typeof window !== 'undefined') {
 
 // ---------- sound effects (Phaser sound manager) ----------
 export function sfx(scene, key) {
-  if (!state.settings.sfx) return;
+  if (!SFX_ENABLED || !state.settings.sfx) return;
   try {
     if (scene.cache.audio.exists(key)) scene.sound.play(key, { volume: (state.settings.volume / 100) * 0.6 });
   } catch (e) { /* sound is optional */ }
@@ -141,7 +150,7 @@ export function sfx(scene, key) {
 
 // NASA audio clips (assets/nasa-audio): play a short segment [offset, duration] of a clip
 export function nasaClip(scene, key, offset = 0, duration) {
-  if (!state.settings.sfx) return;
+  if (!SFX_ENABLED || !state.settings.sfx) return;
   try {
     if (!scene.cache.audio.exists(key)) return;
     const snd = scene.sound.add(key, { volume: (state.settings.volume / 100) * 0.8 });

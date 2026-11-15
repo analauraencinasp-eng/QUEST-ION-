@@ -21,7 +21,11 @@ export function saveSettings() {
 }
 
 export function hasSave() {
-  try { const raw = store() && store().getItem(KEY_GAME); return !!(raw && JSON.parse(raw).screen); } catch (e) { return false; }
+  try {
+    const raw = store() && store().getItem(KEY_GAME);
+    const scr = raw && JSON.parse(raw).screen;
+    return !!(scr && scr.key && scr.key !== 'TitleScene' && scr.key !== 'BootScene');
+  } catch (e) { return false; }
 }
 
 export function saveGame() {

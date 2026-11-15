@@ -4,8 +4,12 @@
   "type": "module",
   "description": "QUEST(ION) — NASA Space Apps 2026 educational game (Phaser 3, no build step)",
   "scripts": {
+    "start": "node server.mjs",
     "test": "node tests/tests-run.mjs && node tests/smoke-test.mjs",
     "ephemeris": "node tools/fetch_ephemeris.mjs",
     "nasa-audio": "node tools/fetch_nasa_audio.mjs"
+  },
+  "dependencies": {
+    "@google/genai": "^3.3.0"
   }
 }

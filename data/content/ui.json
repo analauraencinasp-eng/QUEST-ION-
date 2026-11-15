@@ -42,7 +42,7 @@
     "title": "📋 MY MISSION",
     "mode": "MODE", "role": "ROLE", "planet": "PLANET", "objective": "OBJECTIVE",
     "parts": "SPACECRAFT PARTS", "instruments": "INSTRUMENTS", "inspected": "inspected",
-    "orbit": "ORBIT", "orbitOk": "reaches Mars in {days} days · fuel {fuel}% (game value)",
+    "orbit": "ORBIT", "orbitOk": "reaches Mars in {days} days · Δv {fuel} km/s",
     "results": "RESULTS SO FAR", "meters": "METERS", "resp": "Earth responsibility",
     "log": "MISSION LOG", "logEmpty": "Nothing yet. Your decisions will appear here."
   },
@@ -154,7 +154,10 @@
     "packed": "[x] PACKED",
     "inspect": "[E] INSPECT {NAME}",
     "mentor": "Your rover base already drives, talks and has power. Inspect each table and pick the science instruments your mission needs!",
-    "allDone": "All 14 inspected! Walk to the EXIT ▶ to build your rover.",
+    "allDone": "All 5 requirements are covered! Walk to the EXIT ▶ to build your rover, or keep inspecting.",
+    "need": "Inspect at least one instrument for each requirement to open the exit ({n}/5 covered).",
+    "exitLocked": "EXIT · {n}/5 REQ.",
+    "kit": "KIT {n}",
     "exit": "EXIT ▶",
     "controls": "Arrows / WASD: walk · E: inspect table"
   },
@@ -164,7 +167,14 @@
     "origin": "ORIGIN MISSION:",
     "what": "WHAT IT DOES", "role": "ROLE IN THE GAME", "mount": "WHERE IT MOUNTS", "helps": "HELPS WITH REQUIREMENTS",
     "compat": "COMPATIBILITY: {C}",
-    "back": "◀ WAREHOUSE", "pack": "PACK IN KIT", "unpack": "REMOVE FROM KIT", "quiz": "QUESTION ▶",
+    "back": "◀ WAREHOUSE", "pack": "ADD TO KIT ▶", "unpack": "REMOVE FROM KIT", "quiz": "? QUESTION", "assemble": "ASSEMBLE ▶", "later": "LATER",
+    "mentor": "Read the 5 requirements, then pick instruments that cover them. You can mix and match!",
+    "quizIntro": "Answer it to mark this table as inspected.",
+    "over": "That would go over the budget cap. Remove something from your kit first.",
+    "locked": "Inspect one instrument for each requirement first ({n}/5 covered).",
+    "inKit": "[x] IN YOUR KIT", "values": "SIMULATED GAME VALUES",
+    "compatNames": { "yes": "COMPATIBLE", "redesign": "NEEDS REDESIGN", "offgoal": "DIFFERENT GOAL" },
+    "reqShort": ["1. Capture panoramic images", "2. Examine rocks up close", "3. Identify water minerals", "4. Analyze rock chemistry", "5. Expose fresh rock"],
     "quizTitle": "QUICK QUESTION · {NAME}",
     "correct": "✓ Correct!", "wrong": "✕ Not quite. The right answer is highlighted. Try again!",
     "done": "✓ DONE"
@@ -172,7 +182,6 @@
   "assembly": {
     "title": "BUILD YOUR ROVER",
     "sub": "Drag instruments from your kit onto the rover. The base rover already drives, talks and has power.",
-    "time": "TIME",
     "reqs": "SCIENCE REQUIREMENTS",
     "tip": "Tip: add calibration targets so your measurements can be trusted.",
     "mast": "MAST", "body": "BODY", "arm": "ARM TURRET (4 tools)", "deck": "DECK (extras)",
@@ -180,7 +189,12 @@
     "mentor": "Some tools only work on the arm. Not every great tool fits this rover!",
     "wrongSlot": "{NAME} mounts on the {MOUNT}, not here.",
     "undo": "Z: undo last · drag & drop · ENTER: finish",
-    "finish": "FINISH ▶"
+    "finish": "FINISH ▶",
+    "empty": "Your kit is empty. Go back to the warehouse and add instruments.",
+    "backWh": "◀ WAREHOUSE",
+    "placed": "{NAME} installed on the {SLOT}.",
+    "full": "That spot is taken. Press Z to undo, or drop it on a free spot.",
+    "noFit": "{NAME} has no free spot on the {MOUNT}."
   },
   "assemblyResults": {
     "result": "RESULT:",
@@ -191,7 +205,9 @@
     "picks": "YOUR PICKS (historical MER parts revealed)",
     "missing": "(missing)",
     "retry": "↺ REBUILD", "next": "NEXT ▶",
-    "mentor": "Modern tools are not \"worse\": they were just not built for a 2003 rover, and some answer a different question."
+    "mentor": "Modern tools are not \"worse\": they were just not built for a 2003 rover, and some answer a different question.",
+    "mentorReady": "Every requirement is covered with tools built for this rover. That is very close to what the real team chose!",
+    "mer": "MER", "tryTool": "No tool for requirement {n} ({REQ}): try the {NAME}.", "reqN": "Requirement {n}."
   },
   "orbit": {
     "title": "PLAN YOUR ORBIT", "titleFree": "PLOT YOUR ORBIT",
@@ -216,7 +232,16 @@
     "gotIt": "[ GOT IT ]",
     "months": "about {m} months", "days": "{d} days",
     "earth": "EARTH", "sun": "SUN", "marsNow": "MARS now", "marsArr": "MARS at arrival", "burn": "BURN", "yourPath": "YOUR PATH", "yourGuess": "YOUR GUESS",
-    "earthOrbit": "EARTH ORBIT", "marsOrbit": "MARS ORBIT", "realData": "Planet positions: JPL Horizons (real 2003–2005 data)"
+    "earthOrbit": "EARTH ORBIT", "marsOrbit": "MARS ORBIT", "realData": "Planet positions: JPL Horizons (real 2003–2005 data)",
+    "launchDate": "LAUNCH DATE", "travelTime": "TRAVEL TIME", "criterion": "CRITERION",
+    "faster": "FASTER", "slower": "SLOWER", "inWindow": "IN WINDOW", "outWindow": "OUT OF WINDOW",
+    "dvDep": "Δv DEPARTURE", "dvArr": "Δv ARRIVAL", "dvTot": "Δv TOTAL", "arrival": "ARRIVAL",
+    "rating": "FOR {CRIT}", "bestLine": "BEST FOR {CRIT}: {DATE} · {D} days · Δv {DV} km/s", "showBest": "SHOW BEST", "hideBest": "HIDE BEST",
+    "live": "Planet data: JPL Horizons (live)", "saved": "Planet data: JPL Horizons (saved copy, {DATE})",
+    "loading": "Asking JPL Horizons for Earth and Mars positions...", "computing": "Comparing trajectories...",
+    "clear": "CLEAR", "drawn": "Path drawn! Press NEXT.", "tryIt": "TRY IT ▶", "adjust": "◀ ADJUST",
+    "lockedTitle": "TRAJECTORY LOCKED · {s}/5 STARS ({CRIT})", "you": "YOU", "spirit": "SPIRIT", "opp": "OPPORTUNITY",
+    "rowLaunch": "LAUNCH", "rowArrival": "ARRIVAL", "rowTravel": "TRAVEL", "realBest": "BEST", "bestPath": "BEST PATH"
   },
   "launchReady": {
     "title": "READY FOR LAUNCH",
@@ -285,15 +310,17 @@
     "badge": "Simplified for fun: real links are planned by the team on Earth.",
     "how": "HOW TO PLAY",
     "steps": ["1. An orbiter flies across the Martian sky.", "2. Move your antenna with A/D or the arrow keys.", "3. Press SPACE to fire a data packet ONLY while the orbiter is inside the green LINK WINDOW.", "4. Dust clouds block packets. Every shot costs energy.", "5. Land 3 packets on the orbiter to send your data to Earth!"],
-    "mentor": "Packets fired outside the window are lost in space, and that energy is gone. Wait for the right moment!",
+    "mentor": "A packet fired outside the window misses the orbiter, but your data is not lost: it stays in the rover's memory and you can send it again. The energy of that shot is gone, so wait for the right moment!",
+    "learnTitle": "HOW REAL ROVERS SEND THEIR DATA", "learnNote": "This is what really happened with Spirit and Opportunity.",
+    "memory": "ROVER MEMORY", "saved": "SAVED IN MEMORY: send it again!", "waiting": "WAITING FOR THE NEXT PASS", "memoryFull": "MEMORY FULL",
     "go": "START ▶",
-    "window": "LINK WINDOW", "orbiter": "ORBITER", "lost": "LOST! (outside window)", "blocked": "BLOCKED by dust!", "linked": "LINKED! +1",
+    "window": "LINK WINDOW", "orbiter": "ORBITER", "lost": "MISSED! Still saved in memory", "blocked": "BLOCKED by dust!", "linked": "LINKED! +1",
     "packets": "PACKETS SENT", "energy": "ENERGY", "closes": "WINDOW CLOSES", "delay": "EARTH DELAY",
     "controls": "A/D or Left/Right: aim · SPACE: send packet (only in the LINK WINDOW)",
     "sent": "DATA SENT!", "rover": "ROVER", "dsn": "DSN ON EARTH", "arrives": "ARRIVES ON EARTH IN",
     "shots": "SHOTS USED", "energyLeft": "ENERGY LEFT",
     "resultMentor": "The team on Earth will see your clues about {min} minutes from now. That is how real Mars missions work!",
-    "retryPass": "NEXT PASS ▶", "outMentor": "The orbiter flew away. Another pass comes later: try again!",
+    "retryPass": "NEXT PASS ▶", "outMentor": "The orbiter flew away. Your unsent data is still saved in the rover's memory and waits for the next pass.",
     "continue": "MISSION REPORT ▶"
   },
   "dashboard": {
@@ -328,8 +355,8 @@
     "4c": { "kicker": "NEXT UP", "title": "MISSION OBJECTIVE", "text": "Destination locked: MARS! Now choose the science goal of your mission. Your objective decides the instruments and the spacecraft you will design next.", "bg": "solar" },
     "7b": { "kicker": "NEXT UP", "title": "BUILD YOUR SPACECRAFT", "text": "Your mission is set: Mars, your crew and your objective. Now build the spacecraft that will carry your rover there, one station at a time.", "bg": "solar" },
     "9f": { "kicker": "NEXT UP", "title": "SCIENCE INSTRUMENTS", "text": "Welcome to the warehouse! Your spacecraft is ready. Now choose the science instruments your rover will carry to hunt for clues of ancient water.", "bg": "hangar" },
-    "11a2": { "kicker": "NEXT UP", "title": "BUILD YOUR ROVER", "text": "Your instrument kit is ready. Now install each instrument in the right place on the rover before time runs out, and cover the 5 science requirements!", "bg": "bench" },
-    "11e": { "kicker": "NEXT UP", "title": "PLAN YOUR ORBIT", "text": "Your rover is equipped! Now plan the trip from Earth to Mars: choose the launch day, the burn power and the burn direction.", "bg": "space" },
+    "11a2": { "kicker": "NEXT UP", "title": "BUILD YOUR ROVER", "text": "Your instrument kit is ready. Now install each instrument in the right place on the rover and cover the 5 science requirements!", "bg": "bench" },
+    "11e": { "kicker": "NEXT UP", "title": "PLAN YOUR ORBIT", "text": "Your rover is equipped! Now plan the trip from Earth to Mars: choose the launch date, the travel time and what matters most to you.", "bg": "space" },
     "12.4": { "kicker": "NEXT UP", "title": "LAUNCH", "text": "Your orbit is planned and the launch window is open. Your spacecraft sits on top of the rocket: it's time to leave Earth!", "bg": "sky" },
     "13e-1.0": { "kicker": "UP NEXT · REAL MISSION", "title": "HOW THE REAL ROVERS STUDIED ROCKS", "text": "Before you go hunting, see how Spirit and Opportunity really investigated rocks on Mars, step by step.", "bg": "mars" },
     "13e": { "kicker": "NEXT UP", "title": "ROCK HUNTER", "text": "Your spacecraft reached Mars and the rover is on the ground at Meridiani Planum. Time to explore the rocks and look for clues of ancient water!", "bg": "mars" },

@@ -1,7 +1,7 @@
 // Screen 10 · Station card: component name as title, alternatives A/B/C top-right (B = MER HISTORICAL),
 // blueprint image on the left, description in the centre, parts, SIMULATED GAME VALUES, advantage /
 // limitation, and the effect on Earth ONLY if an official NASA source backs it (none for these parts).
-import { C, S, W, H } from '../ui/theme.js';
+import { C, S, W, H, fs } from '../ui/theme.js';
 import { fresh, txt, pxButton, img, panel, mentorBar, chip, segMeter, hotspot, fit } from '../ui/widgets.js';
 import { setup } from '../ui/chrome.js';
 import { content, t } from '../content.js';
@@ -17,6 +17,7 @@ export default class StationScene extends Phaser.Scene {
 
   create(data) {
     fresh(this);
+    this.noAutoRead = true;          // this card speaks its own full description + keys (draw())
     playMusic('workshop');
     this.st = stationById(data.station || 'structure');
     const cur = state.mission.stations[this.st.id];
@@ -41,7 +42,7 @@ export default class StationScene extends Phaser.Scene {
       if (k === 'Enter') { this.install(); return true; }
       return false;
     };
-    setup(this, data, { back: true, help: 'StationScene', esc: () => back(this) });
+    setup(this, data, { back: false, help: 'StationScene', esc: () => back(this) });   // ◀ WORKSHOP is the back button here
     this.draw();
   }
 
@@ -105,18 +106,35 @@ export default class StationScene extends Phaser.Scene {
       add(txt(this, 792, y + 18 + i * 20, word, { size: 20, color: S.gold }));
     });
     y += 92;
-    const ag = add(this.add.graphics()); ag.fillStyle(0x23294a, 1); ag.fillRect(552, y, 632, 600 - y); ag.lineStyle(3, 0x8a93c8, 1); ag.strokeRect(552, y, 632, 600 - y);
-    add(txt(this, 564, y + 8, t('station.advantage'), { font: 'title', size: 8, color: S.green }));
-    add(txt(this, 668, y + 4, o.advantage, { size: 20, wrap: 506 }));
-    add(txt(this, 564, y + 32, t('station.limitation'), { font: 'title', size: 8, color: S.red }));
-    add(fit(txt(this, 668, y + 28, o.limitation, { size: 20, wrap: 506 }), 506, 600 - y - 52));
-    add(txt(this, 564, 600 - 22, `${t('station.earth')}: ${o.earth_effect ? o.earth_effect.text : t('station.noEarth')}`, { size: 16, color: S.muted, wrap: 610 }));
+    // advantage / limitation / Earth effect: each line sits under the previous one, and the box fits them all
+    const ag = add(this.add.graphics());
+    const adv = add(txt(this, 668, 0, o.advantage, { size: 20, wrap: 506 }));
+    const advL = add(txt(this, 564, 0, t('station.advantage'), { font: 'title', size: 8, color: S.green }));
+    const lim = add(txt(this, 668, 0, o.limitation, { size: 20, wrap: 506 }));
+    const limL = add(txt(this, 564, 0, t('station.limitation'), { font: 'title', size: 8, color: S.red }));
+    const earth = add(txt(this, 564, 0, `${t('station.earth')}: ${o.earth_effect ? o.earth_effect.text : t('station.noEarth')}`, { size: 16, color: S.muted, wrap: 610 }));
+    const BOTTOM = 612;                                    // the card's inner bottom edge
+    const layout = () => {
+      adv.setY(y + 6); advL.setY(adv.y + 4);
+      lim.setY(adv.y + adv.height + 2); limL.setY(lim.y + 4);
+      earth.setY(lim.y + lim.height + 4);
+      return earth.y + earth.height + 6;
+    };
+    // the box grows with the text; if it would leave the card, shrink the font one step at a time
+    let size = 20;
+    while (layout() > BOTTOM && size > 15) {
+      size -= 1;
+      adv.setFontSize(fs(size)); lim.setFontSize(fs(size)); earth.setFontSize(fs(Math.max(14, size - 4)));
+    }
+    const boxH = Math.min(BOTTOM, Math.max(600, layout())) - y;
+    ag.fillStyle(0x23294a, 1); ag.fillRect(552, y, 632, boxH); ag.lineStyle(3, 0x8a93c8, 1); ag.strokeRect(552, y, 632, boxH);
+    this.cont.sendToBack(ag);
     // mentor + install state
     const line = o.kind === 'mer' ? t('station.mentorB') : o.kind === 'alt' ? t('station.mentorC') : t('station.mentorA');
     this.mentor.set(line, { silent: true });
     const installed = state.mission.stations[this.st.id];
     this.installBtn.setLabel(installed && installed !== o.letter ? t('station.reinstall') : installed === o.letter ? '✓ INSTALLED' : t('station.install'));
-    say(`${this.st.name}. Option ${o.letter}: ${o.name}. ${kind}. ${o.desc} Advantage: ${o.advantage} Limitation: ${o.limitation}. ${line}`);
+    say(`${this.st.name}. Option ${o.letter}: ${o.name}. ${kind}. ${o.desc} Advantage: ${o.advantage} Limitation: ${o.limitation}. ${line} Press A, B or C, or the left and right arrows, to compare the options. Press Enter, or click INSTALL, to install this part. Press Escape to go back to the workshop.`);
   }
 
   install() {

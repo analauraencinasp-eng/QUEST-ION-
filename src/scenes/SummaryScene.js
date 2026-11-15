@@ -51,7 +51,7 @@ export default class SummaryScene extends Phaser.Scene {
       else {
         const im = img(this, x + w / 2, y + 51, tl.art, { origin: [0.5, 0] });
         if (tl.art === 'planet-mars-big') im.setDisplaySize(140, 140).setY(y + 56);
-        else if (im.setCrop) { im.setCrop(0, 0, 240, 160); im.setScale(0.62); im.setY(y + 51); }
+        else if (im.setCrop) { im.setCrop(0, 0, 240, 240); im.setScale(150 / 240); im.setY(y + 51); }   // head to waist, fills the 150×150 frame like the Figma
       }
       txt(this, x + w / 2, y + 220, tl.name, { font: 'title', size: 15, origin: [0.5, 0], align: 'center', wrap: w - 20 });
       const sub = txt(this, x + w / 2, y + 252 + (tl.name.length > 14 ? 20 : 0), tl.sub, { size: 21, origin: [0.5, 0], align: 'center', wrap: w - 30, color: S.muted });

@@ -7,7 +7,7 @@ import Stack from './ds/Stack.js';
 import { state } from './state.js';
 import { saveGame } from './save.js';
 import { cover, reveal } from './transitions.js';
-import { quiet } from './a11y.js';
+import { quiet, readScreen } from './a11y.js';
 
 export const history = new Stack();
 let pendingReveal = 'fade';
@@ -19,6 +19,8 @@ export function restoreHistory() {
 }
 
 function persist(key, data) {
+  // the title screen is never saved as "where you are": CONTINUE must take you back INTO the mission
+  if (key === 'TitleScene' || key === 'BootScene') return;
   state.screen = { key, data: data || {} };
   state.history = history.toArray();
   saveGame();
@@ -72,9 +74,11 @@ export function arrived(scene, data) {
   delete scene.routeData.fromBack;
   for (const k of Object.keys(scene.routeData)) if (k.startsWith('_')) delete scene.routeData[k];   // one-shot data (_installed…)
   const key = scene.sys.settings ? scene.sys.settings.key : scene.sys.key;
-  if (key !== 'BootScene') { state.screen = { key, data: scene.routeData }; }
+  if (key !== 'BootScene' && key !== 'TitleScene') { state.screen = { key, data: scene.routeData }; }
   reveal(scene, pendingReveal);
   pendingReveal = 'fade';
+  // accessibility: after the mentor's line, read the whole screen (top → bottom, left → right) + its keys
+  scene.time.delayedCall(200, () => { if (scene.sys.isActive() && !scene.noAutoRead) readScreen(scene); });
 }
 
 export function isBusy() { return busy; }

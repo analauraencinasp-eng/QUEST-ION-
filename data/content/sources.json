@@ -29,6 +29,10 @@
     { "id": "maxq_throttle", "title": "NASA NTRS · SLS engine-out paper (throttle bucket at Max Q)", "url": "https://ntrs.nasa.gov/api/citations/20205004525/downloads/SLS%20Engine%20Out%20Paper.pdf" },
     { "id": "sst_soa", "title": "NASA Small Spacecraft Technology State of the Art (structures, power, comms, GNC, avionics, thermal)", "url": "https://www.nasa.gov/smallsat-institute/sst-soa/" },
     { "id": "horizons", "title": "JPL Horizons API (Earth & Mars positions used in PLAN YOUR ORBIT)", "url": "https://ssd-api.jpl.nasa.gov/doc/horizons.html" },
-    { "id": "nasa_images", "title": "NASA Image and Video Library (audio clips)", "url": "https://images.nasa.gov/" }
+    { "id": "nasa_images", "title": "NASA Image and Video Library (audio clips)", "url": "https://images.nasa.gov/" },
+    {"id": "jpl_relay_2004", "title": "JPL News · Relays from Mars Show International Interplanetary Networking (Aug 10, 2004)", "url": "https://www.jpl.nasa.gov/news/relays-from-mars-show-international-interplanetary-networking/"},
+    {"id": "jpl_spirit_flash_2004", "title": "JPL News · Spirit Condition Upgraded as Twin Rover Nears Mars (Jan 24, 2004): 256 MB of flash memory", "url": "https://www.jpl.nasa.gov/news/spirit-condition-upgraded-as-twin-rover-nears-mars/"},
+    {"id": "jpl_mer_status_feb2004", "title": "JPL News · Mars Exploration Rover Mission Status (Feb 5, 2004): flash keeps data with power off; reformat", "url": "https://www.jpl.nasa.gov/news/mars-exploration-rover-mission-status-8/"},
+    {"id": "jpl_spirit_ram_2009", "title": "JPL News · Team Continues Analyzing Spirit Computer Reboots and Amnesia Events (2009): RAM keeps data only while awake", "url": "https://www.jpl.nasa.gov/news/team-continues-analyzing-spirit-computer-reboots-and-amnesia-events/"}
   ]
 }

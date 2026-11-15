@@ -11,10 +11,13 @@ import { state, STATION_IDS, logEvent } from '../state.js';
 import { go } from '../router.js';
 import { canUseStation, nextStation, computeMeters, stationById, stationOption, affectedMeters } from '../rules.js';
 import { playMusic, sfx } from '../audio.js';
-import { say } from '../a11y.js';
+import { say, sayHover } from '../a11y.js';
 
 const DOOR = { x: 1180, y: 560, w: 100, h: 100 };
-const BLOCKERS = [[312, 262, 656, 270]];          // the ship pad (players walk around it)
+// Only the spacecraft body blocks the player (ship art 360,246 560×200). The player's position is the centre of
+// the sprite, so the box is the ship minus half a sprite. The dashed pad around it is walkable, like the Figma.
+const BLOCKERS = [[400, 262, 480, 150]];
+const START = { x: 336, y: 330 };                 // Figma: P1 stands on the left edge of the pad
 const SPEED = 230;
 
 export default class WorkshopScene extends Phaser.Scene {
@@ -23,6 +26,8 @@ export default class WorkshopScene extends Phaser.Scene {
   create(data) {
     fresh(this);
     playMusic('workshop');
+    // Phaser reuses this object: reset everything a previous visit could have left behind
+    this.leaving = false; this.target = null; this.doorLabel = null; this.lastPrompt = null; this.lockPanel = null; this.hoverSt = null;
     const mi = state.mission;
     this.add.rectangle(0, 0, W, H, C.hangar).setOrigin(0);
     img(this, 0, 0, 'bg-hangar', { origin: 0, w: W, h: H });
@@ -45,7 +50,8 @@ export default class WorkshopScene extends Phaser.Scene {
     this.ask = txt(this, 462, 483, t('workshop.ask'), { font: 'title', size: 9, color: S.navy, origin: 0.5, depth: 10 });
     this.askBg = this.add.rectangle(462, 483, this.ask.width + 14, 22, C.gold).setDepth(9);
     // player
-    const pos = mi.workshopPos || { x: 336, y: 330 };
+    let pos = mi.workshopPos || START;
+    if (insideBlocker(pos.x, pos.y)) pos = START;     // old saves could have the player stuck inside the ship
     this.player = this.add.container(pos.x, pos.y).setDepth(10);
     const sprite = mi.role === 'engineer' || !mi.role ? img(this, 0, 0, 'player-engineer', {}) : img(this, 0, 0, mi.role, { w: 104, h: 133 });
     this.player.add(sprite);
@@ -72,7 +78,21 @@ export default class WorkshopScene extends Phaser.Scene {
       return false;
     };
     // click on a station / the mentor = walk there and use it
-    this.input.on('pointerdown', (p) => { if (!this.modals.length) this.target = { x: p.x, y: Math.max(300, p.y) }; });
+    this.input.on('pointerdown', (p) => {
+      if (this.modals.length || this.leaving) return;
+      if ((this.input.hitTestPointer(p) || []).some((g) => g._a11yInteractive)) return;   // a button was clicked
+      const st = this.stations.find((s) => p.x >= s.x && p.x <= s.x + s.w && p.y >= s.y - 40 && p.y <= s.y + s.h);
+      if (st) { this.target = { ...this.approach(st), use: st }; return; }
+      if (Phaser.Math.Distance.Between(p.x, p.y, 462, 561) < 70) { this.target = { x: 462, y: 470, mentor: true }; return; }
+      this.target = { x: Phaser.Math.Clamp(p.x, 40, 1240), y: Phaser.Math.Clamp(p.y, 300, 620) };
+    });
+    // hovering a station says what it is and how to use it
+    this.input.on('pointermove', (p) => {
+      if (this.modals.length) return;
+      const st = this.stations.find((s) => p.x >= s.x && p.x <= s.x + s.w && p.y >= s.y && p.y <= s.y + s.h);
+      if (st && st !== this.hoverSt) sayHover(this.stationSpeech(st));
+      this.hoverSt = st || null;
+    });
     this.refresh();
     setup(this, data, { back: true, backPos: [1096, 648, 148, 52], help: 'WorkshopScene', helpPos: [24, 640] });
     if (data && data._installed) this.domino(data._installed);
@@ -88,8 +108,11 @@ export default class WorkshopScene extends Phaser.Scene {
     const done = txt(this, x + w - 4, y + h - 6, t('workshop.done'), { font: 'title', size: 9, color: S.white, origin: [1, 1], depth: 7 });
     const doneBg = this.add.rectangle(x + w, y + h, done.width + 12, 22, 0x0f8a5f).setOrigin(1, 1).setStrokeStyle(2, C.white).setDepth(6);
     // tag "n NAME" (Figma Tag · n)
+    // the tag box grows with its text (long names like ATTITUDE & THERMAL CONTROL take 2 lines)
     const tag = txt(this, st.tagPos[0] + 34, st.tagPos[1] + 15, st.name, { font: 'title', size: 9, color: S.navy, origin: [0, 0.5], depth: 8, wrap: 170 });
-    this.add.rectangle(st.tagPos[0], st.tagPos[1], tag.width + 44, 30, C.bubble).setOrigin(0).setStrokeStyle(3, 0x1a1f3a).setDepth(7);
+    const tagH = Math.max(30, Math.ceil(tag.height) + 14);
+    tag.setY(st.tagPos[1] + tagH / 2);
+    this.add.rectangle(st.tagPos[0], st.tagPos[1], Math.ceil(tag.width) + 46, tagH, C.bubble).setOrigin(0).setStrokeStyle(3, 0x1a1f3a).setDepth(7);
     this.add.rectangle(st.tagPos[0] + 6, st.tagPos[1] + 5, 20, 20, [0x56a8e8, C.gold, 0x56c8e8, 0x0f8a5f, 0xd16fa0][st.n - 1]).setOrigin(0).setDepth(8);
     txt(this, st.tagPos[0] + 16, st.tagPos[1] + 15, String(st.n), { font: 'title', size: 10, color: S.navy, origin: 0.5, depth: 9 });
     return { st, art, g: state_, lock, done, doneBg, cx: x + w / 2, cy: y + h + 10, x, y, w, h };
@@ -144,11 +167,17 @@ export default class WorkshopScene extends Phaser.Scene {
     if (h.arrowup || h.w) vy -= 1; if (h.arrowdown || h.s) vy += 1;
     if (!vx && !vy && this.target) {
       const dx = this.target.x - this.player.x, dy = this.target.y - this.player.y;
-      if (Math.hypot(dx, dy) > 8) { vx = dx / Math.hypot(dx, dy); vy = dy / Math.hypot(dx, dy); } else this.target = null;
+      if (Math.hypot(dx, dy) > 8) { vx = dx / Math.hypot(dx, dy); vy = dy / Math.hypot(dx, dy); } else this.arrive();
     } else if (vx || vy) this.target = null;
     if (vx || vy) {
       const len = Math.hypot(vx, vy);
+      const bx = this.player.x, by = this.player.y;
       this.moveTo(this.player.x + (vx / len) * SPEED * dt, this.player.y + (vy / len) * SPEED * dt);
+      // walking with the mouse around the ship: if the straight line is blocked, slide along the ship
+      if (this.target && bx === this.player.x && by === this.player.y) {
+        this.moveTo(this.player.x, this.player.y + (this.target.y < 400 ? -1 : 1) * SPEED * dt);
+        if (by === this.player.y) this.moveTo(this.player.x + (this.target.x < 640 ? -1 : 1) * SPEED * dt, this.player.y);
+      }
       this.sprite.y = Math.sin(time / 70) * 3;
       if (vx) this.sprite.setFlipX && this.sprite.setFlipX(vx < 0);
     }
@@ -157,10 +186,32 @@ export default class WorkshopScene extends Phaser.Scene {
 
   moveTo(x, y) {
     x = Phaser.Math.Clamp(x, 40, 1240); y = Phaser.Math.Clamp(y, 300, 620);
-    const inside = (px, py) => BLOCKERS.some(([bx, by, bw, bh]) => px > bx && px < bx + bw && py > by && py < by + bh);
-    if (!inside(x, this.player.y)) this.player.x = x;
-    if (!inside(this.player.x, y)) this.player.y = y;
+    const stuck = insideBlocker(this.player.x, this.player.y);    // never trap the player: if inside, any move is allowed
+    if (stuck || !insideBlocker(x, this.player.y)) this.player.x = x;
+    if (stuck || !insideBlocker(this.player.x, y)) this.player.y = y;
     state.mission.workshopPos = { x: Math.round(this.player.x), y: Math.round(this.player.y) };
+  }
+
+  // where to stand to use a station (in front of it, inside the walkable area)
+  approach(s) {
+    return { x: Phaser.Math.Clamp(s.cx, 60, 1220), y: Phaser.Math.Clamp(s.cy - 20, 300, 600) };
+  }
+
+  // reached the clicked point: open the station / talk to the mentor if that was the goal
+  arrive() {
+    const tg = this.target; this.target = null;
+    if (!tg) return;
+    if (tg.use) {
+      if (canUseStation(state.mission, tg.use.st.id)) go(this, 'StationScene', { station: tg.use.st.id });
+      else { sfx(this, 'sfx-error'); this.showLock(tg.use); }
+    } else if (tg.mentor) this.askMentor();
+  }
+
+  stationSpeech(s) {
+    const mi = state.mission;
+    if (mi.stations[s.st.id]) return `Station ${s.st.n}, ${s.st.name}: done. Click it, or walk to it and press E, to change the part.`;
+    if (canUseStation(mi, s.st.id)) return `Station ${s.st.n}, ${s.st.name}. Click it to walk there and open it, or walk with the arrow keys and press E.`;
+    return `Station ${s.st.n}, ${s.st.name}: locked. ${t('workshop.hintLocked', { n: s.st.n - 1 })}`;
   }
 
   nearest() {
@@ -178,13 +229,17 @@ export default class WorkshopScene extends Phaser.Scene {
     let label = null;
     if (s) {
       const done = !!mi.stations[s.st.id], usable = canUseStation(mi, s.st.id);
-      label = usable ? t('workshop.pressE', { NAME: s.st.name }) : `🔒 ${s.st.name}`;
+      label = usable ? t('workshop.pressE', { NAME: s.st.name }) : `LOCKED ${s.st.name}`;
       if (!usable && !done) this.showLock(s); else this.hideLock();
     } else { this.hideLock(); if (nearMentor) label = t('workshop.ask'); }
     if (label) {
       this.prompt.setText(label).setPosition(this.player.x, this.player.y - 150);
       this.promptBg.setPosition(this.player.x, this.player.y - 150).setSize(this.prompt.width + 16, 26).setOrigin(0.5).setVisible(true);
-      if (this.lastPrompt !== label) { say(label); this.lastPrompt = label; }
+      if (this.lastPrompt !== label) {
+        this.lastPrompt = label;
+        if (s && canUseStation(mi, s.st.id)) say(`You are at station ${s.st.n}, ${s.st.name}. Press E, or Enter, to open it.`);
+        else if (!s && nearMentor) say('You are next to the mentor. Press Q, or E, to ask a question.');
+      }
     } else { this.prompt.setText(''); this.promptBg.setVisible(false); this.lastPrompt = null; }
   }
 
@@ -194,13 +249,15 @@ export default class WorkshopScene extends Phaser.Scene {
     this.hideLock();
     const prev = STATION_IDS[STATION_IDS.indexOf(s.st.id) - 1];
     const prevN = prev ? stationById(prev).n : 1;
-    const x = Phaser.Math.Clamp(s.x + s.w / 2 - 230, 20, 800), y = s.y > 400 ? s.y - 190 : s.y + s.h + 12;
-    const objs = [
-      panel(this, x, y, 460, 170, { fill: C.navy, stroke: C.gold, bw: 4, depth: 45, shadow: true }),
-      txt(this, x + 16, y + 14, t('workshop.lockedTitle', { n: s.st.n, NAME: s.st.name }), { font: 'title', size: 11, color: S.gold, depth: 46, wrap: 430 }),
-      txt(this, x + 16, y + 42, s.st.hint.text, { size: 21, depth: 46, wrap: 430 }),
-      txt(this, x + 16, y + 140, t('workshop.hintLocked', { n: prevN }), { size: 22, color: S.red, depth: 46 })
-    ];
+    // 9b panel: its height follows its text (title, what the part is for, what to finish first)
+    const x = Phaser.Math.Clamp(s.x + s.w / 2 - 230, 20, 800);
+    const title = txt(this, 0, 0, t('workshop.lockedTitle', { n: s.st.n, NAME: s.st.name }), { font: 'title', size: 11, color: S.gold, depth: 46, wrap: 428 });
+    const body = txt(this, 0, 0, s.st.hint.text, { size: 21, depth: 46, wrap: 428 });
+    const foot = txt(this, 0, 0, t('workshop.hintLocked', { n: prevN }), { size: 22, color: S.red, depth: 46, wrap: 428 });
+    const h = 14 + title.height + 10 + body.height + 8 + foot.height + 14;
+    const y = s.y > 400 ? Math.max(8, s.y - h - 16) : Math.min(s.y + s.h + 12, 632 - h);
+    title.setPosition(x + 16, y + 14); body.setPosition(x + 16, title.y + title.height + 10); foot.setPosition(x + 16, body.y + body.height + 8);
+    const objs = [panel(this, x, y, 460, h, { fill: C.navy, stroke: C.gold, bw: 4, depth: 45, shadow: true }), title, body, foot];
     this.lockPanel = { id: s.st.id, objs };
     say(`${t('workshop.lockedTitle', { n: s.st.n, NAME: s.st.name })}. ${s.st.hint.text} ${t('workshop.hintLocked', { n: prevN })}`);
   }
@@ -264,6 +321,10 @@ export default class WorkshopScene extends Phaser.Scene {
     logEvent('Walked to the warehouse.', 'build');
     go(this, 'NextUpScene', { id: '9f', next: 'WarehouseScene' }, { transition: 'dither' });
   }
+}
+
+function insideBlocker(px, py) {
+  return BLOCKERS.some(([bx, by, bw, bh]) => px > bx && px < bx + bw && py > by && py < by + bh);
 }
 
 // called by StationScene after INSTALL: recompute meters + log

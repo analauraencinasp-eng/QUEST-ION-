@@ -6,7 +6,7 @@
 // Keyboard focus: every button registers in scene.focusables; Tab / Shift+Tab move, Enter/Space press.
 import { C, S, W, H, TITLE_FONT, BODY_FONT, fs } from './theme.js';
 import { sfx } from '../audio.js';
-import { say } from '../a11y.js';
+import { say, sayHover, describeItem } from '../a11y.js';
 
 // ---------- scene start ----------
 // Phaser REUSES the scene object every time it starts: call fresh() first in every create().
@@ -17,6 +17,7 @@ export function fresh(scene) {
   scene.onKey = null;
   scene.paused = false;
   scene.timers = [];
+  scene.noAutoRead = false;
   const cams = scene.cameras;
   if (cams && cams.main) { cams.main.setZoom(1); cams.main.setScroll(0, 0); cams.main.removeBounds && cams.main.removeBounds(); }
 }
@@ -104,7 +105,7 @@ export function moveFocus(scene, dir = 1) {
 export function setFocus(scene, item) {
   if (scene.focused && scene.focused.blur) scene.focused.blur();
   scene.focused = item;
-  if (item && item.focus) { item.focus(); if (item.label) say(item.label); }
+  if (item && item.focus) { item.focus(); if (item.label) say(describeItem(item.label, item.kind || 'button')); }
 }
 export function activeFocusables(scene) {
   const top = scene.modals && scene.modals.length ? scene.modals[scene.modals.length - 1] : null;
@@ -122,7 +123,9 @@ export function pxButton(scene, x, y, w, h, label, onClick, o = {}) {
   const t = txt(scene, w / 2, h / 2 + 1, label, { font: 'title', size: o.size || (h >= 56 ? 20 : 14), color: o.primary ? S.navy : (o.color || S.white), origin: 0.5 });
   fit(t, w - 20);
   cont.add([shadow, box, t]);
+  t._a11yRole = 'button';
   const hit = scene.add.zone(x, y, w, h).setOrigin(0).setDepth(depth + 1).setInteractive({ useHandCursor: true });
+  hit._a11yInteractive = true;
   const item = {
     cont, box, text: t, label: label.replace(/[▶◀]/g, '').trim(), disabled: !!o.disabled, modal: o.modal || null,
     alive: () => !!cont.scene && cont.visible,
@@ -136,7 +139,11 @@ export function pxButton(scene, x, y, w, h, label, onClick, o = {}) {
     destroy() { cont.destroy(); hit.destroy(); },
     hit
   };
-  hit.on('pointerover', () => { if (!item.disabled && isTop(scene, item)) item.focus(); });
+  hit.on('pointerover', () => {
+    if (!isTop(scene, item)) return;
+    if (!item.disabled) item.focus();
+    sayHover(item.disabled ? `${item.label}, button, not available yet.` : describeItem(item.label));
+  });
   hit.on('pointerout', () => { if (scene.focused !== item) item.blur(); });
   hit.on('pointerdown', () => { if (isTop(scene, item)) item.press(); });
   item.setDisabled(item.disabled);
@@ -162,13 +169,15 @@ export function iconButton(scene, x, y, kind, onClick, o = {}) {
   cont.add([shadow, box, g]);
   if (kind === 'help') cont.add(txt(scene, 33, 34, '?', { font: 'title', size: 22, origin: 0.5 }));
   const hit = scene.add.zone(x, y, 64, 64).setOrigin(0).setDepth(depth + 1).setInteractive({ useHandCursor: true });
+  hit._a11yInteractive = true;
   const item = {
     cont, label: kind === 'menu' ? 'Settings menu' : 'Help', modal: o.modal || null, disabled: false,
     alive: () => !!cont.scene && cont.visible,
     focus() { box.setStrokeStyle(4, C.yellow); }, blur() { box.setStrokeStyle(4, C.white); },
     press() { sfx(scene, 'sfx-pickup'); onClick(); }
   };
-  hit.on('pointerover', () => item.focus()); hit.on('pointerout', () => { if (scene.focused !== item) item.blur(); });
+  hit.on('pointerover', () => { item.focus(); if (isTop(scene, item)) sayHover(describeItem(item.label, 'button', kind === 'menu' ? 'Shortcut: Escape.' : 'Shortcut: the H key.')); });
+  hit.on('pointerout', () => { if (scene.focused !== item) item.blur(); });
   hit.on('pointerdown', () => { if (isTop(scene, item)) item.press(); });
   return register(scene, item);
 }
@@ -179,31 +188,35 @@ export function link(scene, x, y, label, onClick, o = {}) {
   t.setDepth(o.depth ?? 25);
   const u = scene.add.rectangle(t.x - t.displayOriginX, t.y - t.displayOriginY + t.height - 2, t.width, 2, 0x56c8e8).setOrigin(0).setDepth(o.depth ?? 25);
   t.setInteractive({ useHandCursor: true });
+  t._a11yRole = 'link'; t._a11yInteractive = true;
   const item = {
-    text: t, label: label, modal: o.modal || null, disabled: false,
+    text: t, label: label, kind: 'link', modal: o.modal || null, disabled: false,
     alive: () => !!t.scene && t.visible,
     focus() { t.setColor(S.yellow); }, blur() { t.setColor(o.color || S.cyan); },
     press() { sfx(scene, 'sfx-pickup'); onClick(); }
   };
-  t.on('pointerover', () => item.focus()); t.on('pointerout', () => { if (scene.focused !== item) item.blur(); });
+  t.on('pointerover', () => { item.focus(); if (isTop(scene, item)) sayHover(describeItem(label, 'link')); });
+  t.on('pointerout', () => { if (scene.focused !== item) item.blur(); });
   t.on('pointerdown', () => { if (isTop(scene, item)) item.press(); });
   item.underline = u;
+  item.destroy = () => { t.destroy(); u.destroy(); };
   return register(scene, item);
 }
 
 // generic clickable area (cards, planets, tabs) that joins the keyboard focus ring
 export function hotspot(scene, x, y, w, h, label, onClick, o = {}) {
   const z = scene.add.zone(x, y, w, h).setOrigin(0).setDepth(o.depth ?? 22).setInteractive({ useHandCursor: true });
+  z._a11yInteractive = true;
   const ring = scene.add.graphics().setDepth((o.depth ?? 22) + 1);
   const item = {
-    zone: z, label, modal: o.modal || null, disabled: false,
+    zone: z, label, kind: 'option', modal: o.modal || null, disabled: false,
     alive: () => !!z.scene && z.input && z.input.enabled,
     focus() { ring.clear(); ring.lineStyle(4, C.yellow, 1); ring.strokeRect(x - 4, y - 4, w + 8, h + 8); if (o.onFocus) o.onFocus(); },
     blur() { ring.clear(); if (o.onBlur) o.onBlur(); },
     press() { sfx(scene, 'sfx-pickup'); onClick(); },
     destroy() { z.destroy(); ring.destroy(); }
   };
-  z.on('pointerover', () => { if (isTop(scene, item)) item.focus(); }); z.on('pointerout', () => { if (scene.focused !== item) item.blur(); });
+  z.on('pointerover', () => { if (isTop(scene, item)) { item.focus(); sayHover(describeItem(label, 'option')); } }); z.on('pointerout', () => { if (scene.focused !== item) item.blur(); });
   z.on('pointerdown', () => { if (isTop(scene, item)) item.press(); });
   return register(scene, item);
 }
@@ -217,14 +230,16 @@ export function mentorBar(scene, x, y, w, h, text, o = {}) {
   const bubbleW = w - portrait - 16;
   const bx = side === 'right' ? x : x + portrait + 16;
   const px = side === 'right' ? x + bubbleW + 16 : x;
-  panel(scene, bx, y, bubbleW, h, { fill: C.bubble, stroke: C.ink, bw: 4, depth });
+  const bubble = panel(scene, bx, y, bubbleW, h, { fill: C.bubble, stroke: C.ink, bw: 4, depth });
   const title = txt(scene, bx + 14, y + 10, o.title || 'MENTOR', { font: 'title', size: 12, color: S.mentor }).setDepth(depth + 1);
   const body = txt(scene, bx + 14, y + 30, '', { size: o.size || 24, color: S.ink, wrap: bubbleW - 28, lineSpacing: 0 }).setDepth(depth + 1);
+  body._a11yMentor = true;   // the mentor line is spoken on its own; the screen reader doesn't repeat it
   const py = y + h - portrait;
-  panel(scene, px, py, portrait, portrait, { fill: C.portrait, stroke: C.white, bw: 4, depth });
-  img(scene, px + portrait / 2, py + portrait / 2 + 2, 'mentor', { w: portrait - 12, h: portrait - 12, depth: depth + 1 });
+  const frame = panel(scene, px, py, portrait, portrait, { fill: C.portrait, stroke: C.white, bw: 4, depth });
+  const face = img(scene, px + portrait / 2, py + portrait / 2 + 2, 'mentor', { w: portrait - 12, h: portrait - 12, depth: depth + 1 });
   const api = {
     title, body,
+    destroy() { if (body._tw) body._tw.remove(); [bubble, title, body, frame, face].forEach((o) => o.destroy()); },
     set(str, opts = {}) { typewriter(scene, body, str, { maxH: h - 40, onDone: opts.onDone }); if (!opts.silent) say(str, opts.lineId); },
     setTitle(s) { title.setText(s); }
   };
@@ -318,7 +333,8 @@ export function slider(scene, x, y, w, min, max, value, onChange, o = {}) {
     press() {},
     set(val, notify = true) { v = Phaser.Math.Clamp(o.step ? Math.round(val / o.step) * o.step : val, min, max); draw(); if (notify && onChange) onChange(v); },
     get: () => v,
-    nudge(dir) { api.set(v + dir * (o.step || (max - min) / 20)); }
+    nudge(dir) { api.set(v + dir * (o.step || (max - min) / 20)); },
+    destroy() { g.destroy(); knob.destroy(); zone.destroy(); }
   };
   if (o.focusable !== false) register(scene, api);
   return api;

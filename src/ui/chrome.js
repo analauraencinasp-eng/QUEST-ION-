@@ -11,7 +11,7 @@ import { state, STATION_IDS } from '../state.js';
 import { saveSettings } from '../save.js';
 import { back, canGoBack, arrived } from '../router.js';
 import { refreshMusic, applyVolume, sfx } from '../audio.js';
-import { say, quiet } from '../a11y.js';
+import { say, quiet, pointerReader } from '../a11y.js';
 import { stationOption, instrumentById } from '../rules.js';
 
 // ---------------- scene setup ----------------
@@ -28,6 +28,7 @@ export function setup(scene, data, opts = {}) {
   }
   if (opts.missionButton) pxButton(scene, opts.missionButton[0], opts.missionButton[1], 264, 60, 'MY MISSION', () => openMission(scene), { depth: 40, size: 16 });
   scene.input.keyboard.on('keydown', (e) => dispatch(scene, e));
+  pointerReader(scene);
   arrived(scene, data);
 }
 
@@ -166,7 +167,7 @@ export function openMission(scene) {
   L.push(`${t('mission.parts')} (${mi.installOrder.length}/5): ${parts.join(' | ')}`);
   const kit = mi.instruments.kit.map((id) => (instrumentById(id) || {}).name || id);
   L.push(`${t('mission.instruments')} (${Object.keys(mi.instruments.inspected).length}/14 ${t('mission.inspected')}): ${kit.length ? kit.join(', ') : '—'}`);
-  L.push(`${t('mission.orbit')}: ${mi.orbit.reached ? t('mission.orbitOk', { days: mi.orbit.travelDays, fuel: mi.orbit.fuelUsed }) : '—'}`);
+  L.push(`${t('mission.orbit')}: ${mi.orbit.reached ? t('mission.orbitOk', { days: mi.orbit.travelDays, fuel: mi.orbit.dvTotal }) : '—'}`);
   const res = [];
   if (mi.launch.done) res.push(`hull ${mi.launch.hull}/3`);
   if (mi.rocks.done) res.push(`${mi.rocks.samples.length}/3 samples`);

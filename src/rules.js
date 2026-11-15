@@ -42,6 +42,12 @@ export function computeMeters(mission) {
     else draw += -o.energy;
     if (o.earth_effect && typeof o.earth_effect.delta === 'number') resp += o.earth_effect.delta;   // only when sourced
   }
+  // Screen 11: every instrument packed in the kit adds its cost and mass and draws energy (simulated values)
+  for (const instId of (mission.instruments && mission.instruments.kit) || []) {
+    const ins = instrumentById(instId);
+    if (!ins) continue;
+    budget += ins.cost || 0; mass += ins.mass || 0; draw += -(ins.energy || 0);
+  }
   const energy = Math.max(0, Math.min(100, Math.round(supply - draw)));
   return { budget, mass, energy, responsibility: Math.max(0, Math.min(100, resp)) };
 }
@@ -90,6 +96,22 @@ export function questionFor(instId) {
 }
 
 export function slotAccepts(slot, inst) { return !!slot && !!inst && slot.mount === inst.mount; }
+
+// Warehouse gate (team decision): the exit opens when, for EACH of the 5 science requirements, the player has
+// inspected (= answered the quick question of) at least one instrument that helps with it. Minimum 5 tables.
+export function requirementsCovered(inspected) {
+  const list = (content.instruments && content.instruments.instruments) || [];
+  const done = Object.keys(inspected || {}).filter((id) => inspected[id]);
+  const covered = [1, 2, 3, 4, 5].map((n) => list.some((i) => done.includes(i.id) && (i.helps || []).includes(n)));
+  return { covered, count: covered.filter(Boolean).length, inspectedCount: done.length, ok: covered.every(Boolean) && done.length >= 5 };
+}
+
+// would packing this instrument go over the budget cap? (same rule as the station cards)
+export function kitWouldExceedBudget(mission, instId) {
+  const kit = mission.instruments.kit.includes(instId) ? mission.instruments.kit : [...mission.instruments.kit, instId];
+  const tmp = { ...mission, instruments: { ...mission.instruments, kit } };
+  return computeMeters(tmp).budget > ((content.stations && content.stations.caps.budget) || Infinity);
+}
 
 // placed: { slotId: instrumentId }
 export function assemblyScore(placed) {
