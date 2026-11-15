@@ -23,7 +23,9 @@ export default class ObjectiveScene extends Phaser.Scene {
     // mentor question at the top (Figma "Mentor question" 160,80 960x118) with portrait
     panel(this, 180, 92, 822, 94, { fill: C.bubble, stroke: C.bubble, bw: 0 });
     txt(this, 194, 100, t('objective.question'), { font: 'title', size: 18, color: S.mentor });
-    txt(this, 194, 126, t('objective.questionSub'), { size: 24, color: S.ink, wrap: 796 });
+    const qTitle = txt(this, 194, 100, '', { font: 'title', size: 18 }); const qY = 100 + qTitle.height + 6; qTitle.destroy();
+    // the sub-line starts under the title and shrinks (never below the readable floor) to stay inside the bubble
+    fitBlock([txt(this, 194, qY, t('objective.questionSub'), { size: 24, color: S.ink, wrap: 796 })], qY, 92 + 94 - 6);
     panel(this, 1024, 98, 82, 82, { fill: C.portrait, stroke: C.white, bw: 4 });
     img(this, 1065, 140, 'mentor', { w: 72, h: 72 });
     this.counter = txt(this, 640, 222, '', { font: 'title', size: 24, color: S.gold, origin: 0.5 });
@@ -35,7 +37,8 @@ export default class ObjectiveScene extends Phaser.Scene {
     this.prev = pxButton(this, 206, 438, 84, 60, '◀', () => this.move(-1), { size: 18 });
     this.nextArrow = pxButton(this, 990, 438, 84, 60, '▶', () => this.move(1), { size: 18 });
     this.nextBtn = pxButton(this, 1072, 642, 184, 60, t('common.next'), () => this.done(), { primary: true });
-    this.status = txt(this, 1062, 560, '', { size: 21, color: S.green, wrap: 200 });
+    // bottom-anchored: when the note wraps (text size L) it grows upward instead of over the NEXT button
+    this.status = txt(this, 1062, 630, '', { size: 21, color: S.green, wrap: 200, origin: [0, 1] });
     this.onKey = (k) => {
       if (k === 'ArrowLeft') { this.move(-1); return true; }
       if (k === 'ArrowRight') { this.move(1); return true; }

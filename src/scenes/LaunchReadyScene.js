@@ -3,7 +3,7 @@
 // REAL MISSION box, mentor line, ◀ ORBIT / START LAUNCH ▶.
 // Liftoff (prompt §11): countdown, camera shake, pixel smoke, the rocket leaves the frame → Screen 13 (meteors).
 // With "Reduce motion & flashes": no shake and no smoke, just a fade.
-import { C, S, W, H } from '../ui/theme.js';
+import { C, S, W, H, minSize } from '../ui/theme.js';
 import { fresh, txt, pxButton, img, panel, mentorBar, fit } from '../ui/widgets.js';
 import { setup } from '../ui/chrome.js';
 import { content, t } from '../content.js';
@@ -45,17 +45,34 @@ export default class LaunchReadyScene extends Phaser.Scene {
     const cx = 318, cy = 104, cw = 644;
     const card = u(this.add.graphics().setDepth(20));
     u(txt(this, cx + 18, cy + 22, t('launchReady.how'), { font: 'title', size: 11, color: S.gold, origin: [0, 0.5], depth: 21 }));
-    let y = cy + 40;
-    for (const f of lf.facts) {
-      u(this.add.rectangle(cx + 18, y + 4, 50, 50, 0x1d3a6e).setOrigin(0).setStrokeStyle(3, C.blueBorder).setDepth(21));
-      u(img(this, cx + 43, y + 29, ICON[f.id] || 'icon-rocket', { w: 32, h: 32, depth: 22 }));
-      u(txt(this, cx + 82, y + 4, f.title, { font: 'title', size: 8, color: S.cyan, depth: 21 }));
-      const body = u(txt(this, cx + 82, y + 20, f.text, { size: 21, wrap: cw - 100, depth: 21, lineSpacing: 0 }));
-      fit(body, cw - 100, 64, 15);
-      y += Math.max(62, 24 + Math.min(body.height, 64)) + 6;
-    }
-    // real mission box
+    // facts: build every text first, then shrink them TOGETHER (1 px at a time, never below the readable
+    // floor) until the card leaves room for the mentor above the buttons. Same size for every fact.
+    const rows = lf.facts.map((f) => ({
+      f,
+      title: u(txt(this, cx + 82, 0, f.title, { font: 'title', size: 8, color: S.cyan, depth: 21 })),
+      body: u(txt(this, cx + 82, 0, f.text, { size: 21, wrap: cw - 100, depth: 21, lineSpacing: 0 }))
+    }));
     const realT = txt(this, cx + 28, 0, lf.real.text, { size: 21, wrap: cw - 64, depth: 22, lineSpacing: 0 });
+    const bodies = [...rows.map((r) => r.body), realT];
+    const MAX_BOTTOM = 646 - 8 - 96 - 12;         // buttons top − gap − mentor height − gap
+    const layout = () => {
+      let yy = cy + 40;
+      for (const r of rows) { r.top = yy; r.title.setY(yy + 4); r.body.setY(yy + 4 + r.title.height + 4); yy += Math.max(58, r.title.height + 8 + r.body.height) + 6; }
+      return yy + 2 + realT.height + 34 + 14;
+    };
+    for (let guard = 0; layout() > MAX_BOTTOM && guard < 24; guard++) {
+      let shrunk = false;
+      for (const b2 of bodies) { const size = parseInt(b2.style.fontSize, 10); if (size > minSize('body')) { b2.setFontSize(size - 1); shrunk = true; } }
+      if (!shrunk) break;
+    }
+    layout();
+    for (const r of rows) {
+      u(this.add.rectangle(cx + 18, r.top + 4, 50, 50, 0x1d3a6e).setOrigin(0).setStrokeStyle(3, C.blueBorder).setDepth(21));
+      u(img(this, cx + 43, r.top + 29, ICON[r.f.id] || 'icon-rocket', { w: 32, h: 32, depth: 22 }));
+    }
+    const last = rows[rows.length - 1];
+    const y = last.top + Math.max(58, last.title.height + 8 + last.body.height) + 6;
+    // real mission box
     const ry = y + 2, rh = realT.height + 34;
     u(this.add.rectangle(cx + 16, ry, cw - 32, rh, 0x0b0f26).setOrigin(0).setStrokeStyle(2, C.gold).setDepth(21));
     u(txt(this, cx + 28, ry + 12, t('launchReady.real'), { font: 'title', size: 8, color: S.gold, origin: [0, 0.5], depth: 22 }));
@@ -67,7 +84,7 @@ export default class LaunchReadyScene extends Phaser.Scene {
     // mentor + buttons
     const o = state.mission.orbit;
     const orbitLine = o.reached ? ` Your trajectory: launch ${o.launchDate}, ${o.travelDays} days to Mars.` : '';
-    u(mentorBar(this, 368, Math.max(480, this.cardBottom + 12), 544, 96, t('launchReady.mentor'), { portrait: 86, size: 21, depth: 20, silent: true }));
+    u(mentorBar(this, 368, Math.min(Math.max(480, this.cardBottom + 12), 646 - 8 - 96), 544, 96, t('launchReady.mentor'), { portrait: 86, size: 21, depth: 20, silent: true }));
     this.backBtn = pxButton(this, 690, 646, 220, 60, t('launchReady.orbit'), () => back(this), { size: 14, depth: 30 });
     this.goBtn = pxButton(this, 926, 646, 330, 60, t('launchReady.launch'), () => this.liftoff(), { primary: true, size: 16, depth: 30 });
     this.onKey = (k) => { if (k === 'Enter' || k === ' ') { this.liftoff(); return true; } return false; };

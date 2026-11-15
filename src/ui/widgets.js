@@ -310,6 +310,24 @@ export function chip(scene, x, y, label, o = {}) {
   return { r, t, w, h, destroy() { r.destroy(); t.destroy(); } };
 }
 
+// Chips laid out left → right that wrap onto a new row when the next one would cross x + maxW.
+// Positions come from each chip's measured width, so they follow the text size (S / M / L).
+// Returns { chips, bottom } — bottom = y of the lower edge of the last row (place the next block under it).
+export function chipFlow(scene, x, y, maxW, labels, o = {}) {
+  const gapX = o.gapX ?? 10, gapY = o.gapY ?? 8;
+  const chips = [];
+  let cx = x, rowTop = y, rowH = 0;
+  for (const label of labels) {
+    const c = chip(scene, 0, 0, label, o);
+    if (cx > x && cx + c.w > x + maxW) { rowTop += rowH + gapY; cx = x; rowH = 0; }
+    const cy = rowTop + c.h / 2;
+    c.r.setPosition(cx, cy); c.t.setPosition(cx + 8, cy - c.t.height / 2 + 1);
+    chips.push(c);
+    cx += c.w + gapX; rowH = Math.max(rowH, c.h);
+  }
+  return { chips, bottom: rowTop + rowH };
+}
+
 export function dots(scene, cx, y, n, i, o = {}) {
   const g = scene.add.graphics().setDepth(o.depth ?? 16);
   const size = o.size || 14, gap = 8, total = n * size + (n - 1) * gap + (o.wideActive ? 10 : 0);

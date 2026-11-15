@@ -2,7 +2,7 @@
 // Hover: dashed ring + tooltip. Only Mars (level 1) is open; the others show a padlock and
 // "Complete the Mars mission to unlock". Click → info panel with the screen behind dimmed.
 import { C, S } from '../ui/theme.js';
-import { fresh, txt, bg, img, hotspot, mentorBar, panel, chip, fitBlock } from '../ui/widgets.js';
+import { fresh, txt, bg, img, hotspot, mentorBar, panel, chipFlow, fitBlock } from '../ui/widgets.js';
 import { setup, openModal, mButton, mText } from '../ui/chrome.js';
 import { content, t } from '../content.js';
 import { state, logEvent } from '../state.js';
@@ -72,16 +72,20 @@ export default class DestinationScene extends Phaser.Scene {
     md.add(img(this, 126 + 40 + 110, 124 + 126 + 110, 'planet-mars-big', { w: 220, h: 220 }));
     const X = 126 + 288, Y = 124 + 34;
     mText(this, md, X, Y, p.name, { font: 'title', size: 30, color: S.gold });
-    let cx = X;
-    for (const f of p.facts) { const c = chip(this, cx, Y + 62, f.text, { fill: C.blueCard, color: S.white, size: 10, stroke: C.blueBorder, depth: md.depth }); md.objs.push(c); cx += c.w + 10; }
+    // fact chips wrap onto as many rows as they need inside the card (right padding 28 px)
+    const title = md.objs[md.objs.length - 1];
+    const CW = 126 + 1028 - 28 - X;
+    const facts = chipFlow(this, X, title.y + title.height + 12, CW, p.facts.map((f) => f.text), { fill: C.blueCard, color: S.white, size: 10, stroke: C.blueBorder, depth: md.depth });
+    facts.chips.forEach((c) => md.objs.push(c));
     // description → questions → real mission, stacked and kept above the buttons
     const blocks = [
-      mText(this, md, X, 0, p.desc.text, { size: 24, wrap: 712 }),
+      mText(this, md, X, 0, p.desc.text, { size: 24, wrap: CW }),
       mText(this, md, X, 0, t('destination.questions'), { font: 'title', size: 12, color: S.cyan }),
-      mText(this, md, X, 0, p.questions.map((q) => '• ' + q).join('\n'), { size: 23, wrap: 712 }),
-      mText(this, md, X, 0, p.real.text, { size: 21, wrap: 712, color: S.muted })
+      mText(this, md, X, 0, p.questions.map((q) => '• ' + q).join('\n'), { size: 23, wrap: CW }),
+      mText(this, md, X, 0, p.real.text, { size: 21, wrap: CW, color: S.muted })
     ];
-    fitBlock(blocks, Y + 84, 124 + 472 - 92, 8);
+    // everything starts under the LAST chip row and must end above the buttons
+    fitBlock(blocks, facts.bottom + 12, 124 + 472 - 92, 8);
     mButton(this, md, 126 + 1028 - 360 - 196, 124 + 472 - 80, 340, 56, t('destination.design'), () => {
       state.mission.planet = p.id;
       logEvent(`Destination: ${p.name} (level ${p.level}).`, 'destination');

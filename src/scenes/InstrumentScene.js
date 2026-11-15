@@ -30,7 +30,7 @@ export default class InstrumentScene extends Phaser.Scene {
     txt(this, 160, 42, t('card.title'), { font: 'title', size: 13, color: S.gold, origin: 0.5 });
     this.kitBox = this.add.graphics();
     this.kitText = txt(this, 52, 89, '', { size: 20, color: S.green, origin: [0, 0.5], wrap: 520 });
-    this.mentor = mentorBar(this, 586, 14, 654, 116, '', { portrait: 116, size: 23 });
+    this.mentor = mentorBar(this, 586, 14, 590, 116, '', { portrait: 116, size: 23 });   // ends at x 1176, left of the menu button
     panel(this, 80, 140, 1120, 512, { fill: 0x10173a, stroke: 0xc8a24a, bw: 4 });
     this.cont = this.add.container(0, 0);
     this.body = null;              // right-column boxes (rebuilt by buildBody)
@@ -155,7 +155,7 @@ export default class InstrumentScene extends Phaser.Scene {
     for (const [label, value] of [[t('card.what'), ins.what], [t('card.role'), ins.role], [t('card.mount'), ins.mountText]]) {
       const l = add(T(this, X + 10, ry + 2, label, { font: 'title', size: 6, color: S.muted, wrap: 150, lineSpacing: 2 }));
       const v = add(T(this, X + 168, ry, value, { size, wrap: W_ - 178, lineSpacing: 0 }));
-      ry += Math.max(v.height, l.height) + 6;
+      ry += Math.max(v.height, l.height + 2) + 12;
     }
     y = ry + PAD - 6;
     bg1.fillStyle(0x0b0f26, 1); bg1.fillRect(X, infoTop, W_, y - infoTop);

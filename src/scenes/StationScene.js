@@ -30,7 +30,7 @@ export default class StationScene extends Phaser.Scene {
     panel(this, 40, 40, stLabel.width + 66, 44, { fill: 0x0b0f26, stroke: C.gold, bw: 3 });
     this.add.rectangle(54, 50, 26, 24, C.gold).setOrigin(0).setDepth(1);
     txt(this, 67, 62, String(this.st.n), { font: 'title', size: 13, color: S.navy, origin: 0.5, depth: 2 });
-    this.mentor = mentorBar(this, 584, 14, 656, 116, '', { portrait: 116, size: 24 });
+    this.mentor = mentorBar(this, 584, 14, 592, 116, '', { portrait: 116, size: 24 });   // ends at x 1176, left of the menu button
     panel(this, 80, 144, 1120, 508, { fill: 0x10173a, stroke: 0xc8a24a, bw: 4 });
     this.cont = this.add.container(0, 0);
     this.backBtn = pxButton(this, 370, 662, 264, 48, t('station.workshop'), () => back(this));
