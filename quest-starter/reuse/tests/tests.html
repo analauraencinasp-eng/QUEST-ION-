@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Space Mission Adventure — tests</title>
+  <style>
+    body { background: #0d0c1c; color: #f6efe3; font: 16px monospace; padding: 24px; }
+    .pass { color: #009E73; } .fail { color: #D55E00; } .edge { color: #F0E442; }
+  </style>
+</head>
+<body>
+  <h1>Test cases (data structures + rules)</h1>
+  <p>Open with Live Server. Every line says PASS or FAIL in words, not only in color.</p>
+  <ol id="out"></ol>
+  <p id="sum"></p>
+  <script type="module">
+    import { runAll } from './tests.js';
+    const content = await (await fetch('content.json')).json();
+    const results = runAll(content);
+    const out = document.getElementById('out');
+    for (const r of results) {
+      const li = document.createElement('li');
+      li.innerHTML = `<b class="${r.pass ? 'pass' : 'fail'}">${r.pass ? '✓ PASS' : '✕ FAIL'}</b> ` +
+        `<span class="${r.kind === 'edge' ? 'edge' : ''}">[${r.kind}]</span> ${r.name}${r.pass ? '' : ` — ${r.error}`}`;
+      out.appendChild(li);
+    }
+    const failed = results.filter((r) => !r.pass).length;
+    document.getElementById('sum').textContent = `${results.length - failed} of ${results.length} passed.`;
+  </script>
+</body>
+</html>

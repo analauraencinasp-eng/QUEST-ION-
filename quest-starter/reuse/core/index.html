@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Misión Espacial: Juno</title>
+  <!-- Pixel fonts (if offline, the game falls back to monospace) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600&family=Press+Start+2P&display=swap">
+  <style>
+    html, body { margin: 0; height: 100%; background: #0d0c1c; color: #f6efe3; font-family: "Pixelify Sans", monospace; }
+    #game { display: flex; align-items: center; justify-content: center; height: 100%; }
+    canvas { image-rendering: pixelated; outline: none; }
+    canvas:focus { outline: 3px solid #56B4E9; }
+    .sr-only { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+    #start { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+      background: rgba(13, 12, 28, .88); color: #f6efe3; font: 20px "Pixelify Sans", monospace; cursor: pointer; z-index: 10; border: 0; width: 100%; }
+    #start b { font: 22px "Press Start 2P", monospace; color: #E69F00; }
+    #start:focus { outline: 4px solid #56B4E9; outline-offset: -8px; }
+  </style>
+</head>
+<body>
+  <h1 class="sr-only">Space Mission Adventure: un juego educativo para diseñar una misión a Júpiter</h1>
+  <div id="sr-live" class="sr-only" aria-live="polite" role="status"></div>
+  <div id="game"></div>
+  <!-- the game needs one click (or key) so the browser gives it the keyboard and the sound -->
+  <button id="start" type="button" autofocus><b>HAZ CLIC PARA JUGAR</b><span>Juega con mouse, toque o teclado · ? abre la ayuda</span></button>
+  <script>
+    const startBtn = document.getElementById('start');
+    const go = () => { startBtn.remove(); window.focus(); const c = document.querySelector('canvas'); if (c) { c.setAttribute('tabindex', '0'); c.focus(); } };
+    startBtn.addEventListener('click', go);
+    startBtn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+  </script>
+  <!-- Phaser 3.90 as a global script, then our game as an ES module (no build step) -->
+  <script src="phaser.min.js"></script>
+  <script type="module" src="game.js"></script>
+</body>
+</html>
