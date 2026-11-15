@@ -3,7 +3,7 @@
 import { readFileSync } from 'node:fs';
 globalThis.Phaser = { Scene: class {} };
 const { setContent, content } = await import('../src/content.js');
-for (const f of ['ui', 'rocks', 'quiz_rockhunter', 'quiz_discoveries', 'comms', 'instruments', 'stations', 'mission_comparison', 'orbit']) setContent(f, JSON.parse(readFileSync(`data/content/${f}.json`, 'utf8')));
+for (const f of ['review', 'launch_facts', 'ui', 'rocks', 'quiz_rockhunter', 'quiz_discoveries', 'comms', 'instruments', 'stations', 'mission_comparison', 'orbit']) setContent(f, JSON.parse(readFileSync(`data/content/${f}.json`, 'utf8')));
 setContent('ephemeris', JSON.parse(readFileSync('data/ephemeris_mer.json', 'utf8')));
 
 let pass = 0, fail = 0;
@@ -96,6 +96,36 @@ const s1 = R.computeScore(full), s2 = R.computeScore({ ...full, launch: { hull: 
 ok(s1.total === s2.total, 'the meteor mini-game never changes the score (team decision)');
 const rs = D.resourceSeries(full);
 ok(rs.fuel[0] === 100 && rs.fuel[2] === 40 && rs.energy[5] === 40, 'resource chart uses the real spent values');
+
+
+// ---- learning review (17–26, 15-R) ----
+const RV = await import('../src/review.js');
+const weak = JSON.parse(JSON.stringify(full));
+Object.assign(weak, { orbit: { reached: true, travelDays: 245, launchDay: 100, stars: 2, fuelUsed: 86, dvTotal: 7.72, launchDate: '2003-04-11' },
+  rocks: { samples: [{ id: 'hematite', evidence: 'strong' }, { id: 'basalt', evidence: 'weak' }], science: 50, energyLeft: 30, done: true },
+  comms: { route: 'uhf', window: 'w1', quality: 'poor' }, signal: { packets: 1 } });
+weak.instruments.placed = { a: 'pancam', b: 'minites', c: 'mi', d: 'pixl', e: 'mossbauer', f: 'rat' };
+const sel = RV.selectConcepts(weak);
+ok(sel.mode === 'weak' && sel.concepts.length >= 3 && sel.concepts.length <= 5, `weak game → 3–5 concepts (${sel.concepts})`);
+ok(sel.concepts.every((id, i) => !i || sel.blocks[sel.concepts[i - 1]] >= sel.blocks[id]), 'weakest concepts first');
+ok(sel.concepts.includes('window') && sel.concepts.includes('data'), 'low RESOURCES and DATA SENT bring their concepts');
+const cats = RV.categoryScores(weak);
+ok(['science', 'engineering', 'resources', 'earth', 'data'].every((k) => typeof cats[k] === 'number'), 'categories = the existing score categories + comms part');
+ok(RV.reasonFor(RV.conceptById('window'), weak).includes('7.72'), 'reason uses the real mission numbers');
+ok(RV.reasonFor(RV.conceptById('instruments'), weak).includes('APXS'), 'reason names the missing Athena instrument');
+const great = JSON.parse(JSON.stringify(full)); great.rocks = { samples: [{ evidence: 'strong' }, { evidence: 'strong' }, { evidence: 'strong' }], science: 120, energyLeft: 80, done: true };
+great.meters.budget = 20000; great.meters.responsibility = 90; great.orbit.fuelUsed = 20; great.instruments.results = { capability: 100, compatibility: 100 };
+const gs = RV.selectConcepts(great);
+ok(gs.mode === 'bonus' && gs.concepts.join() === 'maxq,escape,flash', `all good → bonus concepts (${gs.mode}, cats ${JSON.stringify(gs.categories)})`);
+const qsA = RV.checkQuestions(sel.concepts), qsB = RV.checkQuestions(sel.concepts);
+ok(qsA.length === 3 && JSON.stringify(qsA) === JSON.stringify(qsB), 'same 3 check questions whatever the format');
+ok(RV.scoreCheck(qsA, qsA.map((q) => q.answer)) === 3 && RV.scoreCheck(qsA, [null, null, null]) === 0, 'check score 0–3');
+const rvs = { ...RV.freshReview(), ...sel, seen: { [sel.concepts[0]]: { visual: true } }, check: qsA.map((q) => q.answer) };
+const aft = RV.blocksAfter(rvs);
+ok(aft[sel.concepts[0]] === Math.max(0, sel.blocks[sel.concepts[0]] - 3), 'reviewed + right in the check = 3 blocks less');
+ok(sel.concepts.slice(3).every((id) => aft[id] === sel.blocks[id]), 'concepts not reviewed and not checked keep their blocks');
+ok(RV.leitner(1, true) === 2 && RV.leitner(3, true) === 3 && RV.leitner(2, false) === 1, 'Leitner boxes 1 → 2 → 3, miss → 1');
+for (const c of [...content.review.concepts, ...content.review.bonus]) ok(c.comic.length >= 3 && c.podcast[2].length >= 4 && c.flash.length === 2 && c.practice[1].length === 3 && c.check[1].length === 3 && c.source, `${c.id}: every format has content and a source`);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

@@ -63,16 +63,19 @@ export default class DashboardScene extends Phaser.Scene {
     this.center(mi);
     this.cards(mi);
     this.feedback(mi);
-    pxButton(this, 700, 644, 170, 60, t('dashboard.retry'), () => this.retry(), { size: 16 });
-    pxButton(this, 886, 644, 140, 60, t('dashboard.log'), () => this.openLog(), { size: 16 });
-    pxButton(this, 1042, 644, 214, 60, t('dashboard.continue'), () => this.finish(), { primary: true, size: 16 });
+    pxButton(this, 640, 644, 140, 60, t('dashboard.retry'), () => this.retry(), { size: 14 });
+    pxButton(this, 792, 644, 110, 60, t('dashboard.log'), () => this.openLog(), { size: 14 });
+    // learning review (Screens 17–26): the game picks WHAT from these results, the player picks HOW
+    pxButton(this, 914, 644, 170, 60, t('dashboard.review'), () => this.review(), { size: 14, stroke: C.cyan });
+    pxButton(this, 1096, 644, 160, 60, t('dashboard.continue'), () => this.finish(), { primary: true, size: 14 });
     this.onKey = (k) => {
       const n = Number(k); if (n >= 1 && n <= 6) { this.detail(n); return true; }
       if (k === 'l' || k === 'L') { this.openLog(); return true; }
+      if (k === 'r' || k === 'R') { this.review(); return true; }
       return false;
     };
     setup(this, data, { back: false, help: 'DashboardScene', helpPos: [24, 656], mission: true, esc: () => {} });
-    say(`${t('dashboard.title')} Score ${this.score.total} out of 100. Rank: ${this.rank.rank}. Science ${this.score.science} percent, engineering ${this.score.engineering}, resources ${this.score.resources}, Earth ${this.score.earth}. Press 1 to 6 to see each stage compared with the real mission, L for the log.`);
+    say(`${t('dashboard.title')} Score ${this.score.total} out of 100. Rank: ${this.rank.rank}. Science ${this.score.science} percent, engineering ${this.score.engineering}, resources ${this.score.resources}, Earth ${this.score.earth}. Press 1 to 6 to see each stage compared with the real mission, L for the log, R for your learning review.`);
   }
 
   left(mi) {
@@ -198,12 +201,14 @@ export default class DashboardScene extends Phaser.Scene {
     const improve = worst.m.different ? t('dashboard.improveLine', { STAGE: worst.name }) : t('dashboard.improveNone');
     const learned = t('dashboard.learnedLine');
     const text = `${t('dashboard.good')} ${good}\n${t('dashboard.improve')} ${improve}\n${t('dashboard.learned')} ${learned}`;
-    this.mentor = mentorBar(this, 100, 572, 580, 140, '', { portrait: 120, size: 19, depth: 30, title: t('dashboard.feedback') });
+    this.mentor = mentorBar(this, 100, 572, 526, 140, '', { portrait: 120, size: 19, depth: 30, title: t('dashboard.feedback') });
     this.mentor.set(text, { silent: true });
     this.feedbackText = text;
   }
 
   detail(n) { go(this, 'StageDetailScene', { n }, { transition: 'fade' }); }
+
+  review() { go(this, state.mission.review && state.mission.review.done ? 'ReviewReportScene' : 'ReviewIntroScene', {}, { transition: 'fade' }); }
 
   openLog() {
     const md = openModal(this, t('dashboard.logTitle'), { w: 900, h: 600 });

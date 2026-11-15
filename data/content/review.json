@@ -1,0 +1,653 @@
+{
+ "note": "Learning review (Screens 17–26, 15-R). WHAT to review is chosen by src/review.js from the mission results; HOW is the player's choice. {PLACEHOLDERS} are filled from the mission state. Every fact comes from the game content and its NASA/JPL sources (source).",
+ "rules": {
+  "priority": 50,
+  "good": 70,
+  "maxConcepts": 5,
+  "minConcepts": 3,
+  "checkQuestions": 3
+ },
+ "categories": {
+  "science": "SCIENCE",
+  "engineering": "ENGINEERING",
+  "resources": "RESOURCES",
+  "earth": "EARTH",
+  "data": "DATA SENT"
+ },
+ "concepts": [
+  {
+   "id": "window",
+   "title": "LAUNCH WINDOW",
+   "icon": "calendar",
+   "category": "resources",
+   "stage": 3,
+   "reason": {
+    "ok": "Launched {LAUNCH}: the trip used {DV} km/s of Δv ({FUEL}% of the rocket limit).",
+    "none": "Your trajectory did not reach Mars, so the launch window is the place to start."
+   },
+   "comic": [
+    [
+     "systems",
+     "Earth and Mars go around the Sun at different speeds, so the distance between them keeps changing."
+    ],
+    [
+     "diagram",
+     "The most energy-efficient trip opens only about once every 26 months: the LAUNCH WINDOW."
+    ],
+    [
+     "engineer",
+     "Your plan: launch {LAUNCH}, {DV} km/s of Δv. In this game, Spirit's real dates need about 5.7 km/s."
+    ],
+    [
+     "systems",
+     "Spirit launched on June 10, 2003 and Opportunity on July 7, 2003. Both landed in January 2004."
+    ]
+   ],
+   "podcast": [
+    "systems",
+    "engineer",
+    [
+     [
+      "systems",
+      "Why did both rovers leave Earth in the summer of 2003?"
+     ],
+     [
+      "engineer",
+      "Because of the launch window. Earth and Mars line up for the most energy-efficient trip only about once every 26 months."
+     ],
+     [
+      "systems",
+      "And what happens if you launch outside it?"
+     ],
+     [
+      "engineer",
+      "The same trip needs much more Δv, which means more fuel. Your plan used {DV} km/s."
+     ],
+     [
+      "systems",
+      "So the date is a mission decision, not just a calendar choice."
+     ],
+     [
+      "engineer",
+      "Exactly. Spirit launched on June 10, 2003 and Opportunity on July 7, 2003."
+     ]
+    ]
+   ],
+   "flash": [
+    "How often do Earth and Mars line up for the most energy-efficient trip?",
+    "About every 26 months. MER's two rockets launched in the 2003 window."
+   ],
+   "practice": [
+    "Why did Spirit and Opportunity launch in mid-2003?",
+    [
+     "Earth and Mars lined up for an efficient trip: the launch window",
+     "Mars was at its closest point to the Sun",
+     "The rockets could only fly in summer"
+    ],
+    0,
+    "The 2003 launch window made the trip efficient."
+   ],
+   "why": "Earth and Mars line up for the most energy-efficient trip only about once every 26 months. Launching inside that window needs less Δv, so less fuel. That is why MER's two rockets launched in the 2003 window.",
+   "check": [
+    "How often do Earth and Mars line up for the most efficient trip?",
+    [
+     "Every month",
+     "About every 26 months",
+     "Every 10 years"
+    ],
+    1
+   ],
+   "source": "https://science.nasa.gov/planetary-science/programs/mars-exploration/mission-timeline/"
+  },
+  {
+   "id": "water",
+   "title": "WATER CLUES",
+   "icon": "water",
+   "category": "science",
+   "stage": 5,
+   "reason": {
+    "ok": "You collected {SAMPLES} sample(s); {STRONG} had a strong water clue."
+   },
+   "comic": [
+    [
+     "science",
+     "Some minerals form only when water is present. They are clues to the wet past of Mars."
+    ],
+    [
+     "science",
+     "Opportunity found tiny hematite spheres, nicknamed \"blueberries\". Hematite typically forms in water."
+    ],
+    [
+     "engineer",
+     "In your hunt: {SAMPLES} sample(s), {STRONG} with a strong water clue."
+    ],
+    [
+     "science",
+     "Gypsum veins form when water moves through cracks. Jarosite forms in acidic water."
+    ]
+   ],
+   "podcast": [
+    "science",
+    "systems",
+    [
+     [
+      "systems",
+      "How can a rock tell us there was water?"
+     ],
+     [
+      "science",
+      "Some minerals only form in water. Hematite \"blueberries\" are one of them, and Opportunity found many."
+     ],
+     [
+      "systems",
+      "What else counts as a strong clue?"
+     ],
+     [
+      "science",
+      "Gypsum veins form when water moves through cracks, and jarosite forms in acidic water."
+     ],
+     [
+      "systems",
+      "In this mission you brought home {STRONG} strong clue(s)."
+     ],
+     [
+      "science",
+      "And remember: weak evidence does not mean there was NO water. It means we need more evidence."
+     ]
+    ]
+   ],
+   "flash": [
+    "Which mineral, nicknamed \"blueberries\", did Opportunity find?",
+    "Hematite spheres. Hematite typically forms in water."
+   ],
+   "practice": [
+    "Which mineral did Opportunity find that typically forms in water?",
+    [
+     "Hematite \"blueberries\"",
+     "Ordinary basalt",
+     "Windblown dust"
+    ],
+    0,
+    "Hematite typically forms in water. Opportunity found it at Meridiani Planum."
+   ],
+   "why": "Rovers cannot see old lakes, but minerals remember them. Hematite, gypsum and jarosite form in water, so finding them is evidence that liquid water once existed. Basalt and windblown dust are not water clues on their own.",
+   "check": [
+    "Which mineral is a clue that water was once present?",
+    [
+     "Hematite",
+     "Ordinary basalt",
+     "Windblown dust"
+    ],
+    0
+   ],
+   "source": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-highlights/"
+  },
+  {
+   "id": "instruments",
+   "title": "INSTRUMENTS",
+   "icon": "instruments",
+   "category": "science",
+   "stage": 2,
+   "reason": {
+    "ok": "Your rover carried {ATHENA} of the 6 Athena instruments{MISSING}."
+   },
+   "comic": [
+    [
+     "science",
+     "Each instrument answers a different question about a rock."
+    ],
+    [
+     "science",
+     "Mini-TES spots water minerals from far away. APXS measures a rock's chemistry. Mössbauer identifies iron minerals like hematite."
+    ],
+    [
+     "engineer",
+     "Your rover carried {ATHENA} of the 6 Athena instruments{MISSING}."
+    ],
+    [
+     "systems",
+     "The real rovers carried the Athena payload: Pancam, Mini-TES, Microscopic Imager, APXS, Mössbauer and the Rock Abrasion Tool."
+    ]
+   ],
+   "podcast": [
+    "science",
+    "engineer",
+    [
+     [
+      "engineer",
+      "Why not just take the newest instruments?"
+     ],
+     [
+      "science",
+      "Each tool answers one question. APXS measures chemistry, Mössbauer finds iron minerals like hematite."
+     ],
+     [
+      "engineer",
+      "And PIXL? It is great for chemistry."
+     ],
+     [
+      "science",
+      "PIXL was built for a newer rover, Perseverance. Spirit and Opportunity used the Athena payload."
+     ],
+     [
+      "engineer",
+      "Your rover carried {ATHENA} of the 6 Athena instruments."
+     ],
+     [
+      "science",
+      "Without the right instrument, a rock's clue stays unreadable. That is what happened in Rock Hunter."
+     ]
+    ]
+   ],
+   "flash": [
+    "Which Athena instrument measured the chemistry of a rock?",
+    "APXS. (Mössbauer identified iron minerals like hematite.)"
+   ],
+   "practice": [
+    "Which instrument was built for the newer Perseverance rover, not for Spirit and Opportunity?",
+    [
+     "PIXL",
+     "APXS",
+     "Pancam"
+    ],
+    0,
+    "PIXL was built for Perseverance. Spirit and Opportunity used APXS for chemistry."
+   ],
+   "why": "Spirit and Opportunity carried the Athena payload: Pancam, Mini-TES, Microscopic Imager, APXS, Mössbauer and the Rock Abrasion Tool. Each answers a different question, so the kit decides which clues a rover can read.",
+   "check": [
+    "Which instrument did Spirit and Opportunity use to measure a rock's chemistry?",
+    [
+     "PIXL",
+     "APXS",
+     "MOXIE"
+    ],
+    1
+   ],
+   "source": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-instruments/"
+  },
+  {
+   "id": "data",
+   "title": "DATA TO EARTH",
+   "icon": "data",
+   "category": "data",
+   "stage": 6,
+   "reason": {
+    "ok": "{PACKETS} of 3 packets reached the orbiter; your comms plan was \"{QUALITY}\"."
+   },
+   "comic": [
+    [
+     "comms",
+     "Spirit and Opportunity sent most of their data through orbiters: Mars Odyssey and Mars Global Surveyor."
+    ],
+    [
+     "diagram",
+     "Rover → orbiter → Deep Space Network on Earth. An orbiter pass lasts only 2 to 8 minutes."
+    ],
+    [
+     "engineer",
+     "Your mission: {PACKETS} of 3 packets reached the orbiter. Your plan was \"{QUALITY}\"."
+    ],
+    [
+     "comms",
+     "A packet that does not get out is not lost: it stays in the rover's flash memory for a later pass."
+    ]
+   ],
+   "podcast": [
+    "comms",
+    "science",
+    [
+     [
+      "comms",
+      "Spirit and Opportunity sent most of their data through orbiters: Mars Odyssey and Mars Global Surveyor."
+     ],
+     [
+      "science",
+      "What happens if a packet does not reach the orbiter?"
+     ],
+     [
+      "comms",
+      "It is not lost: it stays in the rover's flash memory, which keeps data even when the power is off."
+     ],
+     [
+      "science",
+      "So it can be sent later?"
+     ],
+     [
+      "comms",
+      "Yes, on another pass. The limit is not time, it is space: each rover had 256 MB of flash memory."
+     ],
+     [
+      "science",
+      "In your mission, {PACKETS} of 3 packets reached the orbiter."
+     ]
+    ]
+   ],
+   "flash": [
+    "What happens to data that does not reach the orbiter?",
+    "It stays in the rover's flash memory and can be sent on a later pass."
+   ],
+   "practice": [
+    "How did most of Spirit and Opportunity's data reach Earth?",
+    [
+     "Relayed through orbiters like Mars Odyssey",
+     "Carried back by a return rocket",
+     "Sent by laser from the rover"
+    ],
+    0,
+    "By the end of the prime mission, 89% of the data came home through UHF relays."
+   ],
+   "why": "An orbiter passes over the rover for only 2 to 8 minutes, so small, valuable results (like rover health and spectrometer data) should go first. By the end of the prime mission, 89% of the rovers' data had come home through UHF relays.",
+   "check": [
+    "If a data packet does not reach the orbiter, what happens?",
+    [
+     "It is lost forever",
+     "It stays saved in the rover's memory and is sent on another pass",
+     "You must wait 26 months for the next window"
+    ],
+    1
+   ],
+   "source": "https://descanso.jpl.nasa.gov/monograph/series13/DeepCommo_Chapter7--141030.pdf"
+  },
+  {
+   "id": "build",
+   "title": "SPACECRAFT DESIGN",
+   "icon": "build",
+   "category": "engineering",
+   "stage": 1,
+   "reason": {
+    "ok": "{MATCHES} of 4 spacecraft choices match the real MER design."
+   },
+   "comic": [
+    [
+     "engineer",
+     "The cruise stage carried the lander and the rover to Mars."
+    ],
+    [
+     "engineer",
+     "Power in space came from solar panels on the cruise stage."
+    ],
+    [
+     "comms",
+     "MER talked to Earth with low-gain and medium-gain X-band antennas."
+    ],
+    [
+     "engineer",
+     "The spacecraft spun at about 2 rpm during cruise to stay stable. Your design: {MATCHES} of 4 choices match MER."
+    ]
+   ],
+   "podcast": [
+    "engineer",
+    "comms",
+    [
+     [
+      "comms",
+      "How did the spacecraft stay pointed on the way to Mars?"
+     ],
+     [
+      "engineer",
+      "It was spin-stabilized: it spun at about 2 rpm during cruise."
+     ],
+     [
+      "comms",
+      "And the antennas still worked while it spun?"
+     ],
+     [
+      "engineer",
+      "Yes. Its wide-beam antennas could still reach Earth while it spun."
+     ],
+     [
+      "comms",
+      "Low-gain and medium-gain X-band antennas, right?"
+     ],
+     [
+      "engineer",
+      "Right. Your design matched {MATCHES} of 4 of the real choices."
+     ]
+    ]
+   ],
+   "flash": [
+    "How did the MER spacecraft stay stable during cruise?",
+    "It was spin-stabilized: it spun at about 2 rpm."
+   ],
+   "practice": [
+    "What powered the MER spacecraft during the trip to Mars?",
+    [
+     "Solar panels on the cruise stage",
+     "A nuclear battery",
+     "Batteries charged only on Earth"
+    ],
+    0,
+    "Solar panels on the cruise stage powered the trip."
+   ],
+   "why": "A spinning cruise stage stays stable, and its wide-beam antennas can still reach Earth while it spins. Solar panels gave power, and low-gain plus medium-gain X-band antennas kept the link.",
+   "check": [
+    "How did the MER spacecraft stay stable during cruise?",
+    [
+     "It spun at about 2 rpm",
+     "It opened a parachute",
+     "It had no attitude control"
+    ],
+    0
+   ],
+   "source": "https://descanso.jpl.nasa.gov/monograph/series13/DeepCommo_Chapter7--141030.pdf"
+  }
+ ],
+ "bonus": [
+  {
+   "id": "maxq",
+   "title": "MAX Q",
+   "icon": "launch",
+   "category": "bonus",
+   "stage": null,
+   "seen": "the launch briefing (Ready for launch)",
+   "reason": {
+    "ok": "You saw it before launch but never reviewed it."
+   },
+   "comic": [
+    [
+     "engineer",
+     "As the rocket speeds up through the air, the air pushes on it harder and harder."
+    ],
+    [
+     "engineer",
+     "The biggest push is called Max Q."
+    ],
+    [
+     "systems",
+     "Engines can be throttled down to get through Max Q safely."
+    ]
+   ],
+   "podcast": [
+    "engineer",
+    "systems",
+    [
+     [
+      "systems",
+      "What is Max Q?"
+     ],
+     [
+      "engineer",
+      "As a rocket speeds up through the air, the push of the air on it grows to a maximum. That maximum is Max Q."
+     ],
+     [
+      "systems",
+      "How do rockets get through it?"
+     ],
+     [
+      "engineer",
+      "Engines can be throttled down to get through it safely."
+     ]
+    ]
+   ],
+   "flash": [
+    "What is Max Q?",
+    "The maximum push of the air on a rocket as it speeds up through the atmosphere."
+   ],
+   "practice": [
+    "How can a rocket get through Max Q safely?",
+    [
+     "Throttle the engines down",
+     "Open a parachute",
+     "Turn the engines off for good"
+    ],
+    0,
+    "Engines can be throttled down to get through Max Q safely."
+   ],
+   "why": "As the rocket speeds up through the air, the push of the air on it grows to a maximum called Max Q. Engines can be throttled down to get through it safely.",
+   "check": [
+    "What is Max Q?",
+    [
+     "The maximum push of the air on the rocket",
+     "The rocket's top speed in space",
+     "The highest point of an orbit"
+    ],
+    0
+   ],
+   "source": "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/dynamic-pressure-2/"
+  },
+  {
+   "id": "escape",
+   "title": "ESCAPE SPEED",
+   "icon": "orbit",
+   "category": "bonus",
+   "stage": null,
+   "seen": "the launch briefing (Ready for launch)",
+   "reason": {
+    "ok": "You saw it before launch but never reviewed it."
+   },
+   "comic": [
+    [
+     "engineer",
+     "Earth's gravity pulls everything back down."
+    ],
+    [
+     "engineer",
+     "To leave it behind, a rocket must reach about 11.2 km per second."
+    ],
+    [
+     "systems",
+     "That is more than 40,000 km/h!"
+    ]
+   ],
+   "podcast": [
+    "engineer",
+    "systems",
+    [
+     [
+      "systems",
+      "How fast must a rocket go to leave Earth?"
+     ],
+     [
+      "engineer",
+      "About 11.2 kilometers per second."
+     ],
+     [
+      "systems",
+      "In kilometers per hour?"
+     ],
+     [
+      "engineer",
+      "More than 40,000 km/h!"
+     ]
+    ]
+   ],
+   "flash": [
+    "About how fast must a rocket go to leave Earth's gravity behind?",
+    "About 11.2 km per second: more than 40,000 km/h."
+   ],
+   "practice": [
+    "About how fast must a rocket go to escape Earth?",
+    [
+     "About 11.2 km/s",
+     "About 1 km/s",
+     "About 100 km/s"
+    ],
+    0,
+    "Escape speed from Earth is about 11.2 km/s."
+   ],
+   "why": "To leave Earth's gravity behind, a rocket must reach about 11.2 km per second: more than 40,000 km/h.",
+   "check": [
+    "About how fast must a rocket go to leave Earth?",
+    [
+     "11.2 km/s",
+     "1 km/s",
+     "100 km/s"
+    ],
+    0
+   ],
+   "source": "https://imagine.gsfc.nasa.gov/science/objects/black_holes1.html"
+  },
+  {
+   "id": "flash",
+   "title": "FLASH MEMORY",
+   "icon": "data",
+   "category": "bonus",
+   "stage": null,
+   "seen": "Signal Run",
+   "reason": {
+    "ok": "You saw it in Signal Run but never reviewed it."
+   },
+   "comic": [
+    [
+     "comms",
+     "The rover keeps its data in flash memory."
+    ],
+    [
+     "comms",
+     "Flash memory holds the data even when the power is off."
+    ],
+    [
+     "engineer",
+     "Each rover had 256 megabytes of flash for everything it recorded."
+    ]
+   ],
+   "podcast": [
+    "comms",
+    "engineer",
+    [
+     [
+      "engineer",
+      "Where does the rover keep its data?"
+     ],
+     [
+      "comms",
+      "In flash memory, which holds data even when the power is off."
+     ],
+     [
+      "engineer",
+      "How much?"
+     ],
+     [
+      "comms",
+      "Each rover had 256 megabytes of flash memory for everything it recorded."
+     ]
+    ]
+   ],
+   "flash": [
+    "How much flash memory did each MER rover have?",
+    "256 megabytes, for everything it recorded."
+   ],
+   "practice": [
+    "What is special about flash memory?",
+    [
+     "It keeps data even when the power is off",
+     "It erases itself every night",
+     "It only works on Earth"
+    ],
+    0,
+    "Flash memory keeps data even when the power is off."
+   ],
+   "why": "The rover keeps its data in flash memory, which holds it even when the power is off. There is no time limit to send it: the limit is space (256 MB per rover).",
+   "check": [
+    "How much flash memory did each MER rover have?",
+    [
+     "256 MB",
+     "2 GB",
+     "1 MB"
+    ],
+    0
+   ],
+   "source": "https://www.jpl.nasa.gov/news/mars-exploration-rover-mission-status-8/"
+  }
+ ]
+}

@@ -18,6 +18,9 @@ import { voiceKey, cleanForSpeech } from './voicekey.js';
 const PREFERRED = ['Google US English', 'Microsoft Aria', 'Microsoft Jenny', 'Samantha', 'Microsoft Zira', 'Alex'];
 const KEY = 'questionv1.voiceURI';
 const RATE = 0.95, PITCH = 1.05;
+let rateMul = 1;   // playback speed set by the review podcast (0.8× / 1× / 1.25×)
+export function setVoiceRate(r) { rateMul = r || 1; if (current && current.audio) current.audio.playbackRate = rateMul; }
+export function voiceAvailable() { return isBrowser && (typeof Audio !== 'undefined' || !!synth()); }
 const isBrowser = typeof window !== 'undefined';
 
 let recorded = new Set();
@@ -154,6 +157,7 @@ async function playNext() {
   if (url && typeof Audio !== 'undefined') {
     const audio = new Audio(url);
     audio.volume = Math.max(0, Math.min(1, state.settings.volume / 100));
+    audio.playbackRate = rateMul;
     current = { item, audio };
     audio.onended = done;
     audio.onerror = () => { if (myGen === gen) webSpeech(item.text, done, myGen); };
@@ -175,7 +179,7 @@ function webSpeech(text, done, myGen) {
     const u = new SpeechSynthesisUtterance(text);
     if (!chosen) choose();
     if (chosen) u.voice = chosen;
-    u.lang = 'en-US'; u.rate = RATE; u.pitch = PITCH; u.volume = state.settings.volume / 100;
+    u.lang = 'en-US'; u.rate = RATE * rateMul; u.pitch = PITCH; u.volume = state.settings.volume / 100;
     u.onend = done; u.onerror = done;
     current = { utter: u };
     s.speak(u);

@@ -6,7 +6,7 @@ import LinkedList from './ds/LinkedList.js';
 export const STATION_IDS = ['structure', 'power', 'comms', 'computer', 'attitude'];
 
 export function defaultSettings() {
-  return { narration: true, textSize: 'M', volume: 70, music: true, musicVolume: 25, sfx: true, reduceMotion: false, nasaKey: '' };
+  return { narration: true, textSize: 'M', volume: 70, music: true, musicVolume: 25, lastReviewFormat: null, sfx: true, reduceMotion: false, nasaKey: '' };
 }
 
 function freshMission() {
@@ -35,6 +35,8 @@ function freshMission() {
     comms: { route: null, window: null, priority: null, returnedMb: 0, totalMb: 0, energy: null, done: false },
     // Screen 16b: Signal Run
     signal: { packets: 0, shots: 0, energyLeft: 100, done: false },
+    // Screens 17–26 + 15-R: learning review (src/review.js). null until the player opens it.
+    review: null,
     points: { science: 0, engineering: 0, resources: 0, earth: 0 },
     resourceHistory: [],              // [{ stage, budget, energy, fuel }] for the dashboard chart
     log: new LinkedList(),

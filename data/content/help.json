@@ -1,6 +1,12 @@
 {
   "global": ["Esc / Backspace: go back (or close a window)", "Tab: move between buttons · Enter / Space: press", "M: MY MISSION · H or ?: this help · ☰: settings"],
   "screens": {
+    "ReviewIntroScene": {"title": "REVIEW YOUR MISSION", "what": "The game looked at your real scores by category and picked the concepts you struggled with. Each one shows why it was picked. Next you choose HOW to review them.", "controls": ["Enter: choose how to review", "K: skip the review", "Esc: back"]},
+    "ReviewFormatScene": {"title": "CHOOSE YOUR FORMAT", "what": "Pick Visual, Podcast, Flashcards, Questions or Text. The concepts are the same in every format; you can switch any time with the tabs.", "controls": ["1–5 or ← →: choose", "Enter: start", "Esc: back"]},
+    "ReviewScene": {"title": "LEARNING REVIEW", "what": "Review each concept in your format. The tabs on top switch format without losing your place.", "controls": ["1–5: switch format", "← / →: previous / next concept · K: skip", "Flashcards: Space flip · Y / N", "Questions: A, B, C", "Podcast: Space play/pause · S script"]},
+    "ReviewCheckScene": {"title": "RETENTION CHECK", "what": "Three questions, the same for every format. They show how much you remember.", "controls": ["A, B, C or ↑ ↓: choose", "Enter: answer"]},
+    "ReviewResultsScene": {"title": "REVIEW RESULTS", "what": "How many check questions you remembered, your format, the time and how the weakness of each concept changed.", "controls": ["Enter: go to the report", "R: review again"]},
+    "ReviewReportScene": {"title": "YOUR REVIEW (REPORT)", "what": "The report page with your learning review: categories, the concepts picked and why, format, time, check answers and progress.", "controls": ["1–6: stage pages", "Esc: dashboard"]},
     "default": { "title": "HELP", "what": "Follow the mentor's instructions. You can always go back with ◀ BACK.", "controls": [] },
     "TitleScene": { "title": "TITLE", "what": "Choose 1 PLAYER or 4 PLAYERS, then press START. If you have a saved mission, CONTINUE takes you back to it. ☰ opens the settings (narration, text size, volume, reduce motion).", "controls": ["← → choose mode", "Enter: start"] },
     "RoleScene": { "title": "CHOOSE YOUR ASTRONAUT", "what": "Click an astronaut to pick it (yellow border). Click \"(i) info\" to read what the role does and its bonus. Then press CONFIRM. In 4 PLAYERS mode, each player picks a different role.", "controls": ["← → choose · I: info", "Enter: confirm"] },

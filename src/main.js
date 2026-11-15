@@ -26,11 +26,18 @@ import TalkScene from './scenes/TalkScene.js';
 import SignalRunScene from './minigames/SignalRunScene.js';
 import DashboardScene from './scenes/DashboardScene.js';
 import StageDetailScene from './scenes/StageDetailScene.js';
+import ReviewIntroScene from './scenes/ReviewIntroScene.js';
+import ReviewFormatScene from './scenes/ReviewFormatScene.js';
+import ReviewScene from './scenes/ReviewScene.js';
+import ReviewCheckScene from './scenes/ReviewCheckScene.js';
+import ReviewResultsScene from './scenes/ReviewResultsScene.js';
+import ReviewReportScene from './scenes/ReviewReportScene.js';
 
 export const SCENES = [BootScene, TitleScene, RoleScene, StoryScene, DestinationScene, NextUpScene, ObjectiveScene,
   SummaryScene, BriefingScene, WorkshopScene, StationScene, WarehouseScene, InstrumentScene, AssemblyScene,
   AssemblyResultsScene, OrbitScene, LaunchReadyScene, MeteorScene, SlidesScene, QuizGateScene, RockHunterScene,
-  CommsScene, TalkScene, SignalRunScene, DashboardScene, StageDetailScene];
+  CommsScene, TalkScene, SignalRunScene, DashboardScene, StageDetailScene,
+  ReviewIntroScene, ReviewFormatScene, ReviewScene, ReviewCheckScene, ReviewResultsScene, ReviewReportScene];
 
 const config = {
   type: Phaser.AUTO,

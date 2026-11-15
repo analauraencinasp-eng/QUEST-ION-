@@ -1,6 +1,6 @@
 {
   "note": "BootScene loads everything listed here. Missing files never crash the game: they become placeholders.",
-  "content": ["ui", "help", "sources", "story", "roles", "planets", "objectives", "stations", "instruments", "questions_instruments", "orbit", "launch_facts", "context_rockstudy", "quiz_rockhunter", "rocks", "context_discoveries", "quiz_discoveries", "comms", "mission_comparison", "nasa_media"],
+  "content": ["ui", "help", "sources", "story", "roles", "planets", "objectives", "stations", "instruments", "questions_instruments", "orbit", "launch_facts", "context_rockstudy", "quiz_rockhunter", "rocks", "context_discoveries", "quiz_discoveries", "comms", "mission_comparison", "nasa_media", "review"],
   "data": { "ephemeris": "data/ephemeris_mer.json" },
   "images": {
     "mentor": "assets/chars/mentor.png",

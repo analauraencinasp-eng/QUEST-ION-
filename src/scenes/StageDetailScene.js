@@ -28,11 +28,17 @@ export default class StageDetailScene extends Phaser.Scene {
     this.add.rectangle(24, 60, sub.width + 16, 28, C.white).setOrigin(0).setDepth(2);
     // tabs 1–6
     stages.forEach((s, i) => {
-      const x = 900 + i * 44, on = i + 1 === this.n;
+      const x = 880 + i * 44, on = i + 1 === this.n;
       this.add.rectangle(x, 24, 32, 32, on ? C.gold : C.navy).setOrigin(0).setStrokeStyle(3, C.white);
       txt(this, x + 16, 40, String(i + 1), { font: 'title', size: 10, color: on ? S.navy : S.white, origin: 0.5 });
       hotspot(this, x, 24, 32, 32, `Stage ${i + 1}: ${s.name}`, () => this.open(i + 1));
     });
+    { // tab R → report page "Your review"
+      const x = 880 + stages.length * 44;
+      this.add.rectangle(x, 24, 32, 32, C.navy).setOrigin(0).setStrokeStyle(3, C.cyan);
+      txt(this, x + 16, 40, 'R', { font: 'title', size: 10, color: S.cyan, origin: 0.5 });
+      hotspot(this, x, 24, 32, 32, 'Your review', () => go(this, 'ReviewReportScene', {}, { noHistory: true, transition: 'fade' }));
+    }
     // table
     const x = 24, w = 1232, cols = [x + 20, x + 280, x + 640, x + 1080];
     let y = 104;
@@ -78,6 +84,7 @@ export default class StageDetailScene extends Phaser.Scene {
       const d = Number(k); if (d >= 1 && d <= stages.length) { this.open(d); return true; }
       if (k === 'ArrowRight') { if (this.n < stages.length) this.open(this.n + 1); return true; }
       if (k === 'ArrowLeft') { if (this.n > 1) this.open(this.n - 1); return true; }
+      if (k === 'r' || k === 'R') { go(this, 'ReviewReportScene', {}, { noHistory: true, transition: 'fade' }); return true; }
       return false;
     };
     setup(this, data, { back: false, esc: () => go(this, 'DashboardScene', {}, { noHistory: true, transition: 'fade' }), help: 'StageDetailScene', helpPos: [24, 644] });

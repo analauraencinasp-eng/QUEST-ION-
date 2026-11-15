@@ -55,3 +55,13 @@ Decisiones que no resuelve el Figma o que cambian lo que dice `PROMPT_CLAUDE_COD
 ## Puntaje (ajuste)
 - Comunicaciones = la mitad por la calidad de tu plan (15h) y la mitad por los paquetes que llegaron (Signal Run).
 
+## Repaso de aprendizaje (pantallas 17–26 y página "Your review" del reporte)
+- Se abre desde el dashboard (botón **REVIEW ▶** o tecla R) y desde la pestaña **R** de las páginas del reporte.
+- **El juego elige QUÉ repasar; el jugador elige CÓMO.** El formato nunca cambia los conceptos.
+- Categorías: las que ya existen en el puntaje (SCIENCE, ENGINEERING, RESOURCES, EARTH) + la parte de comunicaciones (DATA SENT). No hay categorías nuevas.
+- Cada concepto pertenece a una categoría y a una tabla de etapa (15-D): ventana de lanzamiento (RESOURCES · órbita), pistas de agua (SCIENCE · Rock Hunter), instrumentos (SCIENCE · instrumentos), datos a la Tierra (DATA SENT · etapa 6), diseño de la nave (ENGINEERING · etapa 1).
+- Bloques de debilidad (0–5) = nivel de la categoría (<50 % → 3, <70 % → 2) + 1 por cada fila ✕ DIFFERENT y +0.5 por ≈ CLOSE. Se repasan los de 2+ bloques (máximo 5; si hay 1–2 se completa hasta 3). Si todo salió bien: conceptos extra que vio y no repasó (Max Q, velocidad de escape, memoria flash).
+- Los 5 formatos cubren los mismos conceptos; cambiar de pestaña no reinicia el avance. Todos terminan en la misma revisión de 3 preguntas.
+- Después del repaso: −1 bloque por concepto repasado y −2 si acertó su pregunta de la revisión.
+- El repaso **no cambia el puntaje** de la misión.
+
