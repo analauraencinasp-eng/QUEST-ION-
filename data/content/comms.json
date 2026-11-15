@@ -1,0 +1,77 @@
+{
+  "note": "Screens 15b–15i (MER COMMS PLANNER). Values marked * are simplified game assumptions (SIMULATED); facts carry source_url.",
+  "sol": 42,
+  "context": {
+    "routes": {
+      "title": "DECISION 1: HOW WILL YOUR DATA TRAVEL?",
+      "intro": "Spirit and Opportunity had two ways to send data home:",
+      "lines": [
+        { "text": "> DIRECT-TO-EARTH (X-band): the rover points its antenna at Earth and talks to NASA's Deep Space Network. No orbiter needed, but the link is slower and uses more of the rover's energy.*", "source_url": "https://descanso.jpl.nasa.gov/monograph/series13/DeepCommo_Chapter7--141030.pdf" },
+        { "text": "> UHF RELAY: the rover sends data up to an orbiter like Mars Odyssey, which forwards it to Earth. Rates up to 128 kbps, but only while the orbiter passes overhead.", "source_url": "https://descanso.jpl.nasa.gov/monograph/series13/DeepCommo_Chapter7--141030.pdf" }
+      ],
+      "fact": { "text": "By the end of the prime mission (April 2004), 89% of the rovers' data had come home through UHF relays.", "source_url": "https://descanso.jpl.nasa.gov/monograph/series13/DeepCommo_Chapter7--141030.pdf" },
+      "mentor": "Your rover has both antennas installed, so both routes are possible. Think about speed, energy and timing!"
+    },
+    "windows": {
+      "title": "DECISION 2: WHEN CAN YOU TALK?",
+      "intro": "A Martian day (a sol) lasts about 24.6 hours. Contacts only happen in short windows:",
+      "lines": [
+        { "text": "> ORBITER PASSES: Odyssey or Mars Global Surveyor fly over the rover for only 2 to 8 minutes. A pass high in the sky gives a stronger link than a low one.", "source_url": "https://descanso.jpl.nasa.gov/monograph/series13/DeepCommo_Chapter7--141030.pdf" },
+        { "text": "> DIRECT-TO-EARTH: possible only while Earth is above the rover's horizon and a Deep Space Network antenna is free.*", "source_url": "https://www.nasa.gov/directorates/somd/space-communications-navigation-program/what-is-the-deep-space-network/" },
+        { "text": "> NIGHT CONTACTS: in this game, waking up in the cold night costs extra battery energy.*", "source_url": null }
+      ],
+      "formula": "Window length x link speed = how much data you can send.",
+      "mentor": "A longer pass is not always better if it costs energy your rover needs to survive the night."
+    },
+    "priority": {
+      "title": "DECISION 3: WHAT GOES FIRST?",
+      "intro": "Your rover collected more data than one pass can carry. You must choose the order.",
+      "lines": [
+        { "text": "> ROVER TELEMETRY: a small health report. Without it, the team on Earth can't know if the rover is safe." },
+        { "text": "> ANALYSIS RESULTS: small files from spectrometers. They hold the strongest evidence of ancient water." },
+        { "text": "> IMAGES: close-ups and panoramas are huge. They help explain the evidence, but fill the link quickly." }
+      ],
+      "rule": "Send the most valuable and smallest science first.",
+      "mentor": "Real teams decided every sol which data came down first. Science and rover safety both matter!"
+    }
+  },
+  "routes": [
+    { "id": "dte", "name": "A. DIRECT-TO-EARTH (X-BAND)", "short": "DIRECT X-BAND", "speed": "about 10 kbps (slow)*", "contact": "up to 60 min*", "energy": "HIGH*", "needs": "Earth above the horizon + DSN antenna", "capacityMb": 36, "energyCost": 35 },
+    { "id": "uhf", "name": "B. UHF RELAY VIA ORBITER", "short": "UHF RELAY", "speed": "up to 128 kbps (fast)", "contact": "2 to 8 min per pass", "energy": "LOW*", "needs": "An orbiter passing overhead", "capacityMb": 60, "energyCost": 10 }
+  ],
+  "windows": [
+    { "id": "w1", "name": "W1 ODYSSEY PASS", "short": "W1 ODYSSEY", "time": "14:20*", "start": 14.33, "len": "8 min", "elev": "HIGH in sky", "capacityMb": 60, "energy": "LOW*", "energyCost": 10, "night": false },
+    { "id": "w2", "name": "W2 MGS PASS", "short": "W2 MGS", "time": "15:45*", "start": 15.75, "len": "5 min", "elev": "LOW in sky", "capacityMb": 25, "energy": "LOW*", "energyCost": 8, "night": false },
+    { "id": "w3", "name": "W3 ODYSSEY NIGHT PASS", "short": "W3 NIGHT", "time": "03:10*", "start": 3.17, "len": "8 min", "elev": "HIGH in sky", "capacityMb": 64, "energy": "HIGH* (cold night)", "energyCost": 30, "night": true },
+    { "id": "dte1", "name": "D1 DIRECT-TO-EARTH SESSION", "short": "D1 DIRECT", "time": "11:00*", "start": 11, "len": "60 min", "elev": "Earth up", "capacityMb": 36, "energy": "HIGH*", "energyCost": 35, "night": false, "route": "dte" }
+  ],
+  "data": [
+    { "id": "telemetry", "name": "ROVER TELEMETRY (health)", "mb": 3, "value": 10, "kind": "health" },
+    { "id": "spectra", "name": "MOSSBAUER + APXS RESULTS ({CLUES})", "mb": 6, "value": 9, "kind": "science" },
+    { "id": "micro", "name": "MICROSCOPIC IMAGES of samples", "mb": 18, "value": 6, "kind": "image" },
+    { "id": "pano", "name": "PANCAM PANORAMA (color)", "mb": 48, "value": 4, "kind": "image" },
+    { "id": "minites", "name": "MINI-TES SPECTRA", "mb": 8, "value": 7, "kind": "science" }
+  ],
+  "startOrder": ["pano", "micro", "telemetry", "minites", "spectra"],
+  "feedback": {
+    "smallFirst": "+ Small, high-value results first: the key water evidence made it home in one pass.",
+    "scienceLate": "- The key water evidence did not make it into this pass. Put small, valuable results higher.",
+    "telemetryFirst": "+ Telemetry first lets the team check that the rover is healthy.",
+    "telemetryLate": "- Telemetry was not first: the team can't check the rover's health right away.",
+    "partial": "- {NAME} did not fully fit. A second pass (or the night pass, at an energy cost) could finish it.",
+    "allFit": "+ Everything fit in this pass!",
+    "dteNote": "i The direct X-band route would have returned about 36 Mb* using more energy.",
+    "uhfNote": "i The UHF relay route could have returned about 60 Mb* using less energy.",
+    "night": "- The night pass worked, but the cold wake-up cost a lot of battery.*",
+    "good": "Great plan! Spirit and Opportunity sent most of their science through orbiters, just like you. Now let's actually send it!",
+    "ok": "Good plan, with room to improve. Most real MER data came home through orbiter relays. Now let's send it!"
+  },
+  "talk": {
+    "cards": [
+      { "title": "1. LIGHT DELAY", "text": "Radio travels at the speed of light, but Mars is so far away that a message takes about 3 to 22 minutes one way. Nobody can drive the rover with a joystick!", "source_url": "https://science.nasa.gov/blog/speaking-percys-language-how-to-talk-so-perseverance-will-listen/" },
+      { "title": "2. RELAY ORBITERS", "text": "Spirit and Opportunity sent most of their data through orbiters like Mars Odyssey. An orbiter passes overhead for only 2 to 8 minutes, so timing matters.", "source_url": "https://descanso.jpl.nasa.gov/monograph/series13/DeepCommo_Chapter7--141030.pdf" },
+      { "title": "3. THREE BIG DISHES", "text": "NASA's Deep Space Network has three antenna complexes, about 120° apart around the world: California, Spain and Australia, so the network can keep talking to spacecraft as Earth turns.", "source_url": "https://www.nasa.gov/directorates/somd/space-communications-navigation-program/what-is-the-deep-space-network/" }
+    ]
+  },
+  "signal": { "packetsNeeded": 3, "energy": 100, "shotCost": 7, "windowSec": 22, "simulated": true }
+}

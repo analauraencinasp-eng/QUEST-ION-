@@ -1,0 +1,57 @@
+{
+  "note": "Screens 15-D1 … 15-D6 (post-it '15 stage cards → detail comparison'). match rules: 'eq' (player value equals real), 'stationB' (chose option B), 'range' (number inside [min,max] = MATCH, inside [cmin,cmax] = CLOSE), 'atLeast', 'sim' (simulated: no badge).",
+  "stages": [
+    { "id": 1, "name": "CREW & BUILD", "icon": "build",
+      "rows": [
+        { "aspect": "Spacecraft parts", "player_key": "build.parts", "real_value": "Cruise stage + aeroshell carrying the lander and rover", "match_rule": "stationB", "station": "structure", "source_url": "https://descanso.jpl.nasa.gov/monograph/series13/DeepCommo_Chapter7--141030.pdf" },
+        { "aspect": "Power in space", "player_key": "build.power", "real_value": "Solar panels on the cruise stage", "match_rule": "stationB", "station": "power", "source_url": "https://descanso.jpl.nasa.gov/monograph/series13/DeepCommo_Chapter7--141030.pdf" },
+        { "aspect": "Antennas", "player_key": "build.comms", "real_value": "Low-gain + medium-gain X-band antennas", "match_rule": "stationB", "station": "comms", "source_url": "https://descanso.jpl.nasa.gov/monograph/series13/DeepCommo_Chapter7--141030.pdf" },
+        { "aspect": "Staying pointed", "player_key": "build.attitude", "real_value": "Spin-stabilized: the spacecraft spun at about 2 rpm during cruise", "match_rule": "stationB", "station": "attitude", "source_url": "https://descanso.jpl.nasa.gov/DPSummary/DESCANSO_MER_NAV_051215C_low.pdf" }
+      ],
+      "why": "A spinning cruise stage stays stable, and its wide-beam antennas can still reach Earth while it spins.",
+      "why_source": "https://descanso.jpl.nasa.gov/monograph/series13/DeepCommo_Chapter7--141030.pdf" },
+    { "id": 2, "name": "INSTRUMENTS", "icon": "instruments",
+      "rows": [
+        { "aspect": "Instruments chosen", "player_key": "inst.list", "real_value": "Athena payload: Pancam, Mini-TES, Microscopic Imager, APXS, Mössbauer, RAT", "match_rule": "athena", "source_url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-instruments/" },
+        { "aspect": "Requirements met", "player_key": "inst.req", "real_value": "All science goals covered", "match_rule": "range", "min": 5, "max": 5, "cmin": 4, "cmax": 5, "source_url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-objectives/" },
+        { "aspect": "Compatibility", "player_key": "inst.compat", "real_value": "Every instrument built for the rover", "match_rule": "range", "min": 100, "max": 100, "cmin": 70, "cmax": 100, "source_url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-instruments/" },
+        { "aspect": "Mass / budget used", "player_key": "inst.budget", "real_value": "Simulated game value (no real equivalent)", "match_rule": "sim" }
+      ],
+      "why": "Each instrument answered a different question: color and context, minerals from afar, texture, chemical elements and iron minerals.",
+      "why_source": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-instruments/" },
+    { "id": 3, "name": "ORBIT", "icon": "orbit",
+      "rows": [
+        { "aspect": "Launch window", "player_key": "orbit.window", "real_value": "Mid 2003 (Spirit in June, Opportunity in July)", "match_rule": "range", "min": 150, "max": 200, "cmin": 120, "cmax": 230, "source_url": "https://descanso.jpl.nasa.gov/DPSummary/DESCANSO_MER_NAV_051215C_low.pdf" },
+        { "aspect": "Transfer path", "player_key": "orbit.transfer", "real_value": "Transfer trajectory from Earth to Mars, about 7 months", "match_rule": "eq", "value": "transfer", "source_url": "https://descanso.jpl.nasa.gov/DPSummary/DESCANSO_MER_NAV_051215C_low.pdf" },
+        { "aspect": "Travel time", "player_key": "orbit.travel", "real_value": "About 7 months: arrived in January 2004", "match_rule": "range", "min": 180, "max": 240, "cmin": 140, "cmax": 300, "source_url": "https://descanso.jpl.nasa.gov/DPSummary/DESCANSO_MER_NAV_051215C_low.pdf" },
+        { "aspect": "Fuel used", "player_key": "orbit.fuel", "real_value": "Simulated game value (no real equivalent)", "match_rule": "sim" }
+      ],
+      "why": "Earth and Mars line up for an efficient trip only about every 26 months. Launching in that window saves a lot of fuel.",
+      "why_source": "https://science.nasa.gov/planetary-science/programs/mars-exploration/mission-timeline/" },
+    { "id": 4, "name": "LAUNCH", "icon": "launch",
+      "rows": [
+        { "aspect": "Hull left", "player_key": "launch.hull", "real_value": "Meteor storms are a game challenge, not a real MER launch event", "match_rule": "sim" },
+        { "aspect": "Course corrections", "player_key": "launch.tcm", "real_value": "Six trajectory correction maneuvers (TCMs) were planned during the trip", "match_rule": "sim", "source_url": "https://descanso.jpl.nasa.gov/DPSummary/DESCANSO_MER_NAV_051215C_low.pdf" },
+        { "aspect": "Rocket", "player_key": "launch.rocket", "real_value": "Delta II rockets from Cape Canaveral, Florida", "match_rule": "eq", "value": "Delta II", "source_url": "https://www.nasa.gov/missions/mer/nasa-celebrates-decade-of-mars-exploration-by-spirit-opportunity/" }
+      ],
+      "why": "The meteor storm is a game challenge. The real team planned several small engine burns to fine-tune the path during the trip.",
+      "why_source": "https://descanso.jpl.nasa.gov/DPSummary/DESCANSO_MER_NAV_051215C_low.pdf" },
+    { "id": 5, "name": "ROCK HUNTER", "icon": "rock",
+      "rows": [
+        { "aspect": "Rocks analyzed", "player_key": "rock.samples", "real_value": "Rocks and soils analyzed in place (no samples returned)", "match_rule": "range", "min": 3, "max": 3, "cmin": 2, "cmax": 3, "source_url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-instruments/" },
+        { "aspect": "Water clues found", "player_key": "rock.clues", "real_value": "Hematite \"blueberries\", jarosite, gypsum veins, clays, silica", "match_rule": "range", "min": 2, "max": 3, "cmin": 1, "cmax": 3, "source_url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-highlights/" },
+        { "aspect": "Energy management", "player_key": "rock.energy", "real_value": "Solar powered: a planet-wide dust storm in 2018 ended Opportunity's mission", "match_rule": "sim", "source_url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/" }
+      ],
+      "why": "The rovers could not bring samples home, so they chose targets carefully and combined clues from several instruments.",
+      "why_source": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-objectives/" },
+    { "id": 6, "name": "DATA SENT", "icon": "data",
+      "rows": [
+        { "aspect": "Route", "player_key": "comms.route", "real_value": "Mostly relayed through orbiters (Odyssey, MGS), plus direct-to-Earth", "match_rule": "eq", "value": "uhf", "close": "dte", "source_url": "https://descanso.jpl.nasa.gov/monograph/series13/DeepCommo_Chapter7--141030.pdf" },
+        { "aspect": "Contact window", "player_key": "comms.window", "real_value": "Short orbiter passes of 2 to 8 minutes each", "match_rule": "eq", "value": "w1", "close": "w2", "source_url": "https://descanso.jpl.nasa.gov/monograph/series13/DeepCommo_Chapter7--141030.pdf" },
+        { "aspect": "Data priority", "player_key": "comms.priority", "real_value": "Rover health and key science first", "match_rule": "eq", "value": "good", "close": "ok", "source_url": null },
+        { "aspect": "Packets delivered", "player_key": "signal.packets", "real_value": "Simulated game value (no real equivalent)", "match_rule": "sim" }
+      ],
+      "why": "Relaying through orbiters let the rovers send much more data: 89% of the prime-mission data came home that way.",
+      "why_source": "https://descanso.jpl.nasa.gov/monograph/series13/DeepCommo_Chapter7--141030.pdf" }
+  ]
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QUEST(ION) · A space mission design game</title>
+  <style>
+    @font-face { font-family: "Press Start 2P"; src: url("assets/fonts/PressStart2P.woff2") format("woff2"); font-display: block; }
+    @font-face { font-family: "VT323"; src: url("assets/fonts/VT323.woff2") format("woff2"); font-display: block; }
+    html, body { margin: 0; height: 100%; background: #0b0f26; color: #f4f1e6; font-family: "VT323", monospace; overflow: hidden; }
+    #game { display: flex; align-items: center; justify-content: center; height: 100%; }
+    canvas { image-rendering: pixelated; outline: none; }
+    canvas:focus-visible { outline: 3px solid #5aa0e6; }
+    .sr-only { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+    #start { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+      background: rgba(11, 15, 38, .92); color: #f4f1e6; font: 26px "VT323", monospace; cursor: pointer; z-index: 10; border: 0; width: 100%; }
+    #start b { font: 28px "Press Start 2P", monospace; color: #e69f00; text-shadow: 3px 3px 0 #000; }
+    #start:focus-visible { outline: 4px solid #5aa0e6; outline-offset: -10px; }
+    /* warm the fonts so Phaser can measure them on the first frame */
+    .font-warm { position: absolute; left: -9999px; }
+  </style>
+</head>
+<body>
+  <h1 class="sr-only">QUEST(ION): an educational game where you design a mission to Mars inspired by NASA's Spirit and Opportunity rovers</h1>
+  <div id="sr-live" class="sr-only" aria-live="polite" role="status"></div>
+  <span class="font-warm" style="font-family:'Press Start 2P'">.</span><span class="font-warm" style="font-family:'VT323'">.</span>
+  <div id="game"></div>
+  <!-- One click (or key) lets the browser give the game the keyboard and the sound -->
+  <button id="start" type="button" autofocus><b>CLICK TO PLAY</b><span>Mouse + keyboard · Press ? for help at any time</span></button>
+  <script>
+    const startBtn = document.getElementById('start');
+    const go = () => {
+      startBtn.remove();
+      window.__questUnlocked = true;
+      if (window.__questUnlock) window.__questUnlock();
+      const c = document.querySelector('canvas');
+      if (c) { c.setAttribute('tabindex', '0'); c.focus(); }
+    };
+    startBtn.addEventListener('click', go);
+    startBtn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+  </script>
+  <!-- Phaser 3.90 (local copy, no CDN) as a global, then the game as an ES module (no build step) -->
+  <script src="vendor/phaser.min.js"></script>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

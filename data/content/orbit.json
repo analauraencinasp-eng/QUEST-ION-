@@ -1,0 +1,128 @@
+{
+  "note": "Screen 12. Planet positions come from data/ephemeris_mer.json (JPL Horizons). Slider ranges, fuel, tolerance and stars are SIMULATED GAME VALUES.",
+  "ephemerisStart": "2003-01-01",
+  "slider": {
+    "dayMin": 0,
+    "dayMax": 780,
+    "powerMin": 0,
+    "powerMax": 10,
+    "powerStep": 0.5,
+    "dirMin": -90,
+    "dirMax": 90,
+    "dirStep": 5,
+    "simulated": true
+  },
+  "physics": {
+    "gmSun": 0.00029591220828559,
+    "dvPerPower": 0.000283,
+    "hitAU": 0.06,
+    "maxDays": 420,
+    "simulated": true,
+    "note": "dvPerPower: AU/day of extra speed per power step (about 0.49 km/s); hitAU: how close counts as reaching Mars (game tolerance). The green WINDOW zone is computed live: launch days where a medium burn at about 0 degrees reaches Mars."
+  },
+  "sweetSpot": [
+    5.5,
+    7
+  ],
+  "rules": [
+    {
+      "title": "1. WAIT FOR THE WINDOW",
+      "text": "Earth and Mars line up for the most energy-efficient trip only about once every 26 months. Launch when Mars is the right amount ahead of Earth: in mid-2003 it was about 20 to 30 degrees ahead (real JPL Horizons positions).",
+      "source_url": "https://science.nasa.gov/planetary-science/programs/mars-exploration/mission-timeline/"
+    },
+    {
+      "title": "2. BURN WITH EARTH'S MOTION",
+      "text": "Fire the engine in the direction Earth is already moving. The Sun's pull does the rest.",
+      "source_url": "https://descanso.jpl.nasa.gov/DPSummary/DESCANSO_MER_NAV_051215C_low.pdf"
+    },
+    {
+      "title": "3. COAST HALF AN ORBIT",
+      "text": "Your path is a transfer orbit that touches both orbits. For Spirit and Opportunity the trip took about 7 months.",
+      "source_url": "https://descanso.jpl.nasa.gov/DPSummary/DESCANSO_MER_NAV_051215C_low.pdf"
+    }
+  ],
+  "briefingMentor": "Less fuel = more budget for science. Faster paths cost much more fuel!",
+  "tutorial": [
+    {
+      "step": 1,
+      "tag": "TUTORIAL 1/4 LAUNCH DAY",
+      "title": "MENTOR STEP 1: LAUNCH DAY",
+      "text": "Drag the launch day and watch Mars move along its orbit (real JPL Horizons positions). Launch inside the green zone: Mars is about 20 to 30 degrees ahead of Earth, so you both meet at the same place.",
+      "focus": "day"
+    },
+    {
+      "step": 2,
+      "tag": "TUTORIAL 2/4 BURN POWER",
+      "title": "MENTOR STEP 2: BURN POWER",
+      "text": "Power sets how far your path reaches. Too weak and the path turns back before Mars. More power arrives sooner, but past the sweet spot it just burns fuel.",
+      "focus": "power"
+    },
+    {
+      "step": 3,
+      "tag": "TUTORIAL 3/4 DIRECTION",
+      "title": "MENTOR STEP 3: BURN DIRECTION",
+      "text": "Aiming away from Earth's motion wastes speed and bends your path. At 0° (prograde) you add to the speed Earth already gives you.",
+      "focus": "dir"
+    },
+    {
+      "step": 4,
+      "tag": "TUTORIAL 4/4 ENGAGE",
+      "title": "MENTOR STEP 4: ENGAGE",
+      "text": "Press ENGAGE (or SPACE) to fly your plan. Remember: this is a TRANSFER trajectory from Earth to Mars, not an orbit around Mars.",
+      "focus": "go"
+    }
+  ],
+  "help": {
+    "day": {
+      "title": "[?] LAUNCH DAY",
+      "lines": [
+        "Earth and Mars move at different speeds.",
+        "• Good windows come only about every 26 months.",
+        "• In the green zone (mid-2003) Mars is about 20 to 30 degrees ahead of Earth."
+      ]
+    },
+    "power": {
+      "title": "[?] BURN POWER",
+      "lines": [
+        "How hard the engine pushes at launch.",
+        "• Too weak: the path never reaches Mars's orbit.",
+        "• Sweet spot: just enough to reach Mars, saves fuel.",
+        "• Too strong: arrives sooner, but wastes fuel you need later."
+      ]
+    },
+    "dir": {
+      "title": "[?] BURN DIRECTION",
+      "lines": [
+        "Which way the engine pushes.",
+        "• 0° = with Earth's motion (prograde): best.",
+        "• Toward or away from the Sun bends and shortens your path."
+      ]
+    }
+  },
+  "feedback": {
+    "weak": "Too weak! Your path turns back before reaching Mars's orbit. Try a bit more power, not the maximum.",
+    "late": "You reach Mars's orbit, but Mars is not there yet (or already gone). Change the LAUNCH DAY so Mars is about 44° ahead.",
+    "dir": "Your burn is pointing away from Earth's motion. Try a direction closer to 0°.",
+    "hog": "You hit Mars, but you burned a lot of fuel! More power is not always better.",
+    "good": "Great orbit! In the window, near 0° and medium power: the same idea NASA used for Spirit and Opportunity.",
+    "drawGood": "Your drawn guess curved the same way as the real path: around the Sun, with Earth's motion. Nice intuition!",
+    "drawBad": "Compare your drawing with the real path: spacecraft don't fly straight to Mars. They curve around the Sun in a transfer orbit.",
+    "transfer": "This is a TRANSFER trajectory: half an ellipse around the Sun that starts at Earth's orbit and ends at Mars's orbit. It is not an orbit around Mars.",
+    "balance": "The balance: launch window (when), fuel (how much power) and travel time (how fast). More power is not always better."
+  },
+  "real": {
+    "text": "Real mission: Spirit launched June 10, 2003 and Opportunity July 7, 2003 (July 8 UTC); after about 7 months of cruise they arrived in January 2004.",
+    "spiritLaunch": "2003-06-10",
+    "opportunityLaunch": "2003-07-08",
+    "spiritArrival": "2004-01-04",
+    "opportunityArrival": "2004-01-25",
+    "source_url": "https://descanso.jpl.nasa.gov/DPSummary/DESCANSO_MER_NAV_051215C_low.pdf"
+  },
+  "windowPowers": [
+    5.5,
+    6,
+    6.5,
+    7
+  ],
+  "angleNote": "The textbook rule (44 degrees ahead) assumes circular orbits. With the real 2003 positions the efficient launch was with Mars about 20 to 30 degrees ahead."
+}

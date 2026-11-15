@@ -1,0 +1,139 @@
+{
+  "note": "Screen 9 stations + Screen 10 cards. Option B = the real MER cruise configuration (MER HISTORICAL). A and C are alternatives for comparison. cost / mass / energy / stat levels are SIMULATED GAME VALUES. earth_effect stays null unless an official NASA source backs an effect on Earth (none found for these parts).",
+  "caps": { "budget": 120000, "mass": 3000, "simulated": true },
+  "stations": [
+    {
+      "id": "structure", "n": 1, "name": "STRUCTURE", "tag": "Holds it all together", "art": "station-1", "pos": [56, 256, 208, 152], "tagPos": [102, 222],
+      "hint": { "text": "Carries the launch loads and holds the other parts. The real MER cruise stage carried the aeroshell with the rover inside and let go of it before entering Mars's atmosphere.", "source_url": "https://mars.nasa.gov/internal_resources/826/" },
+      "blueprint": ["CRUISE STAGE FRAME", "AEROSHELL INTERFACE"],
+      "options": [
+        { "letter": "A", "name": "LIGHTWEIGHT ALUMINUM FRAME", "short": "Light frame", "kind": "game",
+          "desc": "A lighter frame that holds the cruise systems with less metal.",
+          "parts": "Thin aluminum struts · basic equipment mounts",
+          "stats": [["MASS", 2, "Light"], ["STRENGTH", 2, "Low"], ["COST", 2, "Low"]],
+          "advantage": "Saves launch mass and budget.", "limitation": "Less margin for the shaking and loads of launch.",
+          "cost": 14000, "mass": 420, "energy": 0, "earth_effect": null, "source_url": "https://www.nasa.gov/smallsat-institute/sst-soa/" },
+        { "letter": "B", "name": "MER CRUISE STAGE STRUCTURE", "short": "MER cruise stage", "kind": "mer",
+          "desc": "Carries the launch loads, holds the cruise systems and connects to the aeroshell that protects the rover until it separates before entering Mars's atmosphere.",
+          "parts": "Cruise stage structure and supports · aeroshell interfaces · panel and equipment mounts",
+          "stats": [["MASS", 3, "Medium"], ["STRENGTH", 3, "Medium"], ["COST", 3, "Medium"]],
+          "advantage": "Integrated with the real MER mission.", "limitation": "Its performance can't be compared with A/C without engineering models.",
+          "cost": 18000, "mass": 520, "energy": 0, "earth_effect": null, "source_url": "https://descanso.jpl.nasa.gov/monograph/series13/DeepCommo_Chapter7--141030.pdf" },
+        { "letter": "C", "name": "REINFORCED ALUMINUM FRAME", "short": "Reinforced frame", "kind": "game",
+          "desc": "A heavier frame with extra beams for more strength.",
+          "parts": "Thick aluminum beams · reinforced mounts",
+          "stats": [["MASS", 4, "Heavy"], ["STRENGTH", 5, "High"], ["COST", 4, "High"]],
+          "advantage": "Very strong.", "limitation": "Extra mass needs more fuel and budget to launch.",
+          "cost": 24000, "mass": 700, "energy": 0, "earth_effect": null, "source_url": "https://www.nasa.gov/smallsat-institute/sst-soa/" }
+      ]
+    },
+    {
+      "id": "power", "n": 2, "name": "POWER SYSTEM", "tag": "Energy for every part", "art": "station-2", "pos": [56, 432, 208, 184], "tagPos": [90, 417],
+      "hint": { "text": "Makes electricity during the trip. The real MER cruise stage had its own solar panels.", "source_url": "https://descanso.jpl.nasa.gov/monograph/series13/DeepCommo_Chapter7--141030.pdf" },
+      "blueprint": ["SOLAR ARRAY", "POWER DISTRIBUTION"],
+      "options": [
+        { "letter": "A", "name": "REDUCED-AREA SOLAR ARRAY", "short": "Small array", "kind": "game",
+          "desc": "Fewer solar cells: lighter and cheaper, but less electricity.",
+          "parts": "Small solar array · power regulation",
+          "stats": [["POWER", 2, "Low"], ["MASS", 2, "Light"], ["COST", 2, "Low"]],
+          "advantage": "Light and cheap.", "limitation": "Little spare power for heaters and radio.",
+          "cost": 12000, "mass": 60, "energy": 55, "earth_effect": null, "source_url": "https://www.nasa.gov/smallsat-institute/sst-soa/" },
+        { "letter": "B", "name": "MER CRUISE SOLAR POWER", "short": "MER cruise solar", "kind": "mer",
+          "desc": "Makes and regulates electricity during the cruise to Mars with solar panels on the cruise stage. Not the same as the rover's own solar panels and batteries used on the surface.",
+          "parts": "Cruise solar panels · power regulation for the cruise systems",
+          "stats": [["POWER", 3, "Medium"], ["MASS", 3, "Medium"], ["COST", 3, "Medium"]],
+          "advantage": "Documented, integrated design for MER's trip.", "limitation": "Don't assume a separate cruise battery without specific evidence.",
+          "cost": 16000, "mass": 80, "energy": 75, "earth_effect": null, "source_url": "https://descanso.jpl.nasa.gov/monograph/series13/DeepCommo_Chapter7--141030.pdf" },
+        { "letter": "C", "name": "EXPANDED SOLAR ARRAY", "short": "Big array", "kind": "game",
+          "desc": "More solar cells for extra electricity.",
+          "parts": "Large solar array · power regulation",
+          "stats": [["POWER", 5, "High"], ["MASS", 4, "Heavy"], ["COST", 4, "High"]],
+          "advantage": "Lots of spare power.", "limitation": "Heavier and more expensive; more area to fold for launch.",
+          "cost": 22000, "mass": 120, "energy": 95, "earth_effect": null, "source_url": "https://www.nasa.gov/smallsat-institute/sst-soa/" }
+      ]
+    },
+    {
+      "id": "comms", "n": 3, "name": "COMMUNICATION SYSTEM", "tag": "Talk to Earth", "art": "station-3", "pos": [1000, 248, 224, 160], "tagPos": [1010, 214],
+      "hint": { "text": "Receives commands and sends telemetry during the trip. The real MER cruise used a low-gain and a medium-gain X-band antenna.", "source_url": "https://descanso.jpl.nasa.gov/monograph/series13/DeepCommo_Chapter7--141030.pdf" },
+      "blueprint": ["LOW-GAIN (LGA)", "MEDIUM-GAIN (MGA)"],
+      "options": [
+        { "letter": "A", "name": "SINGLE LOW-GAIN X-BAND", "short": "LGA only", "kind": "game",
+          "desc": "One wide-beam antenna: it hears Earth from almost any direction, but sends little data.",
+          "parts": "Low-Gain Antenna (LGA) · X-band radio",
+          "stats": [["DATA RATE", 1, "Low"], ["COVERAGE", 5, "Wide"], ["COST", 2, "Low"]],
+          "advantage": "Simple and works without precise pointing.", "limitation": "Gets weaker as Mars and Earth move apart.",
+          "cost": 8000, "mass": 20, "energy": -5, "earth_effect": null, "source_url": "https://www.nasa.gov/smallsat-institute/sst-soa/" },
+        { "letter": "B", "name": "MER DUAL-GAIN X-BAND", "short": "MER LGA + MGA", "kind": "mer",
+          "desc": "Receives commands and sends telemetry during the trip. The X-band radio was shared with the rover carried inside: the low-gain antenna served the first weeks, the medium-gain antenna added capability as Earth got farther away.",
+          "parts": "Cruise Low-Gain Antenna (CLGA) + Medium-Gain Antenna (MGA) · X-band link with shared electronics",
+          "stats": [["DATA RATE", 3, "Medium"], ["COVERAGE", 4, "Wide"], ["COST", 3, "Medium"]],
+          "advantage": "Combines wide coverage and higher gain for different cruise phases.", "limitation": "It is the reference design, not a guarantee of better performance than any HGA.",
+          "cost": 12000, "mass": 30, "energy": -8, "earth_effect": null, "source_url": "https://descanso.jpl.nasa.gov/monograph/series13/DeepCommo_Chapter7--141030.pdf" },
+        { "letter": "C", "name": "HIGH-GAIN X-BAND", "short": "HGA dish", "kind": "alt",
+          "desc": "A directional high-gain antenna with an X-band transponder, amplifier and a way to point it at Earth.",
+          "parts": "High-Gain Antenna (HGA) · X-band transponder · amplifier · pointing mechanism or strategy",
+          "stats": [["DATA RATE", 5, "High"], ["COVERAGE", 1, "Narrow"], ["COST", 4, "High"]],
+          "advantage": "Higher directional gain: more data per second.", "limitation": "Needs precise pointing; swapping it in would complicate MER's spin-stabilized cruise.",
+          "cost": 18000, "mass": 45, "energy": -12, "earth_effect": null, "source_url": "https://www.nasa.gov/smallsat-institute/sst-soa/" }
+      ]
+    },
+    {
+      "id": "computer", "n": 4, "name": "ONBOARD COMPUTER", "tag": "The ship's brain", "art": "station-4", "pos": [1000, 432, 224, 176], "tagPos": [1026, 417],
+      "hint": { "text": "Runs the spacecraft: commands, sensors and course corrections. The MER cruise stage had a Cruise Electronics Module.", "source_url": "https://descanso.jpl.nasa.gov/monograph/series13/DeepCommo_Chapter7--141030.pdf" },
+      "blueprint": ["CRUISE ELECTRONICS MODULE", "SUN SENSOR ELECTRONICS"],
+      "options": [
+        { "letter": "A", "name": "SINGLE FLIGHT COMPUTER", "short": "Single computer", "kind": "game",
+          "desc": "One computer does everything on the cruise stage.",
+          "parts": "One flight computer · sensor interfaces",
+          "stats": [["RELIABILITY", 2, "Low"], ["MASS", 1, "Light"], ["COMPLEXITY", 2, "Low"]],
+          "advantage": "Simple, light and cheap.", "limitation": "If it fails there is no backup.",
+          "cost": 9000, "mass": 15, "energy": -6, "earth_effect": null, "source_url": "https://www.nasa.gov/smallsat-institute/sst-soa/" },
+        { "letter": "B", "name": "MER INTEGRATED FLIGHT ELECTRONICS", "short": "MER integrated", "kind": "mer",
+          "desc": "Processing and flight control for the whole spacecraft. On MER it was shared between the cruise stage electronics and the rover it carried.",
+          "parts": "Cruise Electronics Module (CEM) · Sun Sensor Electronics Module · computing integrated with the rover",
+          "stats": [["RELIABILITY", 4, "High"], ["MASS", 2, "Light"], ["COMPLEXITY", 3, "Medium"]],
+          "advantage": "Shows how MER really split its flight functions.", "limitation": "The CEM is not one single processor running the whole mission.",
+          "cost": 13000, "mass": 20, "energy": -8, "earth_effect": null, "source_url": "https://descanso.jpl.nasa.gov/monograph/series13/DeepCommo_Chapter7--141030.pdf" },
+        { "letter": "C", "name": "DUAL-REDUNDANT COMPUTERS", "short": "Dual computers", "kind": "alt",
+          "desc": "Two computers: if one fails, the other takes over.",
+          "parts": "Two flight computers · cross-strapped sensor interfaces",
+          "stats": [["RELIABILITY", 5, "Very high"], ["MASS", 3, "Medium"], ["COMPLEXITY", 5, "High"]],
+          "advantage": "A backup is ready if something fails.", "limitation": "More mass, power and cost.",
+          "cost": 19000, "mass": 30, "energy": -12, "earth_effect": null, "source_url": "https://www.nasa.gov/smallsat-institute/sst-soa/" }
+      ]
+    },
+    {
+      "id": "attitude", "n": 5, "name": "ATTITUDE & THERMAL CONTROL", "tag": "Aim the ship, control heat", "art": "station-5", "pos": [528, 512, 224, 128], "tagPos": [533, 494],
+      "hint": { "text": "Knows where the spacecraft points, fires thrusters for course corrections and keeps parts at safe temperatures. MER spun at about 2 rpm during cruise.", "source_url": "https://descanso.jpl.nasa.gov/DPSummary/DESCANSO_MER_NAV_051215C_low.pdf" },
+      "blueprint": ["PROPELLANT TANKS", "RADIATORS", "THRUSTERS"],
+      "options": [
+        { "letter": "A", "name": "SUN-SENSOR SPIN CONTROL", "short": "Basic spin", "kind": "game",
+          "desc": "Spins the spacecraft for stability and uses only sun sensors to know where it points.",
+          "parts": "Sun sensors · small thrusters · passive thermal paint",
+          "stats": [["CONTROL", 2, "Basic"], ["MASS", 2, "Light"], ["COST", 2, "Low"]],
+          "advantage": "Light and simple.", "limitation": "Less precise course corrections.",
+          "cost": 10000, "mass": 90, "energy": -4, "earth_effect": null, "source_url": "https://www.nasa.gov/smallsat-institute/sst-soa/" },
+        { "letter": "B", "name": "MER SPIN & THERMAL CONTROL", "short": "MER spin + thermal", "kind": "mer",
+          "desc": "Knows where the spacecraft points, fires thrusters for course corrections and keeps parts at safe temperatures. MER was spin-stabilized: it spun at about 2 rpm during cruise.",
+          "parts": "5 Sun Sensors · Star Scanner · 2 thruster clusters · 2 propellant tanks · Heat Rejection System radiators",
+          "stats": [["CONTROL", 4, "Good"], ["MASS", 3, "Medium"], ["COST", 3, "Medium"]],
+          "advantage": "Proven, integrated system for stability, maneuvers and thermal protection.", "limitation": "Built for a spinning spacecraft: other parts must work while it spins.",
+          "cost": 15000, "mass": 120, "energy": -10, "earth_effect": null, "source_url": "https://descanso.jpl.nasa.gov/DPSummary/DESCANSO_MER_NAV_051215C_low.pdf" },
+        { "letter": "C", "name": "THREE-AXIS REACTION WHEELS", "short": "Reaction wheels", "kind": "alt",
+          "desc": "Spinning wheels inside the spacecraft turn it precisely without spinning the whole ship.",
+          "parts": "Reaction wheels · star tracker · thrusters · radiators",
+          "stats": [["CONTROL", 5, "Precise"], ["MASS", 4, "Heavy"], ["COST", 4, "High"]],
+          "advantage": "Precise pointing (good for a narrow high-gain antenna).", "limitation": "Heavier, uses more power, more parts that can fail.",
+          "cost": 21000, "mass": 150, "energy": -16, "earth_effect": null, "source_url": "https://www.nasa.gov/smallsat-institute/sst-soa/" }
+      ]
+    }
+  ],
+  "mentorTips": {
+    "structure": "Tip: STRUCTURE first. MER's cruise stage carried the aeroshell with the rover inside.",
+    "power": "Tip: POWER is next. MER's cruise stage made its own electricity with solar panels.",
+    "comms": "Tip: COMMS is next. A wide low-gain antenna plus a medium-gain antenna worked for MER's spinning cruise stage.",
+    "computer": "Tip: the COMPUTER is next. MER split its flight electronics between the cruise stage and the rover.",
+    "attitude": "Tip: ATTITUDE & THERMAL is last. MER spun slowly to stay stable and used radiators to shed heat.",
+    "done": "Your build is complete! Follow the pink path to the warehouse door."
+  }
+}

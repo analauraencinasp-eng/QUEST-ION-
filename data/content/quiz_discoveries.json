@@ -1,0 +1,12 @@
+{
+  "note": "Quiz gate 14f-2 / 14f-3 (same scene as 13e, different data).",
+  "id": "discoveries",
+  "gate": "Answer this question correctly to continue to Communications.",
+  "next": { "scene": "NextUpScene", "data": { "id": "15b", "next": "CommsScene" } },
+  "questions": [
+    { "id": "dq1", "tier": 1, "question": "Why were the hematite \"blueberries\" found by Opportunity such an important clue?", "options": ["Hematite typically forms in water", "They are pieces of a meteorite that hit Mars", "They are frozen drops of water ice"], "answer_index": 0, "hint": "Think about which mineral they are made of.", "explanation": "Hematite typically forms in water, so the blueberries were evidence of a watery past.", "source_url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-highlights/" },
+    { "id": "dq2", "tier": 2, "question": "What did Spirit and Opportunity find evidence of?", "options": ["Liquid water on Mars long ago", "Living plants growing on Mars", "Gold and diamonds under the dust"], "answer_index": 0, "hint": "Look back at the last card: what did both landing sites show?", "wrongIntro": "Not quite! Hematite typically forms in water. Let's try an easier one.", "explanation": "They confirmed that water was long-standing on the surface of Mars in ancient times.", "source_url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/" },
+    { "id": "dq3", "tier": 3, "question": "How did Spirit uncover the bright silica soil at Home Plate?", "options": ["By dragging a stuck wheel", "With a big drill", "An astronaut dug it up"], "answer_index": 0, "hint": "Spirit had a wheel that didn't turn anymore.", "wrongIntro": "Almost! Let's try another one.", "explanation": "While dragging a wheel, Spirit churned up soil that was 90% pure silica.", "source_url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-highlights/" },
+    { "id": "dq4", "tier": 3, "question": "How long were Spirit and Opportunity designed to work?", "options": ["About 90 sols (three months)", "About 90 years", "One single day"], "answer_index": 0, "hint": "A sol is a Martian day.", "wrongIntro": "Almost! Let's try one more.", "explanation": "They were designed for 90 sols, but lasted years longer.", "source_url": "https://science.nasa.gov/mission/mer-opportunity/" }
+  ]
+}

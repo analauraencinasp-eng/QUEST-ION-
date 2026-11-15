@@ -1,0 +1,17 @@
+{
+  "note": "Screen 5 / 5b / 5c / 5d. Only HUNT FOR ANCIENT WATER is playable.",
+  "objectives": [
+    { "id": "water", "title": "HUNT FOR ANCIENT WATER", "playable": true,
+      "text": "Mars may have had liquid water long ago. Explore the rocks and find clues: some minerals only form when water is present.",
+      "real": { "text": "REAL MISSION: Inspired by NASA's twin rovers Spirit and Opportunity (2004). Opportunity found hematite \"blueberries\", a mineral that typically forms in water.", "source_url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-highlights/" },
+      "question": { "text": "SCIENCE QUESTION: What clues in rocks and minerals show that liquid water once existed?", "source_url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-objectives/" } },
+    { "id": "surface", "title": "SECRETS BENEATH THE SURFACE", "playable": false,
+      "text": "Study how volcanoes, water and heat shaped Mars over time.",
+      "focus": "FOCUS: Volcanic processes, water and heat. Activity: geological analysis.",
+      "locked": "LOCKED: Complete Hunt for Ancient Water to unlock this objective." },
+    { "id": "survive", "title": "SURVIVE THE RED PLANET", "playable": false,
+      "text": "Keep your rover alive through dust, thin air and changing sunlight.",
+      "focus": "FOCUS: Dust, atmosphere and energy. Activity: environment management.",
+      "locked": "LOCKED: Complete Hunt for Ancient Water to unlock this objective." }
+  ]
+}
