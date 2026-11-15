@@ -3,15 +3,15 @@
   "roles": [
     { "id": "systems", "name": "SYSTEMS", "art": "systems", "bonus": "Final say", "bonusKey": "finalSay",
       "desc": "Leads the team. Keeps the mission goal in mind and makes the final call when the crew disagrees.",
-      "inMission": ["Checks that every choice serves the science goal", "Keeps an eye on budget and schedule", "Bonus: Final say in team decisions"] },
+      "inMission": ["Checks that every choice serves the science goal", "Keeps an eye on budget and schedule"] },
     { "id": "engineer", "name": "ENGINEER", "art": "engineer", "bonus": "Energy ×2", "bonusKey": "energy",
       "desc": "Builds the spacecraft. Knows power, mass and budget, and which parts fit together.",
-      "inMission": ["Leads the workshop stations", "Checks the power balance", "Bonus: Energy ×2 when installing solar panels"] },
+      "inMission": ["Leads the workshop stations", "Checks the power balance"] },
     { "id": "science", "name": "SCIENCE", "art": "science", "bonus": "Science ×2", "bonusKey": "science",
       "desc": "Chooses the instruments and the rocks to study. Turns clues into evidence.",
-      "inMission": ["Leads the instrument warehouse", "Reads the scan results in Rock Hunter", "Bonus: Science ×2 on strong clues"] },
+      "inMission": ["Leads the instrument warehouse", "Reads the scan results in Rock Hunter"] },
     { "id": "comms", "name": "COMMUNICATION", "short": "COMMS", "art": "comms", "bonus": "Comms ×2", "bonusKey": "comms",
       "desc": "Talks to Earth. Plans the data route, the contact windows and what gets sent first.",
-      "inMission": ["Leads the communications planner", "Times the data packets in Signal Run", "Bonus: Comms ×2 on linked packets"] }
+      "inMission": ["Leads the communications planner", "Times the data packets in Signal Run"] }
   ]
 }

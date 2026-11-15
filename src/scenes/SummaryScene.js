@@ -44,7 +44,7 @@ export default class SummaryScene extends Phaser.Scene {
     const obj = content.objectives.objectives.find((o) => o.id === mi.objective) || content.objectives.objectives[0];
     const tiles = [
       { tag: t('summary.mode'), col: 0xd16fa0, name: mi.mode === '4p' ? '4 PLAYERS' : '1 PLAYER', sub: t('summary.sameKeyboard'), icon: mi.mode === '4p' ? 'team' : 'gamepad', back: 'TitleScene' },
-      { tag: t('summary.crew'), col: 0x56a8e8, name: role.name, sub: `Bonus: ${role.bonus}`, art: role.art, back: 'RoleScene' },
+      { tag: t('summary.crew'), col: 0x56a8e8, name: role.name, sub: '', art: role.art, back: 'RoleScene' },
       { tag: t('summary.destination'), col: 0xe0662a, name: planet.name, sub: 'Level 1 · 1.5 AU from the Sun', art: 'planet-mars-big', back: 'DestinationScene' },
       { tag: t('summary.objective'), col: 0x3fae5a, name: obj.title, sub: 'Inspired by Spirit & Opportunity', icon: 'water', back: 'ObjectiveScene' }
     ];
