@@ -1,0 +1,21 @@
+{
+  "note": "Screen 4 / 4b. Hit areas copied from the Figma frame (x, y, size). Only Mars is unlocked (level 1).",
+  "planets": [
+    { "id": "mercury", "name": "MERCURY", "x": 218, "y": 313, "size": 64, "level": 2 },
+    { "id": "venus", "name": "VENUS", "x": 308, "y": 313, "size": 64, "level": 2 },
+    { "id": "earth", "name": "EARTH", "x": 398, "y": 313, "size": 64, "level": 2 },
+    { "id": "mars", "name": "MARS", "x": 488, "y": 313, "size": 64, "level": 1,
+      "facts": [
+        { "text": "1.5 AU from the Sun", "source_url": "https://science.nasa.gov/mars/facts/" },
+        { "text": "1 year = 687 Earth days", "source_url": "https://science.nasa.gov/mars/facts/" },
+        { "text": "1 day (sol) ≈ 24.6 hours", "source_url": "https://science.nasa.gov/mars/facts/" }
+      ],
+      "desc": { "text": "A cold, dusty desert world. Long ago it had a watery past: scientists see ancient river valleys, deltas and lakebeds, and rocks that could only have formed in liquid water.", "source_url": "https://science.nasa.gov/mars/facts/" },
+      "questions": ["Was Mars ever home to life?", "What happened to its water and climate?", "Could humans live and work there one day?"],
+      "real": { "text": "Real mission: NASA's Perseverance rover has explored Jezero Crater, an area with an ancient river delta, since 2021.", "source_url": "https://science.nasa.gov/mission/mars-2020-perseverance/" } },
+    { "id": "jupiter", "name": "JUPITER", "x": 597, "y": 277, "size": 136, "level": 2 },
+    { "id": "saturn", "name": "SATURN", "x": 796, "y": 291, "size": 108, "level": 3 },
+    { "id": "uranus", "name": "URANUS", "x": 980, "y": 305, "size": 80, "level": 4 },
+    { "id": "neptune", "name": "NEPTUNE", "x": 1125, "y": 305, "size": 80, "level": 5 }
+  ]
+}

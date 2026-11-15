@@ -1,0 +1,4 @@
+{
+  "note": "NASA audio clips (NASA Image and Video Library, images-api.nasa.gov). Filled by tools/fetch_nasa_audio.mjs. Each entry: key, file, nasa_id, title, url, credit, offset, duration (segment played by the game).",
+  "audio": []
+}

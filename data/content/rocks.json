@@ -1,0 +1,29 @@
+{
+  "note": "Screen 14 Rock Hunter. Rock types and clues come from the MER pages; positions, energy, time and points are SIMULATED GAME VALUES.",
+  "game": { "worldWidth": 2560, "timeSec": 75, "energy": 100, "scanCost": 8, "driveCostPerSec": 0.9, "points": { "strong": 40, "medium": 20, "weak": 10 }, "firstTryQuizBonus": 5, "simulated": true },
+  "events": [
+    { "t": 20, "kind": "dust", "energy": -5, "text": "Gameplay event: dust settles on the solar panels (-5% energy)." },
+    { "t": 38, "kind": "warn", "energy": 0, "text": "Half of your driving time is gone. Choose your targets!" },
+    { "t": 60, "kind": "sunset", "energy": -3, "text": "Gameplay event: the Sun is getting low (-3% energy)." }
+  ],
+  "rocks": [
+    { "id": "basalt", "name": "ORDINARY BASALT", "x": 520, "art": "dark", "evidence": "weak", "instruments": ["pancam", "apxs", "minites"],
+      "clue": "Interesting rock! But we need stronger evidence of past water. Weak evidence does not mean there was NO water.",
+      "result": "Volcanic rock: needs more evidence.", "source_url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-objectives/" },
+    { "id": "hematite", "name": "HEMATITE SPHERES", "x": 860, "art": "berries", "evidence": "strong", "instruments": ["pancam", "mossbauer", "mi", "mastcamz", "mahli"],
+      "clue": "These tiny hematite spheres can be clues to ancient water. Opportunity found many of them, nicknamed \"blueberries\".",
+      "result": "Hematite typically forms in water.", "source_url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-highlights/" },
+    { "id": "dust", "name": "DUSTY SOIL", "x": 1200, "art": "soil", "evidence": "weak", "instruments": ["pancam", "magnets", "mastcamz"],
+      "clue": "Windblown dust and soil. Wind shapes Mars too: this patch tells us little about ancient water.",
+      "result": "Windblown dust: no water clue here.", "source_url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-objectives/" },
+    { "id": "gypsum", "name": "GYPSUM VEIN", "x": 1540, "art": "vein", "evidence": "strong", "instruments": ["apxs", "mi", "rat", "pixl", "mahli"],
+      "clue": "A bright vein in the rock. Veins like this likely formed when water flowed through underground cracks, leaving calcium minerals behind.",
+      "result": "Forms when water moves through cracks.", "source_url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-highlights/" },
+    { "id": "clay", "name": "CLAY-RICH ROCK", "x": 1880, "art": "clay", "evidence": "strong", "instruments": ["minites", "apxs", "chemin", "pixl"],
+      "clue": "Clay minerals! Opportunity found clays that formed in neutral-pH water: the friendliest conditions it studied.",
+      "result": "Clays form in water that is not very acidic.", "source_url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-highlights/" },
+    { "id": "jarosite", "name": "JAROSITE OUTCROP", "x": 2240, "art": "layers", "evidence": "strong", "instruments": ["mossbauer", "rat", "apxs", "chemin"],
+      "clue": "Layered outcrop with jarosite, a mineral that forms in acidic water.",
+      "result": "Jarosite forms in acidic water.", "source_url": "https://www.jpl.nasa.gov/universe/archive/un0403.pdf" }
+  ]
+}

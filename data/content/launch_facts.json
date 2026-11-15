@@ -1,0 +1,9 @@
+{
+  "note": "Screen 12.5 'Ready for launch' (post-it 12.4). The Figma card 'STAGES' was replaced by 'LAUNCH WINDOW' because no official NASA page found states the staging sentence; see DECISIONS.md.",
+  "facts": [
+    { "id": "window", "title": "1. LAUNCH WINDOW", "text": "Earth and Mars line up for the most energy-efficient trip only about once every 26 months. MER's two rockets launched in the 2003 window.", "source_url": "https://science.nasa.gov/planetary-science/programs/mars-exploration/mission-timeline/" },
+    { "id": "maxq", "title": "2. MAX-Q", "text": "As the rocket speeds up through the air, the push of the air on it grows to a maximum called Max Q. Engines can be throttled down to get through it safely.", "source_url": "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/dynamic-pressure-2/" },
+    { "id": "escape", "title": "3. ESCAPE SPEED", "text": "To leave Earth's gravity behind, a rocket must reach about 11.2 km per second: more than 40,000 km/h!", "source_url": "https://imagine.gsfc.nasa.gov/science/objects/black_holes1.html" }
+  ],
+  "real": { "text": "Spirit launched on June 10, 2003 and Opportunity on July 7, 2003, each on a Delta II rocket from Cape Canaveral, Florida.", "source_url": "https://www.nasa.gov/missions/mer/nasa-celebrates-decade-of-mars-exploration-by-spirit-opportunity/" }
+}

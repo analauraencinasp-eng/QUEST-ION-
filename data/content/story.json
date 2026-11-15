@@ -1,0 +1,9 @@
+{
+  "note": "Screen 3 storyboard (Figma 'Storyboard · Screen 3'). Narrative framing questions, not facts.",
+  "slides": [
+    { "id": "story1", "art": "rooftop", "caption": "A teen on a rooftop looks up at Jupiter shining in the night sky.", "text": "Every great mission begins with a question." },
+    { "id": "story2", "art": "questions", "caption": "Jupiter, Europa and Mars, each with a big \"?\" bubble.", "text": "Why does Jupiter have such giant storms? What hides under Europa's ice? Was there ever water on Mars?" },
+    { "id": "story3", "art": "blueprint", "caption": "A mission team around a glowing spacecraft blueprint.", "text": "Mission designers turn questions into spacecraft. They choose a goal, instruments, a rocket and an orbit, with a limited budget." },
+    { "id": "story4", "art": "pad", "caption": "A rocket on the launch pad, Earth behind it.", "text": "Now it's your turn. Pick a question, design your mission and bring the answers home. Every choice has a cost, for your mission and for Earth." }
+  ]
+}
