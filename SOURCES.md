@@ -1,10 +1,10 @@
 # SOURCES — QUEST(ION)
 
-Fuentes oficiales (NASA / JPL) usadas por el contenido educativo del juego. La lista sale de `data/content/sources.json` (la pantalla SOURCES del juego lee ese mismo archivo). Cada dato en `data/content/*.json` lleva su `source_url`.
+Official NASA / JPL sources used for the game's educational content. The list comes from `data/content/sources.json` (the game's SOURCES screen reads that same file). Every item in `data/content/*.json` carries its own `source_url`.
 
-Los números de juego (presupuesto, masa, energía, puntos, estrellas, límites del cohete, memoria en Mb del Signal Run) son **valores simulados** y se marcan así en pantalla.
+Game numbers (budget, mass, energy, points, stars, rocket limits, Signal Run memory in MB) are **simulated values** and are labeled as such on screen.
 
-## Lista
+## List
 
 - [NASA Science · Mars Exploration Rovers: Spirit and Opportunity](https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/)
 - [NASA Science · MER Science Objectives](https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-objectives/)

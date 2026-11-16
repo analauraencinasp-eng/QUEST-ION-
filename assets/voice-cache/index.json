@@ -1,6 +1,7 @@
 {
  "voice": "Sulafat",
  "language": "en-US",
+ "_si": { "si_generated": true, "tool": "Gemini TTS (gemini-3.8-flash-tts, voice Sulafat)" },
  "clips": {
   "759e3e28fae708ef": {
    "chars": 52,
