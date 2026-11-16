@@ -40,24 +40,24 @@ Game numbers (budget, mass, energy, points, stars, rocket limits, Signal Run mem
 - [JPL News · Mars Exploration Rover Mission Status (Feb 5, 2004): flash keeps data with power off; reformat](https://www.jpl.nasa.gov/news/mars-exploration-rover-mission-status-8/)
 - [JPL News · Team Continues Analyzing Spirit Computer Reboots and Amnesia Events (2009): RAM keeps data only while awake](https://www.jpl.nasa.gov/news/team-continues-analyzing-spirit-computer-reboots-and-amnesia-events/)
 
-## Signal Run (pantalla 16b): qué pasa con un paquete que no llega
+## Signal Run (Screen 16b): what happens to a packet that doesn't arrive
 
-Decisión del equipo: que funcione como en la misión real y que el jugador lo aprenda antes de jugar. Lo que dicen las fuentes oficiales:
+Team decision: it should work like the real mission, and the player should learn this before playing. What the official sources say:
 
-| Hecho | Fuente |
+| Fact | Source |
 |---|---|
-| Mars Odyssey y Mars Global Surveyor retransmitieron la mayoría de los datos de los rovers. | [JPL, 10 ago 2004](https://www.jpl.nasa.gov/news/relays-from-mars-show-international-interplanetary-networking/) |
-| Un orbitador recibió "data previously collected and stored by the rover": los datos se guardan y se envían en un paso posterior. | [JPL, 10 ago 2004](https://www.jpl.nasa.gov/news/relays-from-mars-show-international-interplanetary-networking/) |
-| Spirit tenía 256 MB de memoria flash. | [JPL, 24 ene 2004](https://www.jpl.nasa.gov/news/spirit-condition-upgraded-as-twin-rover-nears-mars/) |
-| La flash conserva la información aunque se apague la energía; Spirit tuvo que reformatearla en febrero de 2004. | [JPL, 5 feb 2004](https://www.jpl.nasa.gov/news/mars-exploration-rover-mission-status-8/) |
-| La RAM (128 MB) solo guarda datos mientras el rover sigue despierto hasta su siguiente sesión de comunicación. | [JPL, 2009](https://www.jpl.nasa.gov/news/team-continues-analyzing-spirit-computer-reboots-and-amnesia-events/) |
+| Mars Odyssey and Mars Global Surveyor relayed most of the rovers' data. | [JPL, Aug 10, 2004](https://www.jpl.nasa.gov/news/relays-from-mars-show-international-interplanetary-networking/) |
+| An orbiter received "data previously collected and stored by the rover": data is stored and sent in a later pass. | [JPL, Aug 10, 2004](https://www.jpl.nasa.gov/news/relays-from-mars-show-international-interplanetary-networking/) |
+| Spirit had 256 MB of flash memory. | [JPL, Jan 24, 2004](https://www.jpl.nasa.gov/news/spirit-condition-upgraded-as-twin-rover-nears-mars/) |
+| Flash keeps information even when power is off; Spirit had to reformat it in February 2004. | [JPL, Feb 5, 2004](https://www.jpl.nasa.gov/news/mars-exploration-rover-mission-status-8/) |
+| RAM (128 MB) only holds data while the rover stays awake until its next communication session. | [JPL, 2009](https://www.jpl.nasa.gov/news/team-continues-analyzing-spirit-computer-reboots-and-amnesia-events/) |
 
-**Conclusión usada en el juego:** no hay un límite de horas. Un paquete que no llega se queda guardado en la flash y se puede volver a mandar en la misma ventana o en el siguiente paso del orbitador. El límite real es el espacio en memoria. **Inferencia (no textual en las fuentes):** que un paquete fallado se "reenvía"; las fuentes dicen que los datos guardados se transmiten después, no describen el reintento paquete por paquete.
+**Conclusion used in the game:** there is no time limit in hours. A packet that doesn't arrive stays stored in flash and can be sent again in the same window or in the orbiter's next pass. The real limit is memory space. **Inference (not stated verbatim in the sources):** that a failed packet is "resent"; the sources say stored data is transmitted later, but they don't describe retrying packet by packet.
 
-## Órbita (pantalla 12)
+## Orbit (Screen 12)
 
-Posiciones y velocidades de la Tierra y Marte: [JPL Horizons API](https://ssd-api.jpl.nasa.gov/doc/horizons.html) (en vivo con `npm start`, o la copia guardada `data/ephemeris_mer.json`). Trayectoria: problema de Lambert (H. Curtis, *Orbital Mechanics for Engineering Students*, algoritmo 5.2), solo gravedad del Sol.
+Positions and velocities of Earth and Mars: [JPL Horizons API](https://ssd-api.jpl.nasa.gov/doc/horizons.html) (live with `npm start`, or the saved copy `data/ephemeris_mer.json`). Trajectory: Lambert's problem (H. Curtis, *Orbital Mechanics for Engineering Students*, Algorithm 5.2), Sun's gravity only.
 
-## Retraso de la señal (pantalla 16)
-- Distancia Tierra–Marte del día de la partida: NASA/JPL Horizons (mismo archivo que la órbita). Minutos = distancia / velocidad de la luz (299 792.458 km/s; 1 UA = 149 597 870.7 km).
+## Signal delay (Screen 16)
+- Earth–Mars distance on the day of the play session: NASA/JPL Horizons (same file as the orbit). Minutes = distance / speed of light (299,792.458 km/s; 1 AU = 149,597,870.7 km).
 
