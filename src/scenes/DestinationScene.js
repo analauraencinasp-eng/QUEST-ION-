@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screen 4 · Choose destination (+ 4b Planet info). Same solar-system row with planet names.
 // Hover: dashed ring + tooltip. Only Mars (level 1) is open; the others show a padlock and
 // "Complete the Mars mission to unlock". Click → info panel with the screen behind dimmed.

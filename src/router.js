@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // router.js — moves between screens. Navigation history is a hand-written STACK:
 //   go(scene, key, data, { transition })   push the current screen, play the transition, start the next
 //   back(scene)                            pop the last screen and return to it (◀ BACK / Esc)

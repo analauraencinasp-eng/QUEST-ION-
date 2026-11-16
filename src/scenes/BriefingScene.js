@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screen 8 · Build briefing (3 slides). The panel stays visible; the mentor talks in 3 slides and
 // highlights 1) the 5 numbered stations, 2) BUDGET + MASS, 3) EARTH RESPONSIBILITY.
 // The button becomes START BUILDING → Screen 9.

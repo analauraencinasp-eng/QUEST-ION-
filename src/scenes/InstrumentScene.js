@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screens 11 / 11b · Instrument card (Pancam = MER part, PIXL = real alternative, same layout for all 14):
 // name, ◀ n/14 ▶, chips of the 14 tables, origin mission, what it does / role / where it mounts,
 // requirements it helps with, compatibility, SIMULATED cost/mass/energy, and the quick question

@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screens 15-D1 … 15-D6 · Stage detail: YOU vs the real mission (Spirit & Opportunity).
 // Table ASPECT / YOUR DECISION / REAL MER MISSION / RESULT (✓ MATCH · ≈ CLOSE · ✕ DIFFERENT, never colour only),
 // "WHY THE REAL TEAM CHOSE THIS" with its source, tabs 1–6, ◀ DASHBOARD / ◀ PREV / NEXT STAGE ▶.

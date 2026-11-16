@@ -43,8 +43,8 @@ SI tools were used in QUEST(ION). Below is where and how. No SI-generated conten
 | Area | SI tool | How it was used | Human role |
 |---|---|---|---|
 | **Code** | Claude Code (Anthropic) | Generated most of the game code (Phaser scenes, mini-games, game state, orbit calculation, local server) from a detailed specification written by the team (`PROMPT_CLAUDE_CODE.md`). | The team wrote the specification and the Figma design, tested the game, made later edits and bug fixes, and made the final design decisions (`DECISIONS.md`). |
-| **Educational content** | Claude Code (Anthropic) | Helped look up and draft educational text and quiz questions based on official NASA/JPL pages. Each fact carries a `source_url` (see `SOURCES.md`). | The team reviewed content against the sources. **[confirm]** |
-| **Narrator audio** | Google Gemini TTS (`gemini-3.8-flash-tts`, voice "Sulafat") | All narrator speech and the "Podcast" review format are SI-generated audio. Files are in `assets/voice-cache/`. | The team wrote or approved the narrated text. **[confirm]** |
+| **Educational content** | Claude Code (Anthropic) | Helped look up and draft educational text and quiz questions based on official NASA/JPL pages. Each fact carries a `source_url` (see `SOURCES.md`). | The team reviewed content against the sources. |
+| **Narrator audio** | Google Gemini TTS (`gemini-3.8-flash-tts`, voice "Sulafat") | All narrator speech and the "Podcast" review format are SI-generated audio. Files are in `assets/voice-cache/`. | The team wrote or approved the narrated text.  |
 | **Images / art** | **[None — all art was designed by the team in Figma.]** | **[If any image was SI-generated, list it here and add a visible "SI-generated" watermark.]** | — |
 | **Music** | **[None — Pixabay tracks; confirm they are not AI-generated and fill in author and track names in `CREDITS.md`.]** | — | — |
 | **Documentation** | Claude (Anthropic) | Helped draft the project summary and this README. | Reviewed by the team. |

@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // BootScene — reads data/manifest.json, then loads every content JSON, image and sound it lists.
 // A missing file never stops the game (widgets.img() draws a placeholder). Waits for the pixel
 // fonts so the first texts measure correctly. Then: TitleScene.

@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // audio.js — background music, sound effects and NASA audio clips.
 // MUSIC: two local tracks (assets/music), one HTMLAudioElement each, created once and reused:
 //   ambience.mp3  → every regular screen. Loops. Pauses (keeps its position) while a mini-game is open.

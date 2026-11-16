@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // voice.js — the ONE narrator of the game: Gemini TTS, voice "Sulafat", en-US (fixed, see server.mjs).
 //
 //   speak(text)                 interrupt whatever is being said and say this (newest wins, never overlaps)

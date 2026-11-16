@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Quiz gate 13e-2 / 13e-3 (before Rock Hunter) and 14f-2 / 14f-3 (before Communications): same code, other data.
 // data = { quiz: 'rockhunter' | 'discoveries' } → data/content/quiz_<quiz>.json
 // Tier 1 question → wrong: the explanation + an EASIER question (tier 2) → wrong again: tier 3, and inside

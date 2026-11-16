@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screen 3 · Story (4 slides, Storyboard · Screen 3). Typewriter text + narration, NEXT / ENTER advances,
 // SKIP jumps to Screen 4. BIG mentor portrait next to the text box.
 import { C, S } from '../ui/theme.js';

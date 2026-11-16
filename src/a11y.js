@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // a11y.js — everything the narrator says goes through here. It ALWAYS writes to the hidden aria-live
 // region (for screen readers) and speaks with the fixed narrator voice when Narration = ON.
 //

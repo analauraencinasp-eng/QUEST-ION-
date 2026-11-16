@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // review_ui.js — pieces shared by the learning-review screens (17–26, 15-R):
 // character portrait (original PNGs, cropped, scale 1 = no resampling), dialogue bubble with portrait,
 // vermilion weakness blocks (with a number, never colour only) and the shared REVIEW BAR with format tabs.

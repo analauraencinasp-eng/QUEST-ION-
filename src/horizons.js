@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // horizons.js — talks to the JPL Horizons API (https://ssd-api.jpl.nasa.gov/doc/horizons.html).
 // Used by server.mjs (live, /api/horizons) and tools/fetch_ephemeris.mjs (saves data/ephemeris_mer.json).
 // Same request for both: heliocentric (CENTER 500@10) state VECTORS of Earth (399) and Mars (499), ecliptic J2000,

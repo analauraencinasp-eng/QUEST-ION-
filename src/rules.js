@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // rules.js — PURE game logic (no Phaser), so it can be unit-tested in Node (tests/tests.js).
 // Every number produced here is a SIMULATED GAME VALUE unless it comes from the ephemeris.
 import { content } from './content.js';

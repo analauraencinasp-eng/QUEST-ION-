@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screen 1 · Title (+ 1b Settings via ☰). Solar-system background, mode toggle 1 PLAYER / 4 PLAYERS
 // above START, ☰ top-right, ? bottom-left. CONTINUE appears if there is a saved mission;
 // NEW GAME erases it (settings are kept).

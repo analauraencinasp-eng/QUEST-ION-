@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // server.mjs — local web server for QUEST(ION) + the Gemini text-to-speech narrator.
 //
 //   npm install      (once)

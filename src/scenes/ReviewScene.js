@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screens 19–24 · the review itself, in the format the player chose. One scene, five formats:
 //   visual (20) comic strip · podcast (21/21b) two characters, subtitles, speeds, script fallback ·
 //   flashcards (22a/22b) with 3 Leitner boxes · questions (23a/b/c) · text (24) with NASA SOURCES.

@@ -1,4 +1,4 @@
-// Stack.js — LIFO stack (last in, first out), written by hand on top of an array.
+// Stack.js — LIFO stack (last in, first out)
 // Used in WorkshopScene.js: key Z removes the LAST component installed.
 // push / pop / peek are O(1) (amortized for push); memory O(n).
 

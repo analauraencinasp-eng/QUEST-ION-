@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // icons.js — small pixel icons drawn in code (water drop, gamepad, lock, camera…), used on cards.
 import { C } from './theme.js';
 

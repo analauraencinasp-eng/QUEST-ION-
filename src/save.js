@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // save.js — localStorage: settings and progress are stored separately, so NEW GAME
 // can wipe the progress and keep the settings. Every access is wrapped in try/catch
 // (private windows can block storage; the game must still run).

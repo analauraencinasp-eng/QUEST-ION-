@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // review.js — the learning review after the mission (Screens 17–26 + report page 15-R).
 // WHAT to review comes from the player's real results; HOW (the format) is the player's choice.
 //   1. Category scores: the existing final score (rules.computeScore → science, engineering, resources, earth)

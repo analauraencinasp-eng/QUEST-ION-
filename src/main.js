@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // main.js — Phaser configuration (1280×720 like the Figma frames, pixel art, FIT + centered)
 // and the list of scenes. One scene per group of Figma screens.
 import BootScene from './scenes/BootScene.js';

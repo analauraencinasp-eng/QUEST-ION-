@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screen 5 · Choose objective (+ 5b selected, 5c / 5d locked). The mentor asks at the top,
 // "OBJECTIVE i / 3" centred, ONE card at a time with ◀ ▶ arrows and dots. Only HUNT FOR ANCIENT
 // WATER is playable; NEXT stays disabled until it is selected. MY MISSION is always available.

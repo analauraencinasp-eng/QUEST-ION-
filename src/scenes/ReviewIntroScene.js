@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screens 17 / 17b · Review your mission. The game shows the player's real scores by category and the
 // 3–5 concepts it picked from them (src/review.js), each with its icon, weakness blocks and the reason.
 // 17b: every category is good → bonus concepts the player saw but never reviewed.

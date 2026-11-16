@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screens 16-0b / 16 · Talking to Earth. Diagram Earth — Sun — Mars with the orbiter relay and the
 // 3 DSN sites; "WHY IT MATTERS" card with 3 facts (comms.json → talk.cards, each with source_url).
 // The one-way light delay is computed from the REAL Earth/Mars positions (JPL Horizons ephemeris)

@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screen 11c · Build your rover (assembly mini-game). Drag instruments from the kit tray onto the rover:
 // MAST (1), BODY (1), ARM TURRET (4), DECK (2). A tool only fits where it really mounts (instruments.json).
 // Team decision: NO time limit (the Figma's 45 s timer was removed).

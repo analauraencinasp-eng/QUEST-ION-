@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // state.js — ONE shared object with everything the player has decided or achieved.
 // Every scene imports { state }. save.js turns it into JSON for localStorage.
 // The mission log is a hand-written LinkedList (append O(1), read in order for MY MISSION / LOG).

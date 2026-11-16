@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // hud.js — the 4 meters at the top of the workshop / warehouse (Figma "HUD · BUDGET / MASS / ENERGY /
 // EARTH RESP."): icon box + bar + value. flash() lights a meter (used by the Graph+BFS domino effect).
 import { C, S } from './theme.js';

@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // orbit.js — the science of Screen 12 (pure math, no Phaser, unit-tested in Node).
 //
 // Planet positions and velocities: JPL Horizons (heliocentric, ecliptic J2000, AU and AU/day), either fetched live by

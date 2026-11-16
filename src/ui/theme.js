@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // theme.js — colours, fonts and text sizes copied from the Figma "Low-fi screens" page.
 // Every scene draws with these tokens so the whole game keeps the Figma look.
 import { state } from '../state.js';

@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screen 15 · Mission complete dashboard. Every {placeholder} of the Figma template is filled from the state:
 // score (rules.computeScore — only decisions with real mission impact), rank (decision tree, rules.walkTree),
 // resources over the mission, score by category, you vs real mission, the 6 stage cards (→ 15-D1…D6),

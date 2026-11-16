@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screen 18 · Choose your review format. The player chooses HOW; the concepts never change.
 // "YOUR LAST CHOICE" marks the format used last time (state.settings.lastReviewFormat, saved with the settings).
 import { C, S, W, H } from '../ui/theme.js';

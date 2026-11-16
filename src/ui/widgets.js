@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // widgets.js — the Figma components drawn in code (texts are never baked into PNGs, so
 // narration, text size and future translation work):
 //   txt, panel, pxButton (component "Pixel Button": navy/white or gold), iconButton (Menu / Help),

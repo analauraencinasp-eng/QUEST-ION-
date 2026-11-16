@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screen 12.5 · Ready for launch (how a launch works) + the liftoff transition to Screen 13.
 // Card on a dimmed launch pad: HOW A LAUNCH WORKS (3 facts from launch_facts.json, each with its official source),
 // REAL MISSION box, mentor line, ◀ ORBIT / START LAUNCH ▶.

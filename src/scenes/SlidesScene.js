@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screens 13e-1.1 … 13e-1.6 (how the real rovers studied rocks) and 14f-1.1 … 14f-1.6 (what they discovered).
 // One card per slide: STEP n + title, text, WHY IT MATTERS box, optional REAL box, progress dots, mentor line.
 // data = { set: 'rockstudy' | 'discoveries', i }. NEXT on the last slide → QuizGateScene with the matching quiz.

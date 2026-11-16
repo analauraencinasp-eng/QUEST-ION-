@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screen 11a · Warehouse storage (walkable, 14 instrument tables) — post-it "11a warehouse flow":
 // walk to a table → [E] INSPECT → instrument card (11 / 11b) → quick question → table marked [x].
 // Team decision: the EXIT opens when, for EACH of the 5 science requirements, at least one instrument that

@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // voicekey.js — shared by the browser (voice.js) and the backend (server.mjs) so both compute the SAME
 // cache key for a line of narration. Pure functions, no dependencies.
 

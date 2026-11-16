@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screens 16a–16c · Signal Run. Team decision: it works LIKE THE REAL MISSION and that is taught before playing:
 //   · a packet that misses the orbiter is NOT lost — it stays in the rover's flash memory and can be sent again;
 //   · there is no time limit, the real limit is memory space (MER: 256 MB flash, 128 MB RAM — comms.json + SOURCES.md);

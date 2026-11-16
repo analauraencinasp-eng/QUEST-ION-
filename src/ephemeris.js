@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // ephemeris.js — where Screen 12 gets the real Earth/Mars data.
 //   1. With `npm start` (server.mjs): GET api/horizons → the server asks JPL Horizons live (positions + velocities).
 //   2. If there is no server (GitHub Pages, Live Server) or Horizons does not answer: the saved copy

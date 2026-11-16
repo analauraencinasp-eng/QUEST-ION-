@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screen 13 · Launch mini-game (13 briefing → 13b playing → 13c hit → 13d orbit reached / so close).
 // The rocket climbs on its own to 200 km; the player moves the blue SHIELD (mouse or WASD/arrows) to push
 // falling rocks away from the nose. "INTERACTIVE GAME — not a real event" is always on screen.

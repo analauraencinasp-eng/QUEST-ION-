@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screen 14 · Rock Hunter (14 briefing → 14b scanning → 14c strong clue / 14d inconclusive → 14e results).
 // Drive the rover along Meridiani Planum (A/D or ←/→), stop next to a rock, SPACE = scan with the
 // instruments YOU packed in the warehouse, E = collect, Q = skip. 3 samples before energy or time runs out.

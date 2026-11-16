@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screens 15c–15i · MER COMMS PLANNER (a CRT monitor). Three decisions, each with a short real-context page first:
 //   1 ROUTE (direct X-band vs UHF relay) → 2 WINDOW (when to talk) → 3 PRIORITY (what goes first) → results.
 // Team decision: the choices change the data that reaches Earth, the energy used and the points.

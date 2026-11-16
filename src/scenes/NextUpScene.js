@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // "NEXT UP" transition screens (Figma 4c, 7b, 9f, 11a2, 11e, 12.4, 13e-1.0, 13e, 14f-1.0, 15b, 16-0):
 // dimmed background of the stage, cyan kicker, big gold title, one sentence and NEXT.
 // Same pattern for all of them (post-it "How to implement"): data = { id, next, nextData, transition }.

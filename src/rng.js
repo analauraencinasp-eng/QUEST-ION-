@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // rng.js — small deterministic pseudo-random generator (mulberry32).
 // Same seed → same sequence, so every game has the same rock timings / layouts (and tests can check them).
 export function rng(seed) {

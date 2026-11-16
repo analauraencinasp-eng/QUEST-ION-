@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screen 12 · Plan your orbit (team design, Nov 2026).
 //   12   briefing: 3 rules of the road + an example path (Spirit's real dates)
 //   12-0 STEP 0 · draw your guess of the path with the mouse (kept on the map to compare)

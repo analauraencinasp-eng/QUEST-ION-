@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screen 15-R · Report page "YOUR REVIEW" (after 15-D1…D6, tab R). Same report, one more page:
 // mission performance by category, the concepts picked and why, format used, time spent,
 // retention check answers and learning progress (weakness before → after).

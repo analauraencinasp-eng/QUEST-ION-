@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screen 11d · Assembly results: RESULT label (MISSION READY / SCIENCE CAPABILITY LIMITED / INCOMPLETE ASSEMBLY),
 // 3 bars (capability / historical accuracy / compatibility, all game values), YOUR PICKS with the historical
 // MER parts revealed and why each pick works or not, missing requirements, ↺ REBUILD and NEXT ▶ (→ 11e orbit).

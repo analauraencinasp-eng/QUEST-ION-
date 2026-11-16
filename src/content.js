@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // content.js — every text and number of the game lives in data/content/*.json.
 // BootScene loads the files listed in data/manifest.json and fills this object;
 // scenes read it with `content.<file>` (e.g. content.stations) or `t('ui.key')`.

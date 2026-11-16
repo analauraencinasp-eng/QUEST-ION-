@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screen 7 · Mission summary: ONLY what the player chose so far (mode, crew, destination, objective),
 // each tile with a visual and "✎ change" back to that screen. Mission path: done (green), current
 // (gold), next (grey). CONTINUE → 7b transition → Screen 8.

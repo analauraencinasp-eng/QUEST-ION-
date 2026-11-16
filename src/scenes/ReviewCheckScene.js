@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screens 25a–c · Retention check. Every format leads here and gets the SAME 3 questions
 // (the check question of the first 3 selected concepts, review.checkQuestions). It measures what the
 // player remembers, not the format they used. No feedback until the results screen.

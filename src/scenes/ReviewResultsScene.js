@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screen 26 · Review results: correct answers, format used, time spent, concepts with weakness
 // before → after, the Director celebrating or encouraging. GO TO REPORT (15-R) · REVIEW AGAIN (18).
 import { C, S, W, H } from '../ui/theme.js';

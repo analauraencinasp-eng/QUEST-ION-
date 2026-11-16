@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screen 10 · Station card: component name as title, alternatives A/B/C top-right (B = MER HISTORICAL),
 // blueprint image on the left, description in the centre, parts, SIMULATED GAME VALUES, advantage /
 // limitation, and the effect on Earth ONLY if an official NASA source backs it (none for these parts).

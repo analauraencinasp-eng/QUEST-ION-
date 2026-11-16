@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // chrome.js — what EVERY screen has (team rules):
 //   ? Help button bottom-left (contextual help: controls + what to do here)      key: H or ?
 //   ☰ Menu top-right → Settings (Screen 1b)                                       key: Esc closes

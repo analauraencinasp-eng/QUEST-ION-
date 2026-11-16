@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // transitions.js — TransitionManager. Every scene change goes through cover() (old scene)
 // and reveal() (new scene). Types:
 //   'dither'   pixel/dither sweep (NEXT UP screens and between stages)

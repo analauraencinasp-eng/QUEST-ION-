@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screen 9 · Workshop (walkable VAB, 0/5 → 5/5) + 9b locked hint, 9c "assembled" message,
 // 9d pink path to the door, 9e ask the mentor, 9f transition to the warehouse.
 // The ship starts as a skeleton and is built LAYER BY LAYER (Figma "Ship · 1 structure" … "5 attitude").

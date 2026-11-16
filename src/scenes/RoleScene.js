@@ -1,3 +1,4 @@
+// SI-assisted: generated with Claude Code (Anthropic); reviewed and edited by Team Thrusters.
 // Screen 2 · Choose astronaut (+ 2b Role info). Same solar-system background (dimmed), astronauts
 // from the waist up, "(i) info" under each role, yellow border + P1 ✓ on the chosen one.
 // 4 PLAYERS: P1..P4 each pick a different role (visual only for now). BIG mentor portrait at the bottom.
